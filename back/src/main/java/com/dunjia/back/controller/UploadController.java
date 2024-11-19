@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +27,7 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public Result upload(MultipartFile image) throws IOException {
+    public Result upload(@RequestParam("image") MultipartFile image) throws IOException {
         log.info("上传文件, 文件名：{}", image.getOriginalFilename());
 
         // 上传到阿里云OSS

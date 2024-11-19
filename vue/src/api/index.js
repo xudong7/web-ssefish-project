@@ -43,24 +43,27 @@ export const updateUserProfile = (userData) => {
 };
 
 // 上传图片
-export const upload = async (image) => {
-  try {
-    // 创建 FormData 对象
-    const formData = new FormData();
-    formData.append('image', image); // 'image' 对应后端的接收参数名
-
-    // 发送 POST 请求
-    const response = await axios.post('/api/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // 必须指定为 multipart/form-data
-      },
-    });
-
-    // 返回结果
-    return response.data;
-  } catch (error) {
-    console.error('文件上传失败:', error);
-    throw error;
-  }
+export const upload = (image) => {
+  return axios.post('/api/upload', image);
 }
+// export const upload = async (image) => {
+//   try {
+//     // 创建 FormData 对象
+//     const formData = new FormData();
+//     formData.append('image', image); // 'image' 对应后端的接收参数名
+//
+//     // 发送 POST 请求
+//     const response = await axios.post('/api/upload', formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data', // 必须指定为 multipart/form-data
+//       },
+//     });
+//
+//     // 返回结果
+//     return response.data;
+//   } catch (error) {
+//     console.error('文件上传失败:', error);
+//     throw error;
+//   }
+// }
 
