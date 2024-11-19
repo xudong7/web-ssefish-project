@@ -5,15 +5,15 @@
       <el-col :span="8">
         <h1 class="site-title">校园二手闲置物品交易平台</h1>
       </el-col>
-      <el-col :span="8" class="search-col">
+      <el-col :span="8" class="search-col" style="display: flex; justify-content: space-between; align-items: center;">
         <el-input
             v-model="searchQuery"
             placeholder="搜索商品"
             suffix-icon="el-icon-search"
             clearable
         />
-      </el-col>
-      <el-col :span="4" class="user-options">
+        <el-col :span="1" class="user-options">
+        </el-col>
         <el-button type="primary" @click="searchProducts">搜索</el-button>
       </el-col>
       <el-col :span="4" class="user-options">
@@ -31,13 +31,14 @@
           <div class="card-body">
             <img :src="product.image" alt="product image" class="product-image"/>
             <p class="product-price">¥ {{ product.price }}</p>
-            <el-button class="view-details-btn">
+            <el-button class="view-details-btn" @click="viewProductDetails(product)">
               查看详情
             </el-button>
           </div>
         </el-card>
       </el-col>
     </el-row>
+
 
     <!-- Pagination Section -->
     <el-pagination
@@ -48,6 +49,7 @@
         layout="total, prev, pager, next, jumper"
         :total="totalCount">
     </el-pagination>
+
   </div>
 </template>
 
@@ -113,6 +115,11 @@ export default {
         console.error('API call failed: ', error);
         this.$message.error('Failed to load products');
     });
+    },
+
+    // View product details by navigating to the details page
+    viewProductDetails(product) {
+      this.$router.push({ name: 'ProductDetail', params: { id: product.id } });
     },
   },
   created() {

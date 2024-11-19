@@ -18,12 +18,12 @@ import java.util.UUID;
 @Component
 public class AliOSSUtils {
 
-    @Value("${aliyun.oss.endpoint}")
-    private String endpoint; // = "https://oss-cn-hangzhou.aliyuncs.com";
-    @Value("${aliyun.oss.bucketName}")
-    private String bucketName; // = "web-dunjia";
-    @Value("${aliyun.oss.region}")
-    private String region; // = "cn-hangzhou";
+//    @Value("${aliyun.oss.endpoint}")
+    private String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
+//    @Value("${aliyun.oss.bucketName}")
+    private String bucketName = "web-dunjia";
+//    @Value("${aliyun.oss.region}")
+    private String region = "cn-hangzhou";
 
     private EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
 

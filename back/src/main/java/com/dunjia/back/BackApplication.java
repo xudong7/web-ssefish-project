@@ -11,3 +11,5 @@ public class BackApplication {
 	}
 
 }
+// front -> back
+// back : controller -> service -> dao（mapper） 三层架构

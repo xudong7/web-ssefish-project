@@ -19,4 +19,12 @@ public class ProductService {
     public List<Product> getSearchedProducts(String keyword) {
         return productMapper.getSearchedProducts(keyword);  // 使用Mapper接口获取搜索结果
     }
+
+    public Product getProductById(Integer id) {
+        return productMapper.getProductById(id);  // 使用Mapper接口获取产品数据
+    }
+
+    public void addProduct(Product product) {
+        productMapper.addProduct(product);  // 使用Mapper接口添加产品
+    }
 }

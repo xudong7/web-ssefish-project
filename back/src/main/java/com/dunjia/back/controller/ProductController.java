@@ -33,4 +33,18 @@ public class ProductController {
         return Result.success(products);
     }
 
+    @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
+    public Result getProductById(@PathVariable Integer id) {
+        log.info("Get product by id: {}", id);
+        Product product = productService.getProductById(id);
+        return Result.success(product);
+    }
+
+    @RequestMapping(value = "/products", method = RequestMethod.POST)
+    public Result addProduct(@RequestBody Product product) {
+        log.info("Add product: {}", product);
+        productService.addProduct(product);
+        return Result.success(null);
+    }
+
 }

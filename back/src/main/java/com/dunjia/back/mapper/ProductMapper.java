@@ -1,6 +1,7 @@
 package com.dunjia.back.mapper;
 
 import com.dunjia.back.pojo.Product;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -17,4 +18,6 @@ public interface ProductMapper {
 
     @Select("select * from products where name like concat('%', #{keyword}, '%')")
     List<Product> getSearchedProducts(String keyword);
+
+    void addProduct(Product product);
 }
