@@ -9,9 +9,6 @@ import axios from 'axios';
 
 const app = createApp(App);
 
-// 设置 Axios 基础 URL
-axios.defaults.baseURL = 'http://localhost:8080';  // 这里替换为你的后端 API 地址
-
 app.config.globalProperties.$axios = axios;
 app.use(router);
 app.use(ElementPlus);

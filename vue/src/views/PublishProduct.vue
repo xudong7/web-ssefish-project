@@ -7,6 +7,23 @@
       <el-form-item label="Price" prop="price">
         <el-input v-model="product.price"></el-input>
       </el-form-item>
+      <!--      调整大小使用form-->
+      <el-form-item label="Image" prop="image">
+        <el-upload
+            class="upload-demo"
+            drag
+            action="http://localhost:8082/movie/upload"
+            :before-upload="beforeAvatarUpload"
+            :on-success="uploadsuccess"
+            style="width: fit-content; height: fit-content; text-align: center; ">
+          <el-icon class="el-icon--upload">
+            <upload-filled/>
+          </el-icon>
+          <div class="el-upload__text">
+            <em>点击上传</em>
+          </div>
+        </el-upload>
+      </el-form-item>
       <el-form-item label="Description" prop="description">
         <el-input type="textarea" v-model="product.description"></el-input>
       </el-form-item>
@@ -18,7 +35,7 @@
 </template>
 
 <script>
-import { publishProduct } from '@/api';  // Import the publishProduct method from API
+import {publishProduct} from '@/api';  // Import the publishProduct method from API
 
 export default {
   data() {
@@ -33,13 +50,13 @@ export default {
   methods: {
     submitProduct() {
       publishProduct(this.product)  // Call the publishProduct method
-        .then(() => {
-          this.$router.push({ name: 'Home' });
-        })
-        .catch(error => {
-          console.error("Failed to publish product:", error);
-          this.$message.error('Failed to publish product');
-        });
+          .then(() => {
+            this.$router.push({name: 'Home'});
+          })
+          .catch(error => {
+            console.error("Failed to publish product:", error);
+            this.$message.error('Failed to publish product');
+          });
     }
   }
 };

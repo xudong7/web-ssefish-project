@@ -4,7 +4,7 @@
       <el-menu mode="horizontal" :default-active="activeMenu">
         <el-menu-item index="1" @click="goHome">Home</el-menu-item>
         <el-menu-item index="2" @click="goPublish">Publish Product</el-menu-item>
-        <el-menu-item index="3" @click="goProfile">Profile</el-menu-item>
+<!--        <el-menu-item index="3" @click="goProfile">Profile</el-menu-item>-->
         <el-menu-item index="4" @click="goLogin">Login</el-menu-item>
       </el-menu>
     </el-header>

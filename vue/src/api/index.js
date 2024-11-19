@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// 设置基础 URL
-axios.defaults.baseURL = 'http://localhost:8080'; // 替换为实际的 API 地址
+axios.defaults.baseURL = 'http://localhost:8080'; // backend API 地址
 
 // 添加请求拦截器，自动带上 token
 axios.interceptors.request.use(config => {
@@ -14,17 +13,19 @@ axios.interceptors.request.use(config => {
   return Promise.reject(error);
 });
 
-// 定义所有 API 方法
-
 // 登录
 export const login = (loginData) => {
   return axios.post('/api/login', loginData);
 };
 
-// 获取商品列表
-export const getProducts = () => {
+// 获取所有商品
+export const getProductList = () => {
   return axios.get('/api/products');
-};
+}
+
+export const searchProduct = (keyword) => {
+  return axios.get(`/api/products/search?keyword=${keyword}`);
+}
 
 // 发布商品
 export const publishProduct = (productData) => {
