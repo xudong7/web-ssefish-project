@@ -55,7 +55,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### name
 #### password
 #### email
-
+#### phonenumber
+#### picture
+#### bio
+#### location
+#### rating
+#### num_transactions
 ---
 # *接口*
 
