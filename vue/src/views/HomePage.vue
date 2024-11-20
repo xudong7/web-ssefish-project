@@ -114,7 +114,7 @@ export default {
       }).catch(error => {
         console.error('API call failed: ', error);
         this.$message.error('Failed to load products');
-    });
+      });
     },
 
     // View product details by navigating to the details page
@@ -208,5 +208,13 @@ export default {
 .el-pagination {
   margin-top: 20px;
   text-align: center;
+}
+
+.product-image {
+  width: 100%;  /* Make the image take up the full width of its container */
+  height: 200px; /* Set a fixed height to ensure consistency across images */
+  object-fit: contain; /* Ensure the image maintains its aspect ratio while fitting within the container */
+  border-radius: 8px;
+  margin-bottom: 15px;
 }
 </style>

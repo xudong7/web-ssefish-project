@@ -1,14 +1,26 @@
 <template>
-  <div>
+  <div class="form-container">
+    <h2 class="center-title">发布闲置</h2>
     <el-form :model="product" ref="form" label-width="120px">
       <!-- Product Name Input -->
       <el-form-item label="Product Name" prop="name">
-        <el-input v-model="product.name" placeholder="Enter product name"></el-input>
+        <el-input v-model="product.name" placeholder="Enter product name" class="short-input"></el-input>
       </el-form-item>
 
       <!-- Price Input -->
       <el-form-item label="Price" prop="price">
-        <el-input v-model="product.price" placeholder="Enter product price"></el-input>
+        <el-input v-model="product.price" placeholder="Enter product price" class="short-input"></el-input>
+      </el-form-item>
+
+      <!-- 新增 Location 输入框 -->
+      <el-form-item label="Location" prop="location">
+        <el-select v-model="product.location" placeholder="Select a province" class="short-input">
+          <el-option v-for="province in provinces"
+                     :key="province.code"
+                     :label="province.name"
+                     :value="province.code">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <!-- Image Upload -->
@@ -37,7 +49,7 @@
 
       <!-- Publish Button -->
       <el-form-item>
-        <el-button type="primary" @click="submitProduct">Publish Product</el-button>
+        <el-button type="primary" @click="submitProduct" class="button-container">Publish Product</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -56,6 +68,13 @@ export default {
         description: "", // Initially empty
         owner: "admin",  // Default owner
       },
+      provinces: [
+        { code: '1', name: '广州南校区' },
+        { code: '2', name: '广州东校区' },
+        { code: '3', name: '广州北校区' },
+        { code: '4', name: '深圳校区' },
+        { code: '5', name: '珠海校区' }
+      ]
     };
   },
   methods: {
@@ -126,6 +145,35 @@ export default {
 </script>
 
 <style scoped>
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 居中所有内容 */
+  justify-content: flex-start; /* 垂直开始对齐内容 */
+  min-height: 100vh; /* 使容器至少占满视口高度 */
+  margin-top: -10px; /* 向上调整 */
+}
+
+.center-title {
+  margin-bottom: 20px; /* 底部间距 */
+  font-size: 24px; /* 字体大小 */
+  font-weight: bold; /* 加粗 */
+}
+
+.short-input {
+  width: 300px; /* 设置输入框的宽度 */
+  margin: 0; /* 移除默认边距 */
+}
+
+.upload-demo {
+  max-width: 100%; /* 限制图标和文本的最大宽度 */
+  max-height: 100%; /* 限制图标和文本的最大高度 */
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  background-color: transparent; /* 设置背景透明以去掉边框效果 */
+}
+
 .uploaded-image {
   width: 300px;
   height: 300px;
@@ -133,5 +181,11 @@ export default {
   border-radius: 8px;
   border: 1px solid #ddd;
   margin-top: 10px;
+}
+
+/* 居中按钮 */
+.button-container {
+  text-align: center; /* 居中按钮 */
+  margin-top: 20px; /* 顶部间距 */
 }
 </style>
