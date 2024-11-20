@@ -48,11 +48,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### price
 #### image
 #### description
-#### seller_id 卖家的id 确认卖家是谁
+#### buyer_id 买家的id
+#### seller_id 卖家的id 
 #### condition 二手或者全新...0 1 2 3
 #### status（如“待支付”、“已支付”、“已发货”、“已完成”等）
 #### date_listed 发布日期
-#### order_date（订单创建日期）
 #### likes 想要人数
 
 # user
@@ -60,16 +60,19 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### name
 #### password
 #### email 
-#### carList 购物车
-#### soldRecords 出售记录
-#### purchaseRecords 购买记录
+#### wantList(加入likes的商品的id)
 #### phonenumber
 #### picture
 #### intro
 #### address 地址 东校,南校...
-#### // rating 
 #### num_transactions 交易树,上架数...
-#### // interest 
+
+# tradeList
+#### buyer(user)
+#### seller(user)
+#### product
+#### status(已完成订单,订单进行中,订单取消)
+#### date(订单创建日期)
 
 ---
 # *接口*
