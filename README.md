@@ -48,7 +48,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### price
 #### image
 #### description
-#### owner
+#### seller_id
+#### condition
+#### status
+#### date_listed
+#### likes
 
 # user
 #### id
@@ -61,6 +65,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### location
 #### rating
 #### num_transactions
+#### interest
 ---
 # *接口*
 
