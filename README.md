@@ -66,6 +66,23 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### rating
 #### num_transactions
 #### interest
+
+# cartItems 购物车
+# soldRecords 购买记录
+# purchaseRecords 购买记录
+# removedItems 已下架物品
+# publishedItems 已发布物品
+
+# Order
+#### seller
+#### buyer
+#### product_id
+#### quantity（购买数量）
+#### total_price（订单总价）
+#### status（如“待支付”、“已支付”、“已发货”、“已完成”等）
+#### order_date（订单创建日期）
+#### payment_method（支付方式，如“信用卡”、“支付宝”等）
+#### shipping_address（收货地址）
 ---
 # *接口*
 
