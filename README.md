@@ -48,24 +48,24 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### price
 #### image
 #### description
-#### seller_id
-#### condition
-#### status
-#### date_listed
-#### likes
+#### seller_id 卖家的id 确认卖家是谁
+#### condition 二手或者全新...0 1 2 3
+#### status 订单完成情况: 已卖出,未卖出
+#### date_listed 发布日期
+#### likes 想要人数
 
 # user
-#### id
+#### id 
 #### name
 #### password
-#### email
+#### email 
 #### phonenumber
 #### picture
-#### bio
-#### location
-#### rating
-#### num_transactions
-#### interest
+#### intro
+#### location 地址 东校,南校...
+#### // rating 
+#### num_transactions 交易树,上架数...
+#### // interest 
 
 # cartItems 购物车
 # soldRecords 出售记录
