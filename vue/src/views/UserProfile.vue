@@ -1,112 +1,141 @@
 <template>
   <div class="user-profile">
-    <!-- Header Section -->
-    <el-header class="header">
-      <div class="avatar-wrapper">
-        <el-avatar :src="user.avatar" size="64"></el-avatar>
-        <div class="user-info">
-          <h2>{{ user.nickname }}</h2>
-          <p>ID: {{ user.id }}</p>
+    <el-container>
+      <!-- 个人信息 -->
+      <el-header class="header">
+        <div class="avatar-wrapper">
+          <el-avatar :src="user.img" size="64"></el-avatar>
+          <div class="user-info">
+            <h2>{{ user.name }}</h2>
+            <p>ID: {{ user.id }}</p>
+          </div>
         </div>
-      </div>
-      <el-button plain @click="editProfile">修改个人信息</el-button>
-    </el-header>
+        <el-button plain @click="editProfile">修改个人信息</el-button>
+      </el-header>
 
-    <!-- Main Content Section -->
-    <el-main>
-      <el-row :gutter="20">
-        <!-- Recently Posted Items -->
-        <el-col :span="12">
-          <el-card header="刚刚发布">
-            <el-list>
-              <el-list-item v-for="item in recentlyPosted" :key="item.id">
-                <span>{{ item.name }}</span>
-              </el-list-item>
-            </el-list>
-          </el-card>
-        </el-col>
+      <br>
+      <!-- 侧边选择栏 -->
+      <el-container>
+        <el-aside width="200px">
+          <el-scrollbar>
+            <el-menu :default-active="activeIndex" @select="handleSelect">
+              <el-menu-item index="cart">
+                <el-icon><el-icon-shopping-cart /></el-icon>
+                <span>购物车</span>
+              </el-menu-item>
+              <el-menu-item index="sales">
+                <el-icon><el-icon-pie-chart /></el-icon>
+                <span>出售记录</span>
+              </el-menu-item>
+              <el-menu-item index="purchases">
+                <el-icon><el-icon-receipt /></el-icon>
+                <span>购买记录</span>
+              </el-menu-item>
+              <el-menu-item index="just-off-shelf">
+                <el-icon><el-icon-remove /></el-icon>
+                <span>已下架</span>
+              </el-menu-item>
+              <el-menu-item index="published">
+                <el-icon><el-icon-check-circle /></el-icon>
+                <span>已发布</span>
+              </el-menu-item>
+            </el-menu>
+          </el-scrollbar>
+        </el-aside>
 
-        <!-- Removed Items -->
-        <el-col :span="12">
-          <el-card header="已经下架">
-            <el-list>
-              <el-list-item v-for="item in removedItems" :key="item.id">
-                <span>{{ item.name }}</span>
-              </el-list-item>
-            </el-list>
-          </el-card>
-        </el-col>
-      </el-row>
-
-      <el-row :gutter="20" v-if="showMoreSections">
-        <!-- My Cart -->
-        <el-col :span="12">
-          <el-card header="我的购物车">
-            <el-list>
-              <el-list-item v-for="item in cartItems" :key="item.id">
-                <span>{{ item.name }}</span>
-              </el-list-item>
-            </el-list>
-          </el-card>
-        </el-col>
-
-        <!-- Sold Records -->
-        <el-col :span="12">
-          <el-card header="出售记录">
-            <el-list>
-              <el-list-item v-for="item in soldRecords" :key="item.id">
-                <span>{{ item.name }}</span>
-              </el-list-item>
-            </el-list>
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-main>
+        <!-- 商品展示 -->
+        <el-main>
+          <div v-if="activeIndex === 'cart'">
+            <h3>购物车</h3>
+            <el-card v-for="item in cartItems" :key="item.id">
+              <p>{{ item.name }} - ${{ item.price }}</p>
+            </el-card>
+          </div>
+          <div v-else-if="activeIndex === 'sales'">
+            <h3>出售记录</h3>
+            <el-card v-for="item in soldRecords" :key="item.id">
+              <p>{{ item.name }} - Sold for ${{ item.price }}</p>
+            </el-card>
+          </div>
+          <div v-else-if="activeIndex === 'purchases'">
+            <h3>购买记录</h3>
+            <el-card v-for="item in purchaseRecords" :key="item.id">
+              <p>{{ item.name }} - Purchased for ${{ item.price }}</p>
+            </el-card>
+          </div>
+          <div v-else-if="activeIndex === 'just-off-shelf'">
+            <h3>刚刚下架</h3>
+            <el-card v-for="item in removedItems" :key="item.id">
+              <p>{{ item.name }} - Now off shelf</p>
+            </el-card>
+          </div>
+          <div v-else-if="activeIndex === 'published'">
+            <h3>已经发布</h3>
+            <el-card v-for="item in publishedItems" :key="item.id">
+              <p>{{ item.name }} - ${{ item.price }}</p>
+            </el-card>
+          </div>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElIcon, ElIconShoppingCart, ElIconPieChart, ElIconReceipt, ElIconRemove, ElIconCheckCircle } from 'element-plus';
+import 'element-plus/dist/index.css';
 
 export default {
+  name: 'SidebarMenu',
+  components: {
+    ElIcon,
+    ElIconShoppingCart,
+    ElIconPieChart,
+    ElIconReceipt,
+    ElIconRemove,
+    ElIconCheckCircle
+  },
+
   setup() {
     const user = ref({
-      avatar: 'path/to/avatar.jpg',
-      nickname: '用户名',
+      img: 'path/to/avatar.jpg',
+      name: '用户名',
       id: '123456',
       // 其他用户信息
     });
 
-    const recentlyPosted = ref([
-      { id: 1, name: '二手手机' },
-      { id: 2, name: '二手电脑' },
-      // 其他刚刚发布的物品
-    ]);
 
-    const removedItems = ref([
-      { id: 1, name: '旧书' },
-      { id: 2, name: '旧椅子' },
-      // 其他已经下架的物品
-    ]);
-
+    const activeIndex = ref('cart'); // 默认选中购物车
     const cartItems = ref([
-      { id: 1, name: '二手耳机' },
-      { id: 2, name: '二手键盘' },
-      // 其他购物车中的物品
+      { id: 1, name: 'Product A', price: 100 },
+      { id: 2, name: 'Product B', price: 200 }
     ]);
-
     const soldRecords = ref([
-      { id: 1, name: '二手平板' },
-      { id: 2, name: '二手相机' },
-      // 其他出售记录
+      { id: 1, name: 'Sold Item A', price: 150 },
+      { id: 2, name: 'Sold Item B', price: 250 }
+    ]);
+    const purchaseRecords = ref([
+      { id: 1, name: 'Bought Item A', price: 120 },
+      { id: 2, name: 'Bought Item B', price: 220 }
+    ]);
+    const removedItems = ref([
+      { id: 1, name: 'Off Shelf Item A', price: 110 },
+      { id: 2, name: 'Off Shelf Item B', price: 210 }
+    ]);
+    const publishedItems = ref([
+      { id: 1, name: 'Published Item A', price: 130 },
+      { id: 2, name: 'Published Item B', price: 230 }
     ]);
 
-    const showMoreSections = ref(true); // 控制是否显示更多部分（购物车和出售记录）
-
+    const handleSelect = (key, keyPath) => {
+      console.log(`Selected menu item: ${key}, Key path: ${keyPath}`);
+      activeIndex.value = key;
+    }
 
     const editProfile = () => {
-      ElMessageBox.prompt('Please input your e-mail', 'Tip', {
+      ElMessageBox.prompt('New name', 'Tip', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         inputPattern:
@@ -127,8 +156,6 @@ export default {
           })
     }
 
-
-
     // 模拟从API或Vuex获取用户数据
     onMounted(() => {
       // 通常这里你会从API或Vuex获取用户数据并赋值给user
@@ -137,11 +164,13 @@ export default {
 
     return {
       user,
-      recentlyPosted,
-      removedItems,
+      activeIndex,
       cartItems,
       soldRecords,
-      showMoreSections,
+      purchaseRecords,
+      removedItems,
+      publishedItems,
+      handleSelect,
       editProfile,
     };
   },

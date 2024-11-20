@@ -11,7 +11,7 @@
 # *端口设置*
 
 ## back server 8080
-## front server 8081
+## front server 3000
 
 ---
 ## front setup

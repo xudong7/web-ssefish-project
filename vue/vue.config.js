@@ -2,7 +2,7 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
-    port: 8081,  // 设置前端 Vue.js 运行的端口
+    port: 3000,  // 设置前端 Vue.js 运行的端口
     proxy: {
       '/api': {
         target: 'http://localhost:8080',  // 设置后端 Spring Boot 的 API 地址
