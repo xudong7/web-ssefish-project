@@ -68,7 +68,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### interest
 
 # cartItems 购物车
-# soldRecords 购买记录
+# soldRecords 出售记录
 # purchaseRecords 购买记录
 # removedItems 已下架物品
 # publishedItems 已发布物品
