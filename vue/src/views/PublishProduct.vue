@@ -12,9 +12,9 @@
         <el-input v-model="product.price" placeholder="Enter product price" class="short-input"></el-input>
       </el-form-item>
 
-      <!-- 新增 Location 输入框 -->
+<!--       新增 Location 输入框-->
       <el-form-item label="Location" prop="location">
-        <el-select v-model="product.location" placeholder="Select a province" class="short-input">
+        <el-select v-model="product.address" placeholder="Select a province" class="short-input">
           <el-option v-for="province in provinces"
                      :key="province.code"
                      :label="province.name"
@@ -62,11 +62,17 @@ export default {
   data() {
     return {
       product: {
-        name: "",  // Initially empty
-        price: "", // Initially empty
-        image: "", // Initially empty (image will be uploaded)
-        description: "", // Initially empty
-        owner: "admin",  // Default owner
+        image: "",
+        description: "",
+        name: "",
+        price: "",
+        address: "",
+        buyerId: "",
+        sellerId: 1,
+        condition: 1,
+        status: 1,
+        createTime: "",
+        likes: 0,
       },
       provinces: [
         { code: '1', name: '广州南校区' },
@@ -74,7 +80,7 @@ export default {
         { code: '3', name: '广州北校区' },
         { code: '4', name: '深圳校区' },
         { code: '5', name: '珠海校区' }
-      ]
+      ],
     };
   },
   methods: {
@@ -111,10 +117,10 @@ export default {
     // Submit the product data to the backend
     submitProduct() {
       // Check if all fields are filled
-      if (!this.product.name || !this.product.price || !this.product.description || !this.product.image) {
-        this.$message.error('Please fill in all required fields and upload an image.');
-        return;
-      }
+      // if (!this.product.name || !this.product.price || !this.product.description || !this.product.image) {
+      //   this.$message.error('Please fill in all required fields and upload an image.');
+      //   return;
+      // }
 
       // Call the API to publish the product
       publishProduct(this.product)

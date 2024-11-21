@@ -24,7 +24,7 @@ export default {
   computed: {
     isPrePage() {
       // 检查当前路由名称是否为 PrePage
-      return this.$route.name === 'PrePage';
+      return this.$route.name === 'Login';
     }
   },
   methods: {

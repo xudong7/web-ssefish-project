@@ -1,15 +1,13 @@
 <template>
   <div>
     <el-card>
-<!--      <template #header>-->
-<!--        <span>{{ product.name }}</span>-->
-<!--      </template>-->
       <div class="card-body">
         <img :src="product.image" alt="product image" style="max-width: 100%; height: auto;"/>
         <p><strong>Name:</strong>{{product.name}}</p>
         <p><strong>Price:</strong> ¥ {{ product.price }}</p>
         <p><strong>Description:</strong> {{ product.description }}</p>
-        <p><strong>Owner:</strong> {{ product.owner }}</p>
+        <p><strong>Seller:</strong> {{ product.sellerId }}</p>
+        <p><strong>Address:</strong>{{ product.address }}</p>
         <el-button @click="goToHome">Back to Home</el-button>
       </div>
     </el-card>

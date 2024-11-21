@@ -4,12 +4,10 @@ import LoginPage from '../views/LoginPage.vue';
 import PublishProduct from '../views/PublishProduct.vue';
 import UserProfile from '../views/UserProfile.vue';
 import ProductDetail from '../views/ProductDetail.vue';
-import PrePage from '../views/PrePage.vue'; // 引入新创建的 PrePage 组件
 
 const routes = [
-    { path: '/', name: 'PrePage', component: PrePage }, // 将根路径指向 PrePage
+    { path: '/', name: 'Login', component: LoginPage },
     { path: '/home', name: 'Home', component: HomePage }, // 新增 home 路由
-    { path: '/login', name: 'Login', component: LoginPage },
     {path: '/products/:id', name: 'ProductDetail', component: ProductDetail},
     { path: '/publish', name: 'PublishProduct', component: PublishProduct },
     { path: '/profile', name: 'UserProfile', component: UserProfile },

@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     navigateToLogin() {
-      this.$router.push({ name: 'PrePage' }); // 导航到 PrePage 页面
+      this.$router.push({ name: 'Login' }); // Navigate to the Login page
     },
     searchProducts() {
       searchProduct(this.searchQuery).then(response => {
