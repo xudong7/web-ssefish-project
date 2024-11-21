@@ -124,7 +124,7 @@ export default {
                 message: 'Product published successfully!',
                 type: 'success',
               });
-              this.$router.push('/');  // Redirect to home page after success
+              this.$router.push('/home');  // Redirect to home page after success
             } else {
               this.$message({
                 message: 'Failed to publish product',

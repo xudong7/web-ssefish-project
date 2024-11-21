@@ -40,7 +40,7 @@ export default {
     },
     // Navigate back to home page
     goToHome() {
-      this.$router.push('/'); // Navigate to the home page
+      this.$router.push('/home'); // Navigate to the home page
     }
   },
   created() {

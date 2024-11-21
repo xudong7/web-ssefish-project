@@ -10,12 +10,14 @@
                     placeholder="Enter username"
                     class="input-white"></el-input>
         </el-form-item>
+
         <el-form-item label="Password" prop="password"
                       :rules="[{ required: true, message: 'Please input password', trigger: 'blur' }]">
           <el-input type="password" v-model="loginData.password"
                     placeholder="Enter password"
                     class="input-white"></el-input>
         </el-form-item>
+
         <el-form-item>
           <el-button type="primary" @click="login" :loading="loading">Login</el-button>
           <el-button @click="goToRegister">Register</el-button>
@@ -26,8 +28,6 @@
 </template>
 
 <script>
-import { login } from '@/api';  // Import the login method from API
-
 export default {
   data() {
     return {
@@ -41,21 +41,19 @@ export default {
   methods: {
     login() {
       this.loading = true; // Start loading
-      login(this.loginData)
-          .then(response => {
-            localStorage.setItem('authToken', response.data.token);
-            this.$router.push('/');
-          })
-          .catch(error => {
-            console.error("Login failed:", error);
-            this.$message.error('Login failed');
-            // Optional: Clear fields on login failure
-            this.loginData.name = '';
-            this.loginData.password = '';
-          })
-          .finally(() => {
-            this.loading = false; // End loading
-          });
+
+      // 检查输入的用户名和密码是否都为 "12345"
+      if (this.loginData.name === '12345' && this.loginData.password === '12345') {
+        // 登录成功，跳转到主页
+        this.$router.push('/home');
+      } else {
+        // 登录失败，清空输入框并显示错误消息
+        this.loginData.name = '';
+        this.loginData.password = '';
+        this.$message.error('Login failed: Invalid credentials');
+      }
+
+      this.loading = false; // End loading
     },
     goToRegister() {
       this.$router.push({name: 'Register'});
