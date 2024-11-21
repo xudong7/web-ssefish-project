@@ -17,7 +17,7 @@
         <el-button type="primary" @click="searchProducts">搜索</el-button>
       </el-col>
       <el-col :span="4" class="user-options">
-        <el-button type="success" @click="navigateToLogin">登录</el-button>
+        <el-button type="success" @click="navigateToLogin">登出</el-button>
         <el-button>消息</el-button>
       </el-col>
     </el-row>
