@@ -2,20 +2,20 @@
   <div>
     <el-card>
       <div class="card-body">
-        <img :src="product.image" alt="product image" style="max-width: 80%; height: auto;"/>
+        <img :src="product.image" alt="product image" style="max-width: 60%; height: auto;"/>
         <p><strong>Name:</strong>{{product.name}}</p>
         <p><strong>Price:</strong> ¥ {{ product.price }}</p>
         <p><strong>Description:</strong> {{ product.description }}</p>
         <p><strong>Seller:</strong> {{ seller.name }} </p>
         <p><strong>Location:</strong> {{ addressMap[product.address] }}</p>
-        <el-button @click="goToHome">Back to Home</el-button>
+        <el-button @click="goToHome">返回</el-button>
       </div>
     </el-card>
   </div>
 </template>
 
 <script>
-import { getProductDetail, getSellerById } from '@/api'; // Import API method
+import {getProductDetail, getSellerById} from '@/api'; // Import API method
 
 export default {
   data() {
@@ -70,13 +70,6 @@ export default {
 .card-body {
   text-align: center;
   padding: 20px;
-}
-
-.product-image {
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-  display: block;
 }
 
 el-button {

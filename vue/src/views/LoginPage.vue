@@ -5,7 +5,7 @@
 
       <el-form :model="loginData" ref="form" label-width="120px">
         <el-form-item
-            label="Username"
+            label="用户名"
             prop="username"
             :rules="[{ required: true, message: 'Please input username', trigger: 'blur' }]"
         >
@@ -17,7 +17,7 @@
         </el-form-item>
 
         <el-form-item
-            label="Password"
+            label="密码"
             prop="password"
             :rules="[{ required: true, message: 'Please input password', trigger: 'blur' }]"
         >
@@ -34,10 +34,10 @@
               type="primary"
               @click="login"
               :loading="loading"
-          >Login</el-button>
+          >登录</el-button>
           <el-button
               @click="goToRegister"
-          >Register</el-button>
+          >注册</el-button>
         </el-form-item>
       </el-form>
     </div>

@@ -3,7 +3,6 @@
     <el-header>
       <el-menu mode="horizontal" :default-active="activeMenu">
         <el-menu-item index="1" @click="goAdmin">Admin Dashboard</el-menu-item>
-        <el-menu-item index="2" @click="goUsers">Manage Users</el-menu-item>
       </el-menu>
     </el-header>
     <el-main>
@@ -22,9 +21,6 @@ export default {
   methods: {
     goAdmin() {
       this.$router.push('/admin');
-    },
-    goUsers() {
-      this.$router.push('/admin/users');
     },
     getActiveMenu() {
       const path = this.$route.path;

@@ -2,7 +2,7 @@
   <div class="chat-container">
     <!-- 左侧历史会话列表 -->
     <div class="chat-sidebar">
-      <div class="chat-history-title">Conversations</div>
+      <div class="chat-history-title">会话</div>
       <el-scrollbar class="chat-history-list">
         <div
             v-for="(conversation, index) in conversations"
@@ -50,7 +50,7 @@
             @keyup.enter="sendMessage"
             :disabled="!currentConversation"
         ></el-input>
-        <el-button type="primary" @click="sendMessage" :disabled="!currentConversation">Send</el-button>
+        <el-button type="primary" @click="sendMessage" :disabled="!currentConversation">发送</el-button>
       </el-footer>
     </div>
   </div>
@@ -138,7 +138,7 @@ export default {
   padding: 10px 15px;
   font-weight: bold;
   font-size: 16px;
-  background-color: #409eff;
+  background-color: lightskyblue;
   color: white;
   text-align: center;
   border-top-left-radius: 10px; /* 左上角圆角 */
@@ -165,7 +165,7 @@ export default {
 }
 
 .conversation-item.active {
-  background-color: #409eff;
+  background-color: lightskyblue;
   color: white;
 }
 
@@ -198,7 +198,7 @@ export default {
 
 /* 顶部聊天栏 */
 .chat-header {
-  background-color: #409eff;
+  background-color: lightskyblue;
   color: white;
   padding: 10px;
   display: flex;
@@ -228,7 +228,7 @@ export default {
 
 .message.mine {
   align-self: flex-end;
-  background-color: #409eff;
+  background-color: lightskyblue;
   color: white;
   border-radius: 12px 12px 0 12px; /* 消息右侧圆角 */
 }

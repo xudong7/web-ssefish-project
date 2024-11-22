@@ -4,21 +4,21 @@
       <h1 class="form-title">注册校园二手闲置物品交易平台</h1>
 
       <el-form :model="user" ref="form" label-width="120px">
-        <el-form-item label="Name" prop="name"
+        <el-form-item label="用户名" prop="name"
                       :rules="[{ required: true, message: '请输入昵称', trigger: 'blur' }]">
           <el-input v-model="user.name"
                     placeholder="输入昵称"
                     class="input-white"></el-input>
         </el-form-item>
 
-        <el-form-item label="Password" prop="password"
+        <el-form-item label="密码" prop="password"
                       :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
           <el-input type="password" v-model="user.password"
                     placeholder="输入密码"
                     class="input-white"></el-input>
         </el-form-item>
 
-        <el-form-item label="Email" prop="email"
+        <el-form-item label="邮箱" prop="email"
                       :rules="[
                           { required: true, message: '请输入邮箱', trigger: 'blur' },
                           { type: 'email', message: '请输入有效的邮箱地址', trigger: ['blur', 'change'] }

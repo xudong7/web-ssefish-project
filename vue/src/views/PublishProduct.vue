@@ -34,7 +34,7 @@
             action="/api/upload"
         >
         <template #trigger>
-          <el-button type="primary">Select file</el-button>
+          <el-button type="primary">选择文件</el-button>
         </template>
         </el-upload>
         <div v-if="product.image">
@@ -49,7 +49,7 @@
 
       <!-- Publish Button -->
       <el-form-item>
-        <el-button type="primary" @click="submitProduct" class="button-container">Publish Product</el-button>
+        <el-button type="primary" @click="submitProduct" class="button-container">发布商品</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -117,10 +117,10 @@ export default {
     // Submit the product data to the backend
     submitProduct() {
       // Check if all fields are filled
-      // if (!this.product.name || !this.product.price || !this.product.description || !this.product.image) {
-      //   this.$message.error('Please fill in all required fields and upload an image.');
-      //   return;
-      // }
+      if (!this.product.name || !this.product.price || !this.product.description || !this.product.image) {
+        this.$message.error('Please fill in all required fields and upload an image.');
+        return;
+      }
 
       // Call the API to publish the product
       publishProduct(this.product)
