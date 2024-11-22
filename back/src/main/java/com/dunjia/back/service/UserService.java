@@ -31,4 +31,8 @@ public class UserService {
     public void updateUser(User user) {
         userMapper.updateUser(user);
     }
+
+    public void deleteUserById(Integer id) {
+        userMapper.deleteUserById(id);
+    }
 }

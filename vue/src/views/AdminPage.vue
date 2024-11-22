@@ -136,7 +136,7 @@
 
 <script>
 import { ElPagination } from 'element-plus';
-import { getProductList, deleteProductById } from '../api';
+import { getProductList, deleteProductById, deleteUserById, getUserList, getUserById } from '../api';
 
 export default {
   name: 'AdminPage',
@@ -149,13 +149,7 @@ export default {
       pageSize: 5, // 每页显示的商品数/用户数/交易记录数
       currentPage: 1, // 当前页数
       products: [], // 商品数据
-      users: [
-        { id: 1, email: 'user1@example.com', picture: 'vue/src/assets/logo.png' },
-        { id: 2, email: 'user2@example.com', picture: 'vue/src/assets/logo.png' },
-        { id: 3, email: 'user3@example.com', picture: 'vue/src/assets/logo.png' },
-        { id: 4, email: 'user4@example.com', picture: 'vue/src/assets/logo.png' },
-        { id: 5, email: 'user5@example.com', picture: 'vue/src/assets/logo.png' }
-      ],
+      users: [], // 用户数据
       trades: [
         { id: 1, buyerId: 1234, sellerId: 123, productId: 1 },
         { id: 2, buyerId: 5678, sellerId: 567, productId: 2 },
@@ -196,6 +190,11 @@ export default {
         this.products = response.data.data;
       });
     },
+    getAllUsers() {
+      getUserList().then(response => {
+        this.users = response.data.data;
+      });
+    },
     logout() {
       this.$router.push({ name: 'Login' }); // Navigate to the Login page
     },
@@ -203,7 +202,7 @@ export default {
       this.currentTab = tab;
     },
     editProduct(product) {
-      const updatedProduct = {...product, price: product.price + 100}; // 假设我们只是增加价格作为编辑示例
+      const updatedProduct = {...product, price: product.price + 100};
       const index = this.products.findIndex(p => p.id === product.id);
       if (index !== -1) {
         this.products.splice(index, 1, updatedProduct);
@@ -219,11 +218,15 @@ export default {
       alert(`编辑用户 ${user.email}`);
     },
     deleteUser(id) {
-      const index = this.users.findIndex(user => user.id === id);
-      if (index !== -1) {
-        this.users.splice(index, 1);
-      }
-      alert(`用户已删除`);
+      getUserById(id).then(response => {
+        if (response.data.data.name === 'admin') {
+          alert('不能删除管理员');
+        } else {
+          deleteUserById(id).then(() => {
+            alert(`用户已删除`);
+          });
+        }
+      });
     },
     handlePageChange(page) {
       this.currentPage = page;
@@ -231,6 +234,7 @@ export default {
   },
   created() {
     this.getAllProducts();
+    this.getAllUsers();
   }
 };
 </script>

@@ -68,6 +68,15 @@ export const getSellerById = (id) => {
   return axios.get(`/api/sellers/${id}`);
 }
 
+// 根据id删除user
+export const deleteUserById = (id) => {
+  return axios.delete(`/api/users/${id}`);
+}
+
+// 获取所有用户
+export const getUserList = () => {
+  return axios.get('/api/users');
+}
 
 
 

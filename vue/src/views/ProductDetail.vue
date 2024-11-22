@@ -6,7 +6,7 @@
         <p><strong>Name:</strong>{{product.name}}</p>
         <p><strong>Price:</strong> ¥ {{ product.price }}</p>
         <p><strong>Description:</strong> {{ product.description }}</p>
-        <p><strong>Seller:</strong> {{ user.name }} </p>
+        <p><strong>Seller:</strong> {{ seller.name }} </p>
         <p><strong>Location:</strong> {{ addressMap[product.address] }}</p>
         <el-button @click="goToHome">Back to Home</el-button>
       </div>
@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       product: {}, // Store product details here
-      user: {}, // Store seller details here
+      seller: {}, // Store seller details here
       addressMap: {
         1: '南校区',
         2: '东校区',
@@ -35,11 +35,11 @@ export default {
     findSeller(sellerId) {
       getSellerById(sellerId)
           .then(response => {
-            this.user = response.data.data;
+            this.seller = response.data.data;
           })
           .catch(error => {
-            console.error("Failed to fetch user details:", error);
-            this.$message.error('Failed to fetch user details');
+            console.error("Failed to fetch seller details:", error);
+            this.$message.error('Failed to fetch seller details');
           });
     },
     // Fetch product details using the product ID from the route params
@@ -48,14 +48,13 @@ export default {
       getProductDetail(productId)
           .then(response => {
             this.product = response.data.data; // Store product details in data
-            this.findSeller(this.product.sellerId);
+            this.findSeller(this.product.sellerId); // fetch seller details by seller ID of the product
           })
           .catch(error => {
             console.error("Failed to fetch product details:", error);
             this.$message.error('Failed to fetch product details');
           });
     },
-    // Navigate back to home page
     goToHome() {
       this.$router.push('/home'); // Navigate to the home page
     }
