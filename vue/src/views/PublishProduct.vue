@@ -3,17 +3,17 @@
     <h2 class="center-title">发布闲置</h2>
     <el-form :model="product" ref="form" label-width="120px">
       <!-- Product Name Input -->
-      <el-form-item label="Product Name" prop="name">
+      <el-form-item label="商品名称" prop="name">
         <el-input v-model="product.name" placeholder="Enter product name" class="short-input"></el-input>
       </el-form-item>
 
       <!-- Price Input -->
-      <el-form-item label="Price" prop="price">
+      <el-form-item label="价格" prop="price">
         <el-input v-model="product.price" placeholder="Enter product price" class="short-input"></el-input>
       </el-form-item>
 
 <!--       新增 Location 输入框-->
-      <el-form-item label="Location" prop="location">
+      <el-form-item label="地址" prop="location">
         <el-select v-model="product.address" placeholder="Select a province" class="short-input">
           <el-option v-for="province in provinces"
                      :key="province.code"
@@ -24,7 +24,7 @@
       </el-form-item>
 
       <!-- Image Upload -->
-      <el-form-item label="Image" prop="image">
+      <el-form-item label="图片" prop="image">
         <el-upload
             ref="upload"
             class="upload-demo"
@@ -43,7 +43,7 @@
       </el-form-item>
 
       <!-- Description Input -->
-      <el-form-item label="Description" prop="description">
+      <el-form-item label="描述" prop="description">
         <el-input type="textarea" v-model="product.description" placeholder="Enter product description"></el-input>
       </el-form-item>
 

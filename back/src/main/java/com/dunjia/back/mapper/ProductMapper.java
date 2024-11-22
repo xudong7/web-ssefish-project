@@ -23,4 +23,7 @@ public interface ProductMapper {
     void deleteProductById(Integer id);
 
     void updateProduct(Product product);
+
+    @Select("select * from products where sellerId = #{id}")
+    List<Product> getPublishedProducts(Integer id);
 }

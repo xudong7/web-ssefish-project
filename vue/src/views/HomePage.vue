@@ -17,7 +17,7 @@
         <el-button type="primary" @click="searchProducts">搜索</el-button>
       </el-col>
       <el-col :span="4" class="user-options">
-        <el-button type="success" @click="navigateToLogin">登出</el-button>
+        <el-button type="success" @click="logout">登出</el-button>
         <el-button @click="navigateChat">消息</el-button>
       </el-col>
     </el-row>
@@ -77,7 +77,7 @@ export default {
     },
   },
   methods: {
-    navigateToLogin() {
+    logout() {
       this.$router.push({ name: 'Login' }); // Navigate to the Login page
     },
     navigateChat() {

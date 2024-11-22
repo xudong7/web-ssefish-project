@@ -78,5 +78,9 @@ export const getUserList = () => {
   return axios.get('/api/users');
 }
 
+// 根据userId获取商品
+export const getPublishedProductById = (id) => {
+  return axios.get(`/api/publishedProducts/${id}`);
+}
 
 

@@ -40,4 +40,8 @@ public class ProductService {
         product.setCreateTime(LocalDateTime.now());  // 设置产品更新时间
         productMapper.updateProduct(product);  // 使用Mapper接口更新产品
     }
+
+    public List<Product> getPublishedProducts(Integer id) {
+        return productMapper.getPublishedProducts(id);  // 使用Mapper接口获取已发布产品
+    }
 }

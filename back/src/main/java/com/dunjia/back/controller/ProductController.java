@@ -65,4 +65,12 @@ public class ProductController {
         return Result.success(null);
     }
 
+    // 根据用户id得到其发布的product
+    @RequestMapping(value = "/publishedProducts/{id}", method = RequestMethod.GET)
+    public Result getPublishedProducts(@PathVariable Integer id) {
+        log.info("Get published products by id: {}", id);
+        List<Product> products = productService.getPublishedProducts(id);
+        return Result.success(products);
+    }
+
 }
