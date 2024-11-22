@@ -3,17 +3,17 @@
     <div class="register-form">
       <h1 class="form-title">注册校园二手闲置物品交易平台</h1>
 
-      <el-form :model="registerData" ref="form" label-width="120px">
-        <el-form-item label="Username" prop="username"
+      <el-form :model="user" ref="form" label-width="120px">
+        <el-form-item label="Name" prop="name"
                       :rules="[{ required: true, message: '请输入昵称', trigger: 'blur' }]">
-          <el-input v-model="registerData.nickname"
+          <el-input v-model="user.name"
                     placeholder="输入昵称"
                     class="input-white"></el-input>
         </el-form-item>
 
         <el-form-item label="Password" prop="password"
                       :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
-          <el-input type="password" v-model="registerData.password"
+          <el-input type="password" v-model="user.password"
                     placeholder="输入密码"
                     class="input-white"></el-input>
         </el-form-item>
@@ -23,7 +23,7 @@
                           { required: true, message: '请输入邮箱', trigger: 'blur' },
                           { type: 'email', message: '请输入有效的邮箱地址', trigger: ['blur', 'change'] }
                         ]">
-          <el-input v-model="registerData.email"
+          <el-input v-model="user.email"
                     placeholder="输入邮箱"
                     class="input-white"></el-input>
         </el-form-item>
@@ -38,13 +38,15 @@
 </template>
 
 <script>
+import { addUser} from "@/api";
+
 export default {
   data() {
     return {
-      registerData: {
-        Username: '',
-        Password: '',
-        email: ''
+      user: {
+        name: "",
+        Password: "",
+        email: "",
       },
       loading: false // Loading state
     };
@@ -53,15 +55,18 @@ export default {
     register() {
       this.loading = true; // Start loading
 
-      // 模拟注册成功的逻辑
-      if (this.registerData.nickname && this.registerData.password && this.registerData.email) {
-        // 如果输入有效，显示成功消息并跳转
-        this.$message.success('注册成功！');
-        this.$router.push('/login'); // 假设跳转回登录页面
-      } else {
-        // 清空输入框并显示错误消息
-        this.$message.error('注册失败: 请填写所有字段');
-      }
+      addUser(this.user)
+          .then(() => {
+            this.$message.success('注册成功'); // Show success message
+            this.$router.push({name: 'Login'}); // Redirect to login page
+          })
+          .catch(error => {
+            console.error('Failed to register:', error);
+            this.$message.error('注册失败'); // Show error message
+          })
+          .finally(() => {
+            this.loading = false; // End loading
+          });
 
       this.loading = false; // End loading
     },

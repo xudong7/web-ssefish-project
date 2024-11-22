@@ -2,12 +2,12 @@
   <div>
     <el-card>
       <div class="card-body">
-        <img :src="product.image" alt="product image" style="max-width: 100%; height: auto;"/>
+        <img :src="product.image" alt="product image" style="max-width: 80%; height: auto;"/>
         <p><strong>Name:</strong>{{product.name}}</p>
         <p><strong>Price:</strong> ¥ {{ product.price }}</p>
         <p><strong>Description:</strong> {{ product.description }}</p>
-        <p><strong>Seller:</strong> {{ product.sellerId }}</p>
-        <p><strong>Address:</strong>{{ product.address }}</p>
+        <p><strong>Seller:</strong> {{ user.name }} </p>
+        <p><strong>Location:</strong> {{ addressMap[product.address] }}</p>
         <el-button @click="goToHome">Back to Home</el-button>
       </div>
     </el-card>
@@ -15,21 +15,40 @@
 </template>
 
 <script>
-import { getProductDetail } from '@/api'; // Import API method
+import { getProductDetail, getSellerById } from '@/api'; // Import API method
 
 export default {
   data() {
     return {
-      product: {} // Store product details here
+      product: {}, // Store product details here
+      user: {}, // Store seller details here
+      addressMap: {
+        1: '南校区',
+        2: '东校区',
+        3: '北校区',
+        4: '深圳校区',
+        5: '珠海校区'
+      },
     };
   },
   methods: {
+    findSeller(sellerId) {
+      getSellerById(sellerId)
+          .then(response => {
+            this.user = response.data.data;
+          })
+          .catch(error => {
+            console.error("Failed to fetch user details:", error);
+            this.$message.error('Failed to fetch user details');
+          });
+    },
     // Fetch product details using the product ID from the route params
     fetchProductDetail() {
       const productId = this.$route.params.id; // Get product ID from the URL
       getProductDetail(productId)
           .then(response => {
             this.product = response.data.data; // Store product details in data
+            this.findSeller(this.product.sellerId);
           })
           .catch(error => {
             console.error("Failed to fetch product details:", error);

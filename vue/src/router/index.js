@@ -6,6 +6,7 @@ import UserProfile from '../views/UserProfile.vue';
 import ProductDetail from '../views/ProductDetail.vue';
 import Admin from '@/views/AdminPage.vue';
 import RegisterPage from '@/views/RegisterPage.vue';
+import ChatPage from '@/views/ChatPage.vue';
 
 const routes = [
     { path: '/', name: 'Login', component: LoginPage },
@@ -14,7 +15,8 @@ const routes = [
     { path: '/publish', name: 'PublishProduct', component: PublishProduct },
     { path: '/profile', name: 'UserProfile', component: UserProfile },
     { path: '/register', name: 'Register', component: RegisterPage},
-    { path: '/admin', name: 'Admin', component: Admin }
+    { path: '/admin', name: 'Admin', component: Admin },
+    { path: '/chat', name: 'Chat', component: ChatPage }
 ];
 
 const router = createRouter({
@@ -42,15 +44,21 @@ router.beforeEach((to, from, next) => {
         return next('/admin'); // 重定向到管理员主页
     }
 
+    // 页面刷新后，保存当前的路由路径
+    if (to.name) {
+        localStorage.setItem('currentRoute', to.fullPath);
+    }
+    // if (to.name !== 'Login') {
+    //     localStorage.setItem('currentRoute', to.fullPath);
+    // }
+
     next(); // 允许访问
 });
 
 // 页面刷新后恢复上次访问的路由
 router.isReady().then(() => {
     const savedRoute = localStorage.getItem('currentRoute');
-    if (savedRoute && savedRoute !== '/') {
-        router.push(savedRoute);
-    }
+    if (savedRoute) router.push(savedRoute); // 恢复上次的路由
 });
 
 export default router;

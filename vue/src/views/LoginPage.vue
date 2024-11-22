@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import { login } from '@/api'; // Import login API method
+
 export default {
   data() {
     return {
@@ -61,24 +63,39 @@ export default {
       // 启用加载状态
       this.loading = true;
 
-      // 模拟登录逻辑，根据用户名分配角色
-      setTimeout(() => {
-        if (this.loginData.name === 'admin' && this.loginData.password === 'admin') {
-          localStorage.setItem('userRole', 'admin'); // 保存角色为管理员
-          this.$router.push('/admin'); // 跳转到管理员页面
-        } else if (this.loginData.name === 'user' && this.loginData.password === 'user') {
-          localStorage.setItem('userRole', 'user'); // 保存角色为普通用户
-          this.$router.push('/home'); // 跳转到主页
-        } else {
-          // 登录失败，清空输入并提示错误
-          this.$message.error('Login failed: Invalid credentials');
-          this.loginData.name = '';
-          this.loginData.password = '';
-        }
-
-        // 停止加载状态
-        this.loading = false;
-      }, 1000); // 模拟网络延迟
+      login(this.loginData) // 调用登录接口
+          .then((res) => {
+            if (res.data.code === 1) {
+              this.$message.success('登录成功'); // 提示登录成功
+              // 模拟登录逻辑，根据用户名分配角色
+              setTimeout(() => {
+                if (this.loginData.name === 'admin' && this.loginData.password === 'admin') {
+                  localStorage.setItem('userRole', 'admin'); // 保存角色为管理员
+                  this.$router.push('/admin'); // 跳转到管理员页面
+                } else if (this.loginData.name !== '' && this.loginData.password !== '') {
+                  localStorage.setItem('userRole', 'user'); // 保存角色为普通用户
+                  this.$router.push('/home'); // 跳转到主页
+                }
+                // 停止加载状态
+                this.loading = false;
+              }, 500); // 模拟网络延迟
+            } else {
+              this.$message.error(res.data.message); // 提示登录失败
+              // 清空数据
+              this.loginData.name = '';
+              this.loginData.password = '';
+            }
+          })
+          .catch(error => {
+            console.error('Failed to login:', error);
+            this.$message.error('登录失败'); // 提示登录失败
+            // 清空数据
+            this.loginData.name = '';
+            this.loginData.password = '';
+          })
+          .finally(() => {
+            this.loading = false; // 停止加载状态
+          });
     },
     // 跳转到注册页面
     goToRegister() {

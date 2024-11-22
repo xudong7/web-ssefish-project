@@ -23,6 +23,7 @@ export const getProductList = () => {
   return axios.get('/api/products');
 }
 
+// 搜索商品
 export const searchProduct = (keyword) => {
   return axios.get(`/api/products/search?keyword=${keyword}`);
 }
@@ -46,6 +47,27 @@ export const updateUserProfile = (userData) => {
 export const upload = (image) => {
   return axios.post('/api/upload', image);
 }
+
+// 删除商品
+export const deleteProductById = (id) => {
+  return axios.delete(`/api/products/${id}`);
+}
+
+// 添加用户
+export const addUser = (user) => {
+  return axios.post('/api/users', user);
+}
+
+// 根据id获取用户
+export const getUserById = (id) => {
+  return axios.get(`/api/users/${id}`);
+}
+
+// 根据id获取卖家
+export const getSellerById = (id) => {
+  return axios.get(`/api/sellers/${id}`);
+}
+
 
 
 

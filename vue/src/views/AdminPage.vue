@@ -26,16 +26,20 @@
             <thead>
             <tr>
               <th>商品名称</th>
-              <th>类别</th>
+              <th>图片</th>
               <th>价格</th>
+              <th>地址</th>
+              <th>创建时间</th>
               <th>操作</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="product in pagedProducts" :key="product.id">
               <td>{{ product.name }}</td>
-              <td>{{ product.category }}</td>
+              <td><img :src="product.image" alt="商品图片" class="image"/></td>
               <td>{{ product.price }}</td>
+              <td>{{ product.address }}</td>
+              <td>{{ product.createTime }}</td>
               <td>
                 <button @click="editProduct(product)">编辑</button>
                 <button @click="deleteProduct(product.id)">删除</button>
@@ -132,6 +136,7 @@
 
 <script>
 import { ElPagination } from 'element-plus';
+import { getProductList, deleteProductById } from '../api';
 
 export default {
   name: 'AdminPage',
@@ -143,18 +148,7 @@ export default {
       currentTab: 'product', // 当前选中的 tab
       pageSize: 5, // 每页显示的商品数/用户数/交易记录数
       currentPage: 1, // 当前页数
-      products: [
-        { id: 1, name: '二手手机', category: '电子产品', price: 1200 },
-        { id: 2, name: '二手书', category: '书籍', price: 50 },
-        { id: 3, name: '笔记本电脑', category: '电子产品', price: 2500 },
-        { id: 4, name: '耳机', category: '电子产品', price: 300 },
-        { id: 5, name: '手表', category: '电子产品', price: 500 },
-        { id: 6, name: '电视机', category: '家电', price: 1500 },
-        { id: 7, name: '冰箱', category: '家电', price: 2200 },
-        { id: 8, name: '洗衣机', category: '家电', price: 1800 },
-        { id: 9, name: '空调', category: '家电', price: 3500 },
-        { id: 10, name: '冰箱', category: '家电', price: 2100 }
-      ],
+      products: [], // 商品数据
       users: [
         { id: 1, email: 'user1@example.com', picture: 'vue/src/assets/logo.png' },
         { id: 2, email: 'user2@example.com', picture: 'vue/src/assets/logo.png' },
@@ -197,6 +191,11 @@ export default {
     }
   },
   methods: {
+    getAllProducts() {
+      getProductList().then(response => {
+        this.products = response.data.data;
+      });
+    },
     logout() {
       this.$router.push({ name: 'Login' }); // Navigate to the Login page
     },
@@ -212,11 +211,9 @@ export default {
       alert(`商品已编辑: ${updatedProduct.name}`);
     },
     deleteProduct(id) {
-      const index = this.products.findIndex(product => product.id === id);
-      if (index !== -1) {
-        this.products.splice(index, 1);
-      }
-      alert(`商品已删除`);
+      deleteProductById(id).then(() => {
+        alert(`商品已删除`);
+      });
     },
     editUser(user) {
       alert(`编辑用户 ${user.email}`);
@@ -231,6 +228,9 @@ export default {
     handlePageChange(page) {
       this.currentPage = page;
     }
+  },
+  created() {
+    this.getAllProducts();
   }
 };
 </script>
@@ -348,5 +348,10 @@ button {
 
 button:hover {
   background-color: #d5d5d5;
+}
+
+.image {
+  max-width: 100px;
+  height: auto;
 }
 </style>

@@ -31,4 +31,13 @@ public class ProductService {
         product.setCreateTime(LocalDateTime.now()); // 设置产品创建时间
         productMapper.addProduct(product);  // 使用Mapper接口添加产品
     }
+
+    public void deleteProductById(Integer id) {
+        productMapper.deleteProductById(id);  // 使用Mapper接口删除产品
+    }
+
+    public void updateProduct(Product product) {
+        product.setCreateTime(LocalDateTime.now());  // 设置产品更新时间
+        productMapper.updateProduct(product);  // 使用Mapper接口更新产品
+    }
 }

@@ -18,7 +18,7 @@
       </el-col>
       <el-col :span="4" class="user-options">
         <el-button type="success" @click="navigateToLogin">登出</el-button>
-        <el-button>消息</el-button>
+        <el-button @click="navigateChat">消息</el-button>
       </el-col>
     </el-row>
 
@@ -79,6 +79,9 @@ export default {
   methods: {
     navigateToLogin() {
       this.$router.push({ name: 'Login' }); // Navigate to the Login page
+    },
+    navigateChat() {
+      this.$router.push({ name: 'Chat' }); // Navigate to the Chat page
     },
     searchProducts() {
       searchProduct(this.searchQuery).then(response => {

@@ -12,7 +12,7 @@ module.exports = defineConfig({
     }
   },
 })
-// vue.config.js (Vue CLI ��Ŀ)
+
 module.exports = {
   chainWebpack: config => {
     config.resolve.alias

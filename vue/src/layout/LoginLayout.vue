@@ -9,9 +9,9 @@
         <router-view></router-view>
       </div>
     </el-main>
-<!--    <el-footer class="login-footer">-->
-<!--      <p>© 2024 二手物品交易平台 | All Rights Reserved</p>-->
-<!--    </el-footer>-->
+    <!--    <el-footer class="login-footer">-->
+    <!--      <p>© 2024 二手物品交易平台 | All Rights Reserved</p>-->
+    <!--    </el-footer>-->
   </div>
 </template>
 
@@ -23,7 +23,6 @@
   min-height: 100vh;
   background: linear-gradient(to bottom, #a9ccf1, #f4f4f4); /* 渐变背景 */
 }
-
 
 
 </style>

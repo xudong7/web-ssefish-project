@@ -4,8 +4,6 @@ import com.dunjia.back.pojo.Product;
 import com.dunjia.back.pojo.Result;
 import com.dunjia.back.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.io.ResolverUtil;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +42,20 @@ public class ProductController {
     public Result addProduct(@RequestBody Product product) {
         log.info("Add product: {}", product);
         productService.addProduct(product);
+        return Result.success(null);
+    }
+
+    @RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
+    public Result deleteProductById(@PathVariable Integer id) {
+        log.info("delete product by id: {}", id);
+        productService.deleteProductById(id);
+        return Result.success(null);
+    }
+
+    @RequestMapping(value = "/products", method = RequestMethod.PUT)
+    public Result updateProduct(@RequestBody Product product) {
+        log.info("Update product: {}", product);
+        productService.updateProduct(product);
         return Result.success(null);
     }
 
