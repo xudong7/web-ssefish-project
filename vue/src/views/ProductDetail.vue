@@ -3,11 +3,13 @@
     <el-card>
       <div class="card-body">
         <img :src="product.image" alt="product image" style="max-width: 60%; height: auto;"/>
-        <p><strong>Name:</strong>{{product.name}}</p>
-        <p><strong>Price:</strong> ¥ {{ product.price }}</p>
-        <p><strong>Description:</strong> {{ product.description }}</p>
-        <p><strong>Seller:</strong> {{ seller.name }} </p>
-        <p><strong>Location:</strong> {{ addressMap[product.address] }}</p>
+        <p><strong>名称:</strong> {{product.name}}</p>
+        <p><strong>价格:</strong> ¥ {{ product.price }}</p>
+        <p><strong>描述:</strong> {{ product.description }}</p>
+        <p><strong>卖家:</strong> {{ seller.name }} </p>
+        <p><strong>商品新旧程度:</strong> {{ conditions[product.condition] }}</p>
+        <p><strong>售卖状态:</strong> {{ status[product.status] }}</p>
+        <p><strong>地址:</strong> {{ addressMap[product.address] }}</p>
         <el-button @click="goToHome">返回</el-button>
       </div>
     </el-card>
@@ -29,6 +31,14 @@ export default {
         4: '深圳校区',
         5: '珠海校区'
       },
+      conditions: {
+        1: '二手',
+        2: '全新'
+      },
+      status: {
+        1: '待售',
+        2: '已售'
+      }
     };
   },
   methods: {

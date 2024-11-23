@@ -125,6 +125,9 @@ export default {
         return;
       }
 
+      // Set the seller ID to the current user's ID
+      this.product.sellerId = this.$store.state.user.id;
+
       // Call the API to publish the product
       publishProduct(this.product)
           .then((result) => {
