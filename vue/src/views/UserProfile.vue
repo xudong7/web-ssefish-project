@@ -30,10 +30,6 @@
                 <el-icon><el-icon-receipt /></el-icon>
                 <span>购买记录</span>
               </el-menu-item>
-              <el-menu-item index="just-off-shelf">
-                <el-icon><el-icon-remove /></el-icon>
-                <span>已下架</span>
-              </el-menu-item>
               <el-menu-item index="published">
                 <el-icon><el-icon-check-circle /></el-icon>
                 <span>已发布</span>
@@ -110,28 +106,6 @@
               </tbody>
             </table>
           </div>
-          <div v-else-if="activeIndex === 'just-off-shelf'">
-            <h3>刚刚下架</h3>
-            <table>
-              <thead>
-              <tr>
-                <th>商品名称</th>
-                <th>价格</th>
-                <th>操作</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="item in removedItems" :key="item.id">
-                <td>{{ item.name }}</td>
-                <td>¥{{ item.price }}</td>
-                <td>
-                  <button>编辑</button>
-                  <button>删除</button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
           <div v-else-if="activeIndex === 'published'">
             <h3>已发布商品</h3>
             <table>
@@ -167,9 +141,9 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { ElIcon, ElIconShoppingCart, ElIconPieChart, ElIconReceipt, ElIconRemove, ElIconCheckCircle } from 'element-plus';
+import { ElIcon, ElIconShoppingCart, ElIconPieChart, ElIconReceipt, ElIconCheckCircle } from 'element-plus';
 import 'element-plus/dist/index.css';
-import { getPublishedProductById } from '@/api'; // 导入API方法
+import { getPublishedProductBySellerId } from '@/api'; // 导入API方法
 
 export default {
   name: 'SidebarMenu',
@@ -178,7 +152,6 @@ export default {
     ElIconShoppingCart,
     ElIconPieChart,
     ElIconReceipt,
-    ElIconRemove,
     ElIconCheckCircle
   },
   setup() {
@@ -201,14 +174,10 @@ export default {
       { id: 1, name: 'Bought Item A', price: 120 },
       { id: 2, name: 'Bought Item B', price: 220 }
     ]);
-    const removedItems = ref([
-      { id: 1, name: 'Off Shelf Item A', price: 110 },
-      { id: 2, name: 'Off Shelf Item B', price: 210 }
-    ]);
     const publishedItems = ref([]); // 动态获取已发布商品
 
     const getPublishedItems = () => {
-      getPublishedProductById(user.value.id)
+      getPublishedProductBySellerId(user.value.id)
           .then(response => {
             publishedItems.value = response.data.data || [];
           })
@@ -248,7 +217,6 @@ export default {
       cartItems,
       soldRecords,
       purchaseRecords,
-      removedItems,
       publishedItems,
       handleSelect,
       editProfile,
@@ -387,4 +355,3 @@ button:last-child:hover {
   background-color: #ff8585;
 }
 </style>
-

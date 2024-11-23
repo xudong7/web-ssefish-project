@@ -11,38 +11,44 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
 public class ProductController {
     @Autowired
     private ProductService productService;
 
     // 获取所有product信息
-    @RequestMapping(value = "/products", method = RequestMethod.GET)
+    @GetMapping("/products")
     public Result getAllProducts() {
         log.info("Get all products");
         List<Product> products = productService.getAllProducts();
         return Result.success(products);
     }
 
-    // 根据关键字搜索product信息
-    @RequestMapping(value = "/products/search", method = RequestMethod.GET)
-    public Result getSearchedProducts(@RequestParam(defaultValue = "") String keyword) {
-        log.info("Get searched products with keyword: {}", keyword);
-
-        List<Product> products = productService.getSearchedProducts(keyword);
-        return Result.success(products);
-    }
-
     // 根据id获取product信息
-    @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
+    @GetMapping("/products/{id}")
     public Result getProductById(@PathVariable Integer id) {
         log.info("Get product by id: {}", id);
         Product product = productService.getProductById(id);
         return Result.success(product);
     }
 
+    // 根据sellerId获取product信息
+    @GetMapping("/products/profile/{sellerId}")
+    public Result getProductsBySellerId(@PathVariable Integer sellerId) {
+        log.info("Get products by seller id: {}", sellerId);
+        List<Product> products = productService.getPublishedProducts(sellerId);
+        return Result.success(products);
+    }
+
+    // 根据关键字搜索product信息
+    @GetMapping("/products/search")
+    public Result getSearchedProducts(@RequestParam(defaultValue = "") String keyword) {
+        log.info("Get searched products with keyword: {}", keyword);
+        List<Product> products = productService.getSearchedProducts(keyword);
+        return Result.success(products);
+    }
+
     // 添加product
-    @RequestMapping(value = "/products", method = RequestMethod.POST)
+    @PostMapping("/products")
     public Result addProduct(@RequestBody Product product) {
         log.info("Add product: {}", product);
         productService.addProduct(product);
@@ -50,27 +56,11 @@ public class ProductController {
     }
 
     // 根据id删除product
-    @RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/products/{id}")
     public Result deleteProductById(@PathVariable Integer id) {
         log.info("delete product by id: {}", id);
         productService.deleteProductById(id);
         return Result.success(null);
-    }
-
-    // 更新product信息
-    @RequestMapping(value = "/products", method = RequestMethod.PUT)
-    public Result updateProduct(@RequestBody Product product) {
-        log.info("Update product: {}", product);
-        productService.updateProduct(product);
-        return Result.success(null);
-    }
-
-    // 根据用户id得到其发布的product
-    @RequestMapping(value = "/publishedProducts/{id}", method = RequestMethod.GET)
-    public Result getPublishedProducts(@PathVariable Integer id) {
-        log.info("Get published products by id: {}", id);
-        List<Product> products = productService.getPublishedProducts(id);
-        return Result.success(products);
     }
 
 }

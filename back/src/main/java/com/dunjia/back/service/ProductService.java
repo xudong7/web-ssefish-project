@@ -5,8 +5,6 @@ import com.dunjia.back.pojo.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,11 +32,6 @@ public class ProductService {
 
     public void deleteProductById(Integer id) {
         productMapper.deleteProductById(id);  // 使用Mapper接口删除产品
-    }
-
-    public void updateProduct(Product product) {
-        product.setCreateTime(LocalDateTime.now());  // 设置产品更新时间
-        productMapper.updateProduct(product);  // 使用Mapper接口更新产品
     }
 
     public List<Product> getPublishedProducts(Integer id) {

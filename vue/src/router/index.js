@@ -48,9 +48,6 @@ router.beforeEach((to, from, next) => {
     if (to.name) {
         localStorage.setItem('currentRoute', to.fullPath);
     }
-    // if (to.name !== 'Login') {
-    //     localStorage.setItem('currentRoute', to.fullPath);
-    // }
 
     next(); // 允许访问
 });
