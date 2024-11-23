@@ -4,7 +4,7 @@
       <!-- 个人信息 -->
       <el-header class="header">
         <div class="avatar-wrapper">
-          <el-avatar :src="user.img" size="64"></el-avatar>
+          <el-avatar :src="user.picture" size="64"></el-avatar>
           <div class="user-info">
             <h2>{{ user.name }}</h2>
             <p>ID: {{ user.id }}</p>
@@ -22,6 +22,10 @@
                 <el-icon><el-icon-shopping-cart /></el-icon>
                 <span>购物车</span>
               </el-menu-item>
+              <el-menu-item index="published">
+                <el-icon><el-icon-check-circle /></el-icon>
+                <span>已发布</span>
+              </el-menu-item>
               <el-menu-item index="sales">
                 <el-icon><el-icon-pie-chart /></el-icon>
                 <span>出售记录</span>
@@ -29,10 +33,6 @@
               <el-menu-item index="purchases">
                 <el-icon><el-icon-receipt /></el-icon>
                 <span>购买记录</span>
-              </el-menu-item>
-              <el-menu-item index="published">
-                <el-icon><el-icon-check-circle /></el-icon>
-                <span>已发布</span>
               </el-menu-item>
             </el-menu>
           </el-scrollbar>
@@ -155,11 +155,8 @@ export default {
     ElIconCheckCircle
   },
   setup() {
-    const user = ref({
-      image: 'path/to/avatar.jpg',
-      name: '用户名',
-      id: '1',
-    });
+    // user从localStorage中获取
+    const user = ref(JSON.parse(localStorage.getItem('user')) || {});
 
     const activeIndex = ref('cart'); // 默认选中购物车
     const cartItems = ref([

@@ -34,13 +34,4 @@ class BackApplicationTests {
 		System.out.println(jwt);
 	}
 
-	@Test
-	void testParseJwt() {
-		Claims claims = Jwts.parser()
-				.setSigningKey("secret")
-				.parseClaimsJws("eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYWRtaW4iLCJpZCI6MSwiZXhwIjoxNzMyMTIyNDAxfQ.gx3q6Bxf1dwE0c7aXPdQcHsgv6FrXh6HdsVQgboMyvI")
-				.getBody();
-
-		System.out.println(claims);
-	}
 }

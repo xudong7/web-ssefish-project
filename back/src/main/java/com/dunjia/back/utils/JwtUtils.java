@@ -14,9 +14,8 @@ public class JwtUtils {
     private static final Long expire = 30 * 60 * 1000L;  // token 过期时间 30 分钟
 
     // 生成 jwt
-    public static String generateJwt(Map<String, Object> claims) {
+    public static String generateJwt() {
         return Jwts.builder()
-                .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, signKey)
                 .setExpiration(new Date(System.currentTimeMillis() + expire))  // 设置过期时间
                 .compact();

@@ -28,10 +28,6 @@ public class UserService {
         userMapper.addUser(user);
     }
 
-    public void updateUser(User user) {
-        userMapper.updateUser(user);
-    }
-
     public void deleteUserById(Integer id) {
         userMapper.deleteUserById(id);
     }

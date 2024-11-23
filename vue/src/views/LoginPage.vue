@@ -67,6 +67,10 @@ export default {
           .then((res) => {
             if (res.data.code === 1) {
               this.$message.success('登录成功'); // 提示登录成功
+
+              localStorage.setItem('token', res.data.data.token); // 保存token
+              localStorage.setItem('user', JSON.stringify(res.data.data.user)); // 保存登录用户
+
               // 模拟登录逻辑，根据用户名分配角色
               setTimeout(() => {
                 if (this.loginData.name === 'admin' && this.loginData.password === 'admin') {

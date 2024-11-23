@@ -2,7 +2,7 @@
   <div>
     <el-header>
       <el-menu mode="horizontal" :default-active="activeMenu">
-        <el-menu-item index="1" @click="goAdmin">Admin Dashboard</el-menu-item>
+        <el-menu-item index="1" @click="goAdmin">后台</el-menu-item>
       </el-menu>
     </el-header>
     <el-main>

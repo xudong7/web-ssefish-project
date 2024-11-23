@@ -66,6 +66,7 @@
             <thead>
             <tr>
               <th>用户id</th>
+              <th>用户名</th>
               <th>邮箱</th>
               <th>头像</th>
               <th>操作</th>
@@ -74,8 +75,9 @@
             <tbody>
             <tr v-for="user in pagedUsers" :key="user.id">
               <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
               <td>{{ user.email }}</td>
-              <td><img :src="user.picture" alt="头像" /></td>
+              <td><img :src="user.picture" alt="头像" class="image" /></td>
               <td>
                 <button @click="editUser(user)">编辑</button>
                 <button @click="deleteUser(user.id)">删除</button>

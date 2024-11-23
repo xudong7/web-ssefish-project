@@ -98,6 +98,9 @@ export default {
                 message: 'Image uploaded successfully!',
                 type: 'success',
               });
+
+              // Clear the selected file and reset the image preview
+              this.$refs.upload.clearFiles();
             } else {
               this.$message({
                 message: 'Failed to upload image',
