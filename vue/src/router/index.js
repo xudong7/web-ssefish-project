@@ -27,7 +27,7 @@ const router = createRouter({
 // 路由守卫：根据角色重定向
 router.beforeEach((to, from, next) => {
     const role = localStorage.getItem('userRole'); // 获取角色
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token');
 
     // 如果没有 token，跳转到登录页面
     if (!token && to.name !== 'Login') {

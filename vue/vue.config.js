@@ -4,7 +4,7 @@ module.exports = defineConfig({
   devServer: {
     port: 3000,  // 设置前端 Vue.js 运行的端口
     proxy: {
-      '/api': {
+      '/': {
         target: 'http://localhost:8080',  // 设置后端 Spring Boot 的 API 地址
         changeOrigin: true,               // 为虚拟主机做适配
         secure: false                     // 如果后端没有使用 https，设置为 false
