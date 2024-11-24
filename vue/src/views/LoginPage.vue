@@ -32,7 +32,7 @@
         <el-form-item>
           <el-button
               type="primary"
-              @click="login"
+              @click="goToLogin"
               :loading="loading"
           >登录</el-button>
           <el-button
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     // 登录方法
-    login() {
+    goToLogin() {
       // 启用加载状态
       this.loading = true;
 
@@ -101,6 +101,21 @@ export default {
             this.loading = false; // 停止加载状态
           });
     },
+    // 检查是否已经登录
+    checkLoginStatus() {
+      const user = localStorage.getItem('user');
+
+      // Retrieve user info and set the login data
+      if (user) {
+        const parsedUser = JSON.parse(user);
+        this.loginData.name = parsedUser.name;  // Set the username
+        this.loginData.password = parsedUser.password;  // Convert the password to string
+        this.goToLogin();
+      } else {
+        this.loginData.name = '';
+        this.loginData.password = '';
+      }
+    },
     // 跳转到注册页面
     goToRegister() {
       this.$router.push({ name: 'Register' });
@@ -116,6 +131,7 @@ export default {
   },
   mounted() {
     this.disableScroll(); // 组件挂载时禁用滚动
+    this.checkLoginStatus(); // 检查登录状态
   },
   beforeUnmount() {
     this.enableScroll(); // 组件卸载时启用滚动

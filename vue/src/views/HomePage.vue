@@ -78,6 +78,10 @@ export default {
   },
   methods: {
     logout() {
+      localStorage.removeItem('token'); // Remove the token from local storage
+      localStorage.removeItem('user'); // Remove the user object from local storage
+      localStorage.removeItem('userRole'); // Remove the user role from local storage
+
       this.$router.push({ name: 'Login' }); // Navigate to the Login page
     },
     navigateChat() {
