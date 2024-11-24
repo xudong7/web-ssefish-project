@@ -198,6 +198,9 @@ export default {
       });
     },
     logout() {
+      localStorage.removeItem('token'); // Remove the token from local storage
+      localStorage.removeItem('user'); // Remove the user object from local storage
+      localStorage.removeItem('userRole'); // Remove the user role from local storage
       this.$router.push({ name: 'Login' }); // Navigate to the Login page
     },
     navigateTo(tab) {
@@ -214,6 +217,8 @@ export default {
     deleteProduct(id) {
       deleteProductById(id).then(() => {
         alert(`商品已删除`);
+        // 刷新页面
+        location.reload();
       });
     },
     editUser(user) {
@@ -226,6 +231,8 @@ export default {
         } else {
           deleteUserById(id).then(() => {
             alert(`用户已删除`);
+            // 刷新页面
+            location.reload();
           });
         }
       });
