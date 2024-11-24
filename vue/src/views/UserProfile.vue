@@ -177,6 +177,7 @@ export default {
       getPublishedProductBySellerId(user.value.id)
           .then(response => {
             publishedItems.value = response.data.data || [];
+            alert(publishedItems.value);
           })
           .catch(error => {
             console.error('Failed to fetch published items:', error);
