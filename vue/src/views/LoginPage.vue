@@ -7,8 +7,7 @@
         <el-form-item
             label="用户名"
             prop="username"
-            :rules="[{ required: true, message: 'Please input username', trigger: 'blur' }]"
-        >
+            :rules="[{ required: true, message: 'Please input username', trigger: 'blur' }]">
           <el-input
               v-model="loginData.name"
               placeholder="Enter username"
@@ -19,8 +18,7 @@
         <el-form-item
             label="密码"
             prop="password"
-            :rules="[{ required: true, message: 'Please input password', trigger: 'blur' }]"
-        >
+            :rules="[{ required: true, message: 'Please input password', trigger: 'blur' }]">
           <el-input
               type="password"
               v-model="loginData.password"
@@ -33,11 +31,13 @@
           <el-button
               type="primary"
               @click="goToLogin"
-              :loading="loading"
-          >登录</el-button>
+              :loading="loading">
+            登录
+          </el-button>
           <el-button
-              @click="goToRegister"
-          >注册</el-button>
+              @click="goToRegister">
+            注册
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -80,6 +80,14 @@ export default {
                   localStorage.setItem('userRole', 'user'); // 保存角色为普通用户
                   this.$router.push('/home'); // 跳转到主页
                 }
+
+                // 登录成功后删除用户密码 避免密码泄露
+                const storedUser = JSON.parse(localStorage.getItem('user'));
+                if (storedUser && storedUser.password) {
+                  delete storedUser.password; // Remove the password from user data
+                  localStorage.setItem('user', JSON.stringify(storedUser)); // Update user in localStorage
+                }
+
                 // 停止加载状态
                 this.loading = false;
               }, 500); // 模拟网络延迟
@@ -118,7 +126,7 @@ export default {
     },
     // 跳转到注册页面
     goToRegister() {
-      this.$router.push({ name: 'Register' });
+      this.$router.push({name: 'Register'});
     },
     // 禁用滚动
     disableScroll() {
@@ -145,13 +153,16 @@ export default {
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
   height: 100vh; /* 全屏高度 */
-  background-color: #a9ccf1; /* 背景颜色 */
+  background-image: url('@/assets/loginBack.jpg'); /* 背景图片 */
+  background-size: cover; /* 背景图片填充 */
+  background-position: center; /* 背景图片居中 */
+  background-repeat: no-repeat; /* 背景不重复 */
 }
 
 .login-form {
   max-width: 400px;
   padding: 50px;
-  background: white; /* 表单背景颜色 */
+  background: rgba(255, 255, 255, 0.8); /* 白色背景加透明度 */
   border-radius: 8px;
   text-align: center; /* 文本居中 */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */

@@ -10,7 +10,7 @@
             :class="['conversation-item', activeConversation === index ? 'active' : '']"
             @click="selectConversation(index)"
         >
-          <el-avatar :src="conversation.avatar" />
+          <el-avatar :src="conversation.avatar"/>
           <div class="conversation-info">
             <div class="conversation-name">{{ conversation.name }}</div>
             <div class="conversation-preview">
@@ -25,7 +25,7 @@
     <div class="chat-main">
       <el-header class="chat-header">
         <div class="chat-participants">
-          <el-avatar :src="currentConversation?.avatar" />
+          <el-avatar :src="currentConversation?.avatar"/>
           <span class="chat-name">{{ currentConversation?.name || 'Select a conversation' }}</span>
         </div>
       </el-header>
@@ -66,15 +66,15 @@ export default {
           name: "Seller A",
           avatar: "/seller-a-avatar.png",
           messages: [
-            { content: "Hi, is the item available?", isMine: false },
-            { content: "Yes, it's still available.", isMine: true },
+            {content: "Hi, is the item available?", isMine: false},
+            {content: "Yes, it's still available.", isMine: true},
           ],
         },
         {
           name: "Buyer B",
           avatar: "/buyer-b-avatar.png",
           messages: [
-            { content: "Can you provide more details about the item?", isMine: false },
+            {content: "Can you provide more details about the item?", isMine: false},
           ],
         },
       ],
@@ -115,72 +115,74 @@ export default {
 </script>
 
 <style scoped>
-
 .chat-container {
   display: flex;
   height: 100vh;
-  border-radius: 10px; /* 圆角 */
+  border-radius: 12px; /* 圆角 */
   overflow: hidden; /* 禁止溢出 */
 }
 
 /* 左侧历史会话列表 */
 .chat-sidebar {
   width: 25%;
-  background-color: #f5f5f5;
+  background-color: #f7f7f7;
   border-right: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  border-top-left-radius: 10px; /* 左上角圆角 */
-  border-bottom-left-radius: 10px; /* 左下角圆角 */
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1); /* 加阴影 */
 }
 
 .chat-history-title {
-  padding: 10px 15px;
+  padding: 18px 20px;
   font-weight: bold;
-  font-size: 16px;
-  background-color: lightskyblue;
+  font-size: 18px;
+  background-color: #4fa3f7;
   color: white;
   text-align: center;
-  border-top-left-radius: 10px; /* 左上角圆角 */
+  border-top-left-radius: 12px;
 }
 
 .chat-history-list {
   flex: 1;
-  padding: 10px;
-  overflow-y: auto; /* 允许历史会话列表滚动 */
+  padding: 15px;
+  overflow-y: auto;
 }
 
 .conversation-item {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 12px;
   cursor: pointer;
-  border-radius: 8px; /* 圆角 */
-  margin-bottom: 5px;
-  transition: background-color 0.2s;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .conversation-item:hover {
   background-color: #e6f7ff;
+  transform: scale(1.02);
 }
 
 .conversation-item.active {
-  background-color: lightskyblue;
+  background-color: #4fa3f7;
   color: white;
 }
 
 .conversation-info {
-  margin-left: 10px;
+  margin-left: 15px;
   flex: 1;
 }
 
 .conversation-name {
   font-weight: bold;
+  font-size: 16px;
 }
 
 .conversation-preview {
   font-size: 14px;
-  color: gray;
+  color: #888;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -192,24 +194,32 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  border-top-right-radius: 10px; /* 右上角圆角 */
-  border-bottom-right-radius: 10px; /* 右下角圆角 */
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
-/* 顶部聊天栏 */
 .chat-header {
-  background-color: lightskyblue;
+  background-color: #4fa3f7;
   color: white;
-  padding: 10px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
-  border-top-right-radius: 10px; /* 右上角圆角 */
+  border-top-right-radius: 12px;
 }
 
-/* 消息内容区 */
+.chat-participants {
+  display: flex;
+  align-items: center;
+}
+
+.chat-name {
+  margin-left: 10px;
+  font-size: 18px;
+}
+
 .chat-messages-container {
   flex: 1;
-  padding: 10px;
+  padding: 20px;
   overflow-y: auto;
 }
 
@@ -219,38 +229,43 @@ export default {
 }
 
 .message {
-  max-width: 60%;
-  padding: 10px;
-  border-radius: 8px; /* 圆角 */
-  margin: 5px 0;
+  max-width: 70%;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 8px 0;
   word-wrap: break-word;
 }
 
 .message.mine {
   align-self: flex-end;
-  background-color: lightskyblue;
+  background-color: #4fa3f7;
   color: white;
-  border-radius: 12px 12px 0 12px; /* 消息右侧圆角 */
+  border-radius: 12px 12px 0 12px;
 }
 
 .message.partner {
   align-self: flex-start;
   background-color: #f0f0f0;
-  border-radius: 12px 12px 12px 0; /* 消息左侧圆角 */
+  border-radius: 12px 12px 12px 0;
 }
 
 /* 底部输入栏 */
 .chat-footer {
   display: flex;
   align-items: center;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-bottom-right-radius: 10px; /* 右下角圆角 */
+  padding: 12px 20px;
+  background-color: #f7f7f7;
+  border-bottom-right-radius: 12px;
 }
 
 .chat-input {
   flex: 1;
-  margin-right: 10px;
-  border-radius: 20px; /* 输入框圆角 */
+  margin-right: 15px;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.el-button {
+  border-radius: 50px; /* 圆形按钮 */
 }
 </style>

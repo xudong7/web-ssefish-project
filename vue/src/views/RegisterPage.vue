@@ -19,10 +19,8 @@
         </el-form-item>
 
         <el-form-item label="邮箱" prop="email"
-                      :rules="[
-                          { required: true, message: '请输入邮箱', trigger: 'blur' },
-                          { type: 'email', message: '请输入有效的邮箱地址', trigger: ['blur', 'change'] }
-                        ]">
+                      :rules="[ { required: true, message: '请输入邮箱', trigger: 'blur' },
+                                { type: 'email', message: '请输入有效的邮箱地址', trigger: ['blur', 'change'] } ]">
           <el-input v-model="user.email"
                     placeholder="输入邮箱"
                     class="input-white"></el-input>
@@ -95,7 +93,10 @@ export default {
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
   height: 100vh; /* Full viewport height */
-  background-color: #a9ccf1; /* Optional background color for the full screen */
+  background-image: url('@/assets/loginBack.jpg'); /* Add background image */
+  background-size: cover; /* Ensure the image covers the entire container */
+  background-position: center; /* Center the background image */
+  background-repeat: no-repeat; /* Prevent repeating background */
 }
 
 .register-form {

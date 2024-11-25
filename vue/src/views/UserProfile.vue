@@ -10,7 +10,7 @@
             <p>ID: {{ user.id }}</p>
           </div>
         </div>
-        <el-button plain @click="editProfile">修改个人信息</el-button>
+        <el-button plain @click="showEditDialog">修改个人信息</el-button>
       </el-header>
 
       <el-container>
@@ -136,11 +136,32 @@
       </el-container>
     </el-container>
   </div>
+
+  <!-- 修改用户的对话框 -->
+  <el-dialog title="修改用户" v-model="editDialogVisible" width="50%" @close="editDialogClosed" :close-on-click-modal="false">
+    <!-- 内容主体区 -->
+    <el-form :model="editUserForm" :rules="editUserFormRules" ref="editUserFormRef" label-width="70px">
+      <el-form-item label="头像" prop="picture">
+        <el-input v-model="editUserForm.picture"></el-input>
+      </el-form-item>
+      <el-form-item label="校区" prop="address">
+        <el-input v-model="editUserForm.address"></el-input>
+      </el-form-item>
+      <el-form-item label="简介" prop="intro">
+        <el-input v-model="editUserForm.intro"></el-input>
+      </el-form-item>
+
+    </el-form>
+    <!-- 底部区 -->
+    <span class="dialog-footer">
+    <el-button @click="editDialogVisible = false">取消</el-button>
+    <el-button type="primary" @click="editUser">确定</el-button>
+  </span>
+  </el-dialog>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
 import { ElIcon, ElIconShoppingCart, ElIconPieChart, ElIconReceipt, ElIconCheckCircle } from 'element-plus';
 import 'element-plus/dist/index.css';
 import { getPublishedProductBySellerId } from '@/api'; // 导入API方法
@@ -177,11 +198,10 @@ export default {
       getPublishedProductBySellerId(user.value.id)
           .then(response => {
             publishedItems.value = response.data.data || [];
-            alert(publishedItems.value);
           })
           .catch(error => {
             console.error('Failed to fetch published items:', error);
-            ElMessage.error('Failed to fetch published items');
+            //ElMessage.error('Failed to fetch published items');
           });
     };
 
@@ -189,25 +209,15 @@ export default {
       activeIndex.value = key;
     };
 
-    const editProfile = () => {
-      ElMessageBox.prompt('请输入新用户名', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputPattern: /^.{1,50}$/,
-        inputErrorMessage: '用户名不能为空或超长',
-      })
-          .then(({ value }) => {
-            user.value.name = value;
-            ElMessage.success('用户名修改成功');
-          })
-          .catch(() => {
-            ElMessage.info('取消修改用户名');
-          });
+    const editDialogVisible = ref(false); // 控制对话框的显示与隐藏
+    const showEditDialog = () => {
+      editDialogVisible.value = true; // 显示对话框
     };
 
     onMounted(() => {
       getPublishedItems(); // 加载已发布商品数据
     });
+
 
     return {
       user,
@@ -217,11 +227,42 @@ export default {
       purchaseRecords,
       publishedItems,
       handleSelect,
-      editProfile,
+      editDialogVisible, // 添加到返回的对象中
+      showEditDialog, // 添加到返回的对象中
+
+      //获取用户列表的参数对象
+      queryInfo: {
+        query: "",
+        pagenum: 1, //当前的页数
+        pagesize: 2, //每页的数量
+      },
+      userList: [],
+      total: 0,
+      addDialogVisible: false, //控制添加用户对话框的显示与隐藏
+      //添加用户的表单数据
+      addUserForm: {},
+      //修改用户的表单数据
+      editUserForm: {},
+      /*
+      //修改表单的验证规则对象
+      editUserFormRules: {
+        picture: [{required:true,message:'请上传图片',trigger:'blur'}],
+        mobile: [{required:true,message:'请输入手机号',trigger:'blur'}]
+      },
+      //添加表单的验证规则对象
+      addUserFormRules: {
+        username: [{required:true,message:'请输入用户名',trigger:'blur'},
+          {min:3,max:10,message:'用户名长度在3~10个字符',trigger:'blur'}],
+        password: [{required:true,message:'请输入密码',trigger:'blur'},
+          {min:6,max:15,message:'密码长度在6~15个字符',trigger:'blur'}],
+        email: [{required:true,message:'请输入邮箱',trigger:'blur'}],
+        mobile: [{required:true,message:'请输入手机号',trigger:'blur'}]
+      }*/
     };
   }
 };
 </script>
+
 
 <style scoped>
 /* 顶部用户信息样式 */
@@ -352,4 +393,12 @@ button:last-child {
 button:last-child:hover {
   background-color: #ff8585;
 }
+
+.dialog-footer {
+  display: flex;
+  justify-content: center; /* 居中 */
+  gap: 20px; /* 设置按钮之间的间距 */
+  padding: 10px 0; /* 给底部区域添加适当的内边距 */
+}
+
 </style>

@@ -22,6 +22,30 @@
       </el-col>
     </el-row>
 
+    <!-- Sorting Bar (横栏) -->
+    <el-row class="sorting-bar" type="flex" justify="start" align="middle" style="padding: 20px 0;">
+      <!-- 综合排序 -->
+      <el-col :span="3">
+        <el-select v-model="sortType" placeholder="综合" style="width: 100%; min-width: 10px">
+          <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-col>
+
+      <!-- 发布时间排序 -->
+      <el-col :span="3">
+        <el-select v-model="timeFilter" placeholder="发布时间" style="width: 100%; min-width: 10px">
+          <el-option v-for="item in timeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-col>
+
+      <!-- 价格排序 -->
+      <el-col :span="3">
+        <el-select v-model="priceSort" placeholder="价格" style="width: 100%; min-width: 10px">
+          <el-option v-for="item in priceOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-col>
+    </el-row>
+
     <!-- Product Grid Section -->
     <el-row gutter="20" type="flex" justify="start">
       <el-col :span="6" v-for="product in paginatedProducts" :key="product.id">
@@ -32,14 +56,18 @@
           <div class="card-body">
             <img :src="product.image" alt="product image" class="product-image"/>
             <p class="product-price">¥ {{ product.price }}</p>
-            <el-button class="view-details-btn" @click="viewProductDetails(product)">
-              查看详情
+            <el-button class="view-details-btn" type="primary" @click="viewProductDetails(product)">查看详情</el-button>
+            <!-- 购买按钮 -->
+            <el-button  class="buy-btn" type="primary" @click="buyProduct">购买</el-button>
+            <!-- 收藏按钮（星星图标） -->
+            <el-button  class="add-btn" type="success" @click="addToFavorites">
+              <el-icon><star /></el-icon>
             </el-button>
+
           </div>
         </el-card>
       </el-col>
     </el-row>
-
 
     <!-- Pagination Section -->
     <el-pagination
@@ -56,8 +84,11 @@
 
 <script>
 import {getProductList, searchProduct} from '@/api';
+import {Star} from "@element-plus/icons-vue";
+import {ElMessage} from "element-plus";
 
 export default {
+  components: {Star},
   data() {
     return {
       searchQuery: "",
@@ -66,6 +97,25 @@ export default {
       totalCount: 10,
       pageSize: 8,
       background: true,
+      // Sort options data
+      sortType: '', // 综合排序
+      timeFilter: '', // 发布时间过滤
+      priceSort: '', // 价格排序
+      // 数据选项
+      sortOptions: [
+        { value: 'recent', label: '最近发布' },
+        { value: 'nearby', label: '距离最近' },
+        { value: 'credit', label: '信用排序' }
+      ],
+      timeOptions: [
+        { value: '1d', label: '一天内' },
+        { value: '1w', label: '一星期内' },
+        { value: '1m', label: '一月内' }
+      ],
+      priceOptions: [
+        { value: 'high', label: '价格从高到低' },
+        { value: 'low', label: '价格从低到高' }
+      ]
     }
   },
   computed: {
@@ -132,6 +182,16 @@ export default {
     viewProductDetails(product) {
       this.$router.push({ name: 'ProductDetail', params: { id: product.id } });
     },
+
+    buyProduct() {
+      // Add logic for the buy button (for now, just a placeholder message)
+      ElMessage.success('已购买');
+    },
+    addToFavorites() {
+      // Add logic for adding to favorites (for now, just a placeholder message)
+      ElMessage.success('已添加购物车');
+    }
+
   },
   created() {
     this.getProductList();
