@@ -26,4 +26,19 @@ public interface ProductMapper {
 
     @Select("select * from products where sellerId = #{id}")
     List<Product> getPublishedProducts(Integer id);
+
+    @Select("select * from products order by price desc")
+    List<Product> getProductsListByPriceFromH();
+
+    @Select("select * from products order by price ")
+    List<Product> getProductsListByPriceFromL();
+
+    @Select("select * from products where createtime >= date_sub(now(), interval 1 day)")
+    List<Product> getProductsListByTime();
+
+    @Select("select * from products where createtime >= date_sub(now(), interval 1 week)")
+    List<Product> getProductsListByTimeWeek();
+
+    @Select("select * from products where createtime >= date_sub(now(), interval 1 month)")
+    List<Product> getProductsListByTimeMonth();
 }

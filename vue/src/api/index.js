@@ -31,7 +31,7 @@ export const getProductList = () => {
   return axios.get('/products');
 }
 export const getPublishedProductBySellerId = (sellerId) => {
-    return axios.get(`/products/profile/${sellerId}`);
+  return axios.get(`/products/profile/${sellerId}`);
 }
 // 搜索商品
 export const searchProduct = (keyword) => {
@@ -49,7 +49,28 @@ export const getProductDetail = (id) => {
 export const deleteProductById = (id) => {
   return axios.delete(`/products/${id}`);
 }
-
+//按价格对商品排序低到高
+export  const  getProductsListByPriceFromL =()=>{
+  return axios.get('/products/Lower');
+}
+//按价格对商品排序高到低
+export  const  getProductsListByPriceFromH =()=>{
+  return axios.get('/products/Higher');
+}
+//按时间展示商品
+export  const  getProductsListByTime =()=>{
+  return axios.get('/products/ByTime');
+}
+export  const  getProductsListByTimeWeek =()=>{
+  return axios.get('/products/ByTimeWeek');
+}
+export  const  getProductsListByTimeMonth =()=>{
+  return axios.get('/products/ByTimeMonth');
+}
+//
+export  const addProductsToCart =() =>{
+  return axios.get('/products/addProductsToCart');
+}
 
 // 用户API
 // 添加用户
@@ -72,6 +93,5 @@ export const deleteUserById = (id) => {
 export const getUserList = () => {
   return axios.get('/users');
 }
-
 
 

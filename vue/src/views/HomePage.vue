@@ -22,26 +22,37 @@
       </el-col>
     </el-row>
 
-    <!-- Sorting Bar (横栏) -->
+    <!-- Sorting Bar -->
     <el-row class="sorting-bar" type="flex" justify="start" align="middle" style="padding: 20px 0;">
       <!-- 综合排序 -->
       <el-col :span="3">
         <el-select v-model="sortType" placeholder="综合" style="width: 100%; min-width: 10px">
-          <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-col>
 
       <!-- 发布时间排序 -->
       <el-col :span="3">
-        <el-select v-model="timeFilter" placeholder="发布时间" style="width: 100%; min-width: 10px">
-          <el-option v-for="item in timeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="timeFilter" placeholder="发布时间" style="width: 100%; min-width: 10px"
+                   @change="handleTimeSortChange">
+          <el-option v-for="item in timeOptions" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-col>
 
       <!-- 价格排序 -->
       <el-col :span="3">
-        <el-select v-model="priceSort" placeholder="价格" style="width: 100%; min-width: 10px">
-          <el-option v-for="item in priceOptions" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select
+            v-model="priceSort"
+            placeholder="价格"
+            style="width: 100%; min-width: 120px"
+            @change="handlePriceSortChange"
+        >
+          <el-option
+              v-for="item in priceOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
         </el-select>
       </el-col>
     </el-row>
@@ -57,13 +68,12 @@
             <img :src="product.image" alt="product image" class="product-image"/>
             <p class="product-price">¥ {{ product.price }}</p>
             <el-button class="view-details-btn" type="primary" @click="viewProductDetails(product)">查看详情</el-button>
-            <!-- 购买按钮 -->
-            <el-button  class="buy-btn" type="primary" @click="buyProduct">购买</el-button>
-            <!-- 收藏按钮（星星图标） -->
-            <el-button  class="add-btn" type="success" @click="addToFavorites">
-              <el-icon><star /></el-icon>
+            <el-button class="buy-btn" type="primary" @click="buyProduct">购买</el-button>
+            <el-button class="add-btn" type="success" @click="addToFavorites">
+              <el-icon>
+                <star/>
+              </el-icon>
             </el-button>
-
           </div>
         </el-card>
       </el-col>
@@ -78,12 +88,19 @@
         layout="total, prev, pager, next, jumper"
         :total="totalCount">
     </el-pagination>
-
   </div>
 </template>
 
 <script>
-import {getProductList, searchProduct} from '@/api';
+import {
+  getProductList,
+  searchProduct,
+  getProductsListByPriceFromH,
+  getProductsListByPriceFromL,
+  getProductsListByTime,
+  getProductsListByTimeWeek,
+  getProductsListByTimeMonth
+} from '@/api';
 import {Star} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 
@@ -98,28 +115,27 @@ export default {
       pageSize: 8,
       background: true,
       // Sort options data
-      sortType: '', // 综合排序
-      timeFilter: '', // 发布时间过滤
-      priceSort: '', // 价格排序
+      sortType: '',
+      timeFilter: '',
+      priceSort: '',
       // 数据选项
       sortOptions: [
-        { value: 'recent', label: '最近发布' },
-        { value: 'nearby', label: '距离最近' },
-        { value: 'credit', label: '信用排序' }
+        {value: 'recent', label: '最近发布'},
+        {value: 'nearby', label: '距离最近'},
+        {value: 'credit', label: '信用排序'}
       ],
       timeOptions: [
-        { value: '1d', label: '一天内' },
-        { value: '1w', label: '一星期内' },
-        { value: '1m', label: '一月内' }
+        {value: 'd', label: '一天内'},
+        {value: 'w', label: '一星期内'},
+        {value: 'm', label: '一月内'}
       ],
       priceOptions: [
-        { value: 'high', label: '价格从高到低' },
-        { value: 'low', label: '价格从低到高' }
+        {value: 'high', label: '价格从高到低'},
+        {value: 'low', label: '价格从低到高'},
       ]
-    }
+    };
   },
   computed: {
-    // 计算当前页面所应该展示的商品
     paginatedProducts() {
       const start = (this.currentPage - 1) * this.pageSize;
       const end = start + this.pageSize;
@@ -127,28 +143,77 @@ export default {
     },
   },
   methods: {
-    logout() {
-      localStorage.removeItem('token'); // Remove the token from local storage
-      localStorage.removeItem('user'); // Remove the user object from local storage
-      localStorage.removeItem('userRole'); // Remove the user role from local storage
+    handleTimeSortChange(value) {
+      console.log("选择的值:", value);
 
-      this.$router.push({ name: 'Login' }); // Navigate to the Login page
+      const apiMap = {
+        d: getProductsListByTime,
+        w: getProductsListByTimeWeek,
+        m: getProductsListByTimeMonth,
+        default: getProductList
+      };
+
+      const apiFunction = apiMap[value] || apiMap.default;
+
+      apiFunction()
+          .then(response => {
+            if (response && response.data && response.data.code === 1) {
+              this.productList = response.data.data;
+              this.totalCount = this.productList.length;
+            } else {
+              this.$message.error(response.data.message || "Unknown error occurred");
+            }
+          })
+          .catch(error => {
+            console.error('API call failed: ', error);
+            this.$message.error('Failed to load products');
+          });
     },
+
+    handlePriceSortChange(value) {
+      console.log("选择的值:", value);
+
+      const apiMap = {
+        high: getProductsListByPriceFromH,
+        low: getProductsListByPriceFromL,
+        default: getProductList
+      };
+
+      const apiFunction = apiMap[value] || apiMap.default;
+
+      apiFunction()
+          .then(response => {
+            if (response && response.data && response.data.code === 1) {
+              this.productList = response.data.data;
+              this.totalCount = this.productList.length;
+            } else {
+              this.$message.error(response.data.message || "Unknown error occurred");
+            }
+          })
+          .catch(error => {
+            console.error('API call failed: ', error);
+            this.$message.error('Failed to load products');
+          });
+    },
+
+    logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userRole');
+      this.$router.push({name: 'Login'});
+    },
+
     navigateChat() {
-      this.$router.push({ name: 'Chat' }); // Navigate to the Chat page
+      this.$router.push({name: 'Chat'});
     },
+
     searchProducts() {
       searchProduct(this.searchQuery).then(response => {
-        console.log('API Response:', response); // Inspect the response structure
-        if (response) {
-          if (response.data.code === 1) {
-            this.productList = response.data.data;
-            this.totalCount = this.productList.length;
-          } else {
-            this.$message.error(response.data.message);
-          }
+        if (response && response.data && response.data.code === 1) {
+          this.productList = response.data.data;
+          this.totalCount = this.productList.length;
         } else {
-          this.$message.error('Invalid response format');
+          this.$message.error(response.data.message || "No products found.");
         }
       }).catch(error => {
         console.error('API call failed: ', error);
@@ -159,18 +224,14 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
     },
+
     getProductList() {
       getProductList().then(response => {
-        console.log('API Response:', response); // Inspect the response structure
-        if (response) {
-          if (response.data.code === 1) {
-            this.productList = response.data.data;
-            this.totalCount = this.productList.length;
-          } else {
-            this.$message.error(response.data.message);
-          }
+        if (response && response.data && response.data.code === 1) {
+          this.productList = response.data.data;
+          this.totalCount = this.productList.length;
         } else {
-          this.$message.error('Invalid response format');
+          this.$message.error(response.data.message || "No products available.");
         }
       }).catch(error => {
         console.error('API call failed: ', error);
@@ -178,20 +239,17 @@ export default {
       });
     },
 
-    // View product details by navigating to the details page
     viewProductDetails(product) {
-      this.$router.push({ name: 'ProductDetail', params: { id: product.id } });
+      this.$router.push({name: 'ProductDetail', params: {id: product.id}});
     },
 
     buyProduct() {
-      // Add logic for the buy button (for now, just a placeholder message)
       ElMessage.success('已购买');
     },
+
     addToFavorites() {
-      // Add logic for adding to favorites (for now, just a placeholder message)
       ElMessage.success('已添加购物车');
     }
-
   },
   created() {
     this.getProductList();
@@ -282,7 +340,7 @@ export default {
 }
 
 .product-image {
-  width: 100%;  /* Make the image take up the full width of its container */
+  width: 100%; /* Make the image take up the full width of its container */
   height: 200px; /* Set a fixed height to ensure consistency across images */
   object-fit: contain; /* Ensure the image maintains its aspect ratio while fitting within the container */
   border-radius: 8px;

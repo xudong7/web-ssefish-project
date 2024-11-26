@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -36,5 +37,25 @@ public class ProductService {
 
     public List<Product> getPublishedProducts(Integer id) {
         return productMapper.getPublishedProducts(id);  // 使用Mapper接口获取已发布产品
+    }
+
+    public List<Product> getProductsListByPriceFromH() {
+        return productMapper.getProductsListByPriceFromH();
+    }
+
+    public List<Product> getProductsListByPriceFromL() {
+        return productMapper.getProductsListByPriceFromL();
+    }
+
+    public List<Product> getProductsListByTime() {
+        return productMapper.getProductsListByTime();
+    }
+
+    public List<Product> getProductsListByTimeWeek() {
+        return productMapper.getProductsListByTimeWeek();
+    }
+
+    public List<Product> getProductsListByTimeMonth() {
+        return productMapper.getProductsListByTimeMonth();
     }
 }

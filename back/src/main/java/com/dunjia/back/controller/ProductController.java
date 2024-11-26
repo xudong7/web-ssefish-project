@@ -22,7 +22,39 @@ public class ProductController {
         List<Product> products = productService.getAllProducts();
         return Result.success(products);
     }
-
+    //按价格对商品排序高到低
+    @GetMapping("/products/Higher")
+    public Result getProductsListByPriceFromH() {
+        log.info("Get products list by price from h");
+        List<Product> products = productService.getProductsListByPriceFromH();
+        return Result.success(products);
+    }
+    //按价格对商品排序低到高
+    @GetMapping("/products/Lower")
+    public Result getProductsListByPriceFromL() {
+        log.info("get products list by price from l");
+        List<Product> products = productService.getProductsListByPriceFromL();
+        return Result.success(products);
+    }
+    //展示商品按时间
+    @GetMapping("/products/ByTime")
+    public Result getProductsListByTime() {
+        log.info("");
+        List<Product> products = productService.getProductsListByTime();
+        return Result.success(products);
+    }
+    @GetMapping("/products/ByTimeWeek")
+    public Result getProductsListByTimeWeek() {
+        log.info("");
+        List<Product> products = productService.getProductsListByTimeWeek();
+        return Result.success(products);
+    }
+    @GetMapping("/products/ByTimeMonth")
+    public Result getProductsListByTimeMonth() {
+        log.info("");
+        List<Product> products = productService.getProductsListByTimeMonth();
+        return Result.success(products);
+    }
     // 根据id获取product信息
     @GetMapping("/products/{id}")
     public Result getProductById(@PathVariable Integer id) {
@@ -54,7 +86,12 @@ public class ProductController {
         productService.addProduct(product);
         return Result.success(null);
     }
-
+    //添加商品之当前用户的购物车
+//    @GetMapping("/products/addProductsToCart")
+//    public Result addProductsToCart(@RequestBody List<Integer> wantList) {
+//        log.info("Add products to the cart: {}", wantList);
+//        productService.addProductsToCart(wantList);
+//    }
     // 根据id删除product
     @DeleteMapping("/products/{id}")
     public Result deleteProductById(@PathVariable Integer id) {
