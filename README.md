@@ -22,6 +22,10 @@ remember natapp's url(like http://xxxx.natapp.cc)
 replace the url in application.properties
 ```
 ## 4. open browser and enter the url
+```
+alipay账号： whaphg2436@sandbox.com
+alipay密码： 111111
+```
 
 ---
 # *技术栈*
