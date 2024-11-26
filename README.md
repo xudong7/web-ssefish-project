@@ -1,11 +1,34 @@
 # *中山大学软件工程java期末项目*
 # *软工闲鱼*
+---
+# How to run
+## 1. run back server
+### find the BackApplication.java and run it
+## 2. run front server
+### run the following command
+```
+cd vue
+```
+```
+npm install 
+```
+```
+npm run serve
+```
+## 3. open natapp dir and click start.bat
+```
+ps. 
+remember natapp's url(like http://xxxx.natapp.cc)
+replace the url in application.properties
+```
+## 4. open browser and enter the url
 
 ---
 # *技术栈*
 
 ## vue element-plus axios
 ## springboot mybatis mysql pagehelper
+## natapp nginx
 
 ---
 # *端口设置*
