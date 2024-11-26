@@ -68,7 +68,7 @@
             <img :src="product.image" alt="product image" class="product-image"/>
             <p class="product-price">¥ {{ product.price }}</p>
             <el-button class="view-details-btn" type="primary" @click="viewProductDetails(product)">查看详情</el-button>
-            <el-button class="buy-btn" type="primary" @click="buyProduct">购买</el-button>
+            <el-button class="buy-btn" type="primary" @click="buyProduct(product)">购买</el-button>
             <el-button class="add-btn" type="success" @click="addToFavorites">
               <el-icon>
                 <star/>
@@ -243,8 +243,27 @@ export default {
       this.$router.push({name: 'ProductDetail', params: {id: product.id}});
     },
 
-    buyProduct() {
-      ElMessage.success('已购买');
+    async buyProduct(product) {
+      try {
+        // Prepare the necessary data for the purchase
+        const subject = product.name; // Product name
+        const traceNo = product.id;   // Product ID
+        const totalAmount = product.price; // Product price
+
+        // Construct the payment URL with the necessary query parameters
+        const paymentUrl = `http://127.0.0.1:8080/alipay/pay?subject=${encodeURIComponent(subject)}&traceNo=${traceNo}&totalAmount=${totalAmount}`;
+
+        // Open the payment URL in the current window (redirects to the payment page)
+        // window.open(paymentUrl, '_self');
+        window.open(paymentUrl, '_blank');
+
+        // Display a success message indicating the purchase has started
+        ElMessage.success(`已购买: ${subject}`);
+      } catch (error) {
+        // Handle potential errors (like issues with API calls)
+        console.error('Error during purchase: ', error);
+        ElMessage.error('购买失败，请稍后再试');
+      }
     },
 
     addToFavorites() {
