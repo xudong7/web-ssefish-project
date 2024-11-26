@@ -10,7 +10,11 @@
             <p>ID: {{ user.id }}</p>
           </div>
         </div>
-        <el-button plain @click="showEditDialog">修改个人信息</el-button>
+        <el-col :span="4" class="user-options">
+          <!-- 登出 -->
+          <el-button type="success" @click="logout" style="width: 60px; background-color: #4CAF50; color: white; border-color: #4CAF50;">登出</el-button>
+          <el-button plain @click="showEditDialog">修改个人信息</el-button>
+        </el-col>
       </el-header>
 
       <el-container>
@@ -190,41 +194,45 @@
     </el-form>
     <!-- 底部区 -->
     <span class="dialog-footer">
-      <el-button @click="editDialogVisible = false">取消</el-button>
-      <el-button type="primary" @click="editUser">确定</el-button>
-    </span>
+    <el-button @click="editDialogVisible = false">取消</el-button>
+    <el-button type="primary" @click="editUser">确定</el-button>
+  </span>
   </el-dialog>
 </template>
 
 <script>
 import {computed, onMounted, ref} from 'vue';
-import {ElIcon } from 'element-plus';
 import 'element-plus/dist/index.css';
-import {getPublishedProductBySellerId} from '@/api'; // 导入API方法
+import {getPublishedProductBySellerId} from '@/api';
+import router from "@/router"; // 导入API方法
 
 export default {
   name: 'SidebarMenu',
-  components: {
-    ElIcon,
-  },
   setup() {
-    // user从localStorage中获取
-    const user = ref(JSON.parse(localStorage.getItem('user')) || {});
 
-    const activeIndex = ref('cart'); // 默认选中购物车
+    //修改部分
+    const logout = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userRole');
+      router.push({name: 'Login'});
+    };
+
+    const user = ref(JSON.parse(localStorage.getItem('user')) || {});
+    const activeIndex = ref('cart');
     const cartItems = ref([
-      { id: 1, name: 'Product A', price: 100 },
-      { id: 2, name: 'Product B', price: 200 }
+      {id: 1, name: 'Product A', price: 100},
+      {id: 2, name: 'Product B', price: 200}
     ]);
     const soldRecords = ref([
-      { id: 1, name: 'Sold Item A', price: 150 },
-      { id: 2, name: 'Sold Item B', price: 250 }
+      {id: 1, name: 'Sold Item A', price: 150},
+      {id: 2, name: 'Sold Item B', price: 250}
     ]);
     const purchaseRecords = ref([
-      { id: 1, name: 'Bought Item A', price: 120 },
-      { id: 2, name: 'Bought Item B', price: 220 }
+      {id: 1, name: 'Bought Item A', price: 120},
+      {id: 2, name: 'Bought Item B', price: 220}
     ]);
-    const publishedItems = ref([]); // 动态获取已发布商品
+    const publishedItems = ref([]);
 
     const pageSize = 5;
     const cartCurrentPage = ref(1);
@@ -244,6 +252,10 @@ export default {
 
     const handleSelect = (key) => {
       activeIndex.value = key;
+    };
+    const editDialogVisible = ref(false); // 控制对话框的显示与隐藏
+    const showEditDialog = () => {
+      editDialogVisible.value = true; // 显示对话框
     };
 
     // 分页处理函数
@@ -286,18 +298,21 @@ export default {
     });
 
     return {
+      logout, //修改
       user,
+      editDialogVisible,
+      showEditDialog,
+      handleSelect,
       activeIndex,
       cartItems,
       soldRecords,
       purchaseRecords,
       publishedItems,
-      pageSize,
       cartCurrentPage,
       salesCurrentPage,
       purchaseCurrentPage,
       publishedCurrentPage,
-      handleSelect,
+      pageSize,
       handleCartPageChange,
       handleSalesPageChange,
       handlePurchasePageChange,
@@ -306,7 +321,12 @@ export default {
       paginatedSalesRecords,
       paginatedPurchaseRecords,
       paginatedPublishedItems,
-      getPublishedItems
+
+      addDialogVisible: false, //控制添加用户对话框的显示与隐藏
+      //添加用户的表单数据
+      addUserForm: {},
+      //修改用户的表单数据
+      editUserForm: {},
     };
   }
 };

@@ -55,6 +55,11 @@
           />
         </el-select>
       </el-col>
+
+      <!-- Reset Button -->
+      <el-col :span="3">
+        <el-button type="warning" @click="resetFilters">重置</el-button>
+      </el-col>
     </el-row>
 
     <!-- Product Grid Section -->
@@ -237,6 +242,13 @@ export default {
         console.error('API call failed: ', error);
         this.$message.error('Failed to load products');
       });
+    },
+
+    resetFilters() {
+      this.sortType = '';  // Reset to '最近发布'
+      this.timeFilter = '';     // Reset to '一天内'
+      this.priceSort = '';   // Reset to '价格从高到低'
+      this.getProductList();     // Refresh the product list with default values
     },
 
     viewProductDetails(product) {
