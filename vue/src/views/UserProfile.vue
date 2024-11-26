@@ -51,7 +51,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="item in cartItems" :key="item.id">
+              <tr v-for="item in paginatedCartItems" :key="item.id">
                 <td>{{ item.name }}</td>
                 <td>¥{{ item.price }}</td>
                 <td>
@@ -61,6 +61,15 @@
               </tr>
               </tbody>
             </table>
+            <!-- 分页 --><br>
+            <el-pagination
+                @current-change="handleCartPageChange"
+                :current-page="cartCurrentPage"
+                :page-size="pageSize"
+                :total="cartItems.length"
+                layout="total, prev, pager, next, jumper"
+                :background="true"
+            ></el-pagination>
           </div>
           <div v-else-if="activeIndex === 'sales'">
             <h3>出售记录</h3>
@@ -73,7 +82,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="item in soldRecords" :key="item.id">
+              <tr v-for="item in paginatedSalesRecords" :key="item.id">
                 <td>{{ item.name }}</td>
                 <td>¥{{ item.price }}</td>
                 <td>
@@ -83,6 +92,15 @@
               </tr>
               </tbody>
             </table>
+            <!-- 分页 --><br>
+            <el-pagination
+                @current-change="handleSalesPageChange"
+                :current-page="salesCurrentPage"
+                :page-size="pageSize"
+                :total="soldRecords.length"
+                layout="total, prev, pager, next, jumper"
+                :background="true"
+            ></el-pagination>
           </div>
           <div v-else-if="activeIndex === 'purchases'">
             <h3>购买记录</h3>
@@ -95,7 +113,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="item in purchaseRecords" :key="item.id">
+              <tr v-for="item in paginatedPurchaseRecords" :key="item.id">
                 <td>{{ item.name }}</td>
                 <td>¥{{ item.price }}</td>
                 <td>
@@ -105,6 +123,15 @@
               </tr>
               </tbody>
             </table>
+            <!-- 分页 --><br>
+            <el-pagination
+                @current-change="handlePurchasePageChange"
+                :current-page="purchaseCurrentPage"
+                :page-size="pageSize"
+                :total="purchaseRecords.length"
+                layout="total, prev, pager, next, jumper"
+                :background="true"
+            ></el-pagination>
           </div>
           <div v-else-if="activeIndex === 'published'">
             <h3>已发布商品</h3>
@@ -119,7 +146,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="item in publishedItems" :key="item.id">
+              <tr v-for="item in paginatedPublishedItems" :key="item.id">
                 <td>{{ item.name }}</td>
                 <td><img :src="item.image" alt="商品图片" class="image" /></td>
                 <td>¥{{ item.price }}</td>
@@ -131,6 +158,15 @@
               </tr>
               </tbody>
             </table>
+            <!-- 分页 --><br>
+            <el-pagination
+                @current-change="handlePublishedPageChange"
+                :current-page="publishedCurrentPage"
+                :page-size="pageSize"
+                :total="publishedItems.length"
+                layout="total, prev, pager, next, jumper"
+                :background="true"
+            ></el-pagination>
           </div>
         </el-main>
       </el-container>
@@ -154,26 +190,22 @@
     </el-form>
     <!-- 底部区 -->
     <span class="dialog-footer">
-    <el-button @click="editDialogVisible = false">取消</el-button>
-    <el-button type="primary" @click="editUser">确定</el-button>
-  </span>
+      <el-button @click="editDialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="editUser">确定</el-button>
+    </span>
   </el-dialog>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import { ElIcon, ElIconShoppingCart, ElIconPieChart, ElIconReceipt, ElIconCheckCircle } from 'element-plus';
+import {computed, onMounted, ref} from 'vue';
+import {ElIcon } from 'element-plus';
 import 'element-plus/dist/index.css';
-import { getPublishedProductBySellerId } from '@/api'; // 导入API方法
+import {getPublishedProductBySellerId} from '@/api'; // 导入API方法
 
 export default {
   name: 'SidebarMenu',
   components: {
     ElIcon,
-    ElIconShoppingCart,
-    ElIconPieChart,
-    ElIconReceipt,
-    ElIconCheckCircle
   },
   setup() {
     // user从localStorage中获取
@@ -194,6 +226,12 @@ export default {
     ]);
     const publishedItems = ref([]); // 动态获取已发布商品
 
+    const pageSize = 5;
+    const cartCurrentPage = ref(1);
+    const salesCurrentPage = ref(1);
+    const purchaseCurrentPage = ref(1);
+    const publishedCurrentPage = ref(1);
+
     const getPublishedItems = () => {
       getPublishedProductBySellerId(user.value.id)
           .then(response => {
@@ -201,7 +239,6 @@ export default {
           })
           .catch(error => {
             console.error('Failed to fetch published items:', error);
-            //ElMessage.error('Failed to fetch published items');
           });
     };
 
@@ -209,15 +246,44 @@ export default {
       activeIndex.value = key;
     };
 
-    const editDialogVisible = ref(false); // 控制对话框的显示与隐藏
-    const showEditDialog = () => {
-      editDialogVisible.value = true; // 显示对话框
+    // 分页处理函数
+    const handleCartPageChange = (page) => {
+      cartCurrentPage.value = page;
+    };
+    const handleSalesPageChange = (page) => {
+      salesCurrentPage.value = page;
+    };
+    const handlePurchasePageChange = (page) => {
+      purchaseCurrentPage.value = page;
+    };
+    const handlePublishedPageChange = (page) => {
+      publishedCurrentPage.value = page;
     };
 
-    onMounted(() => {
-      getPublishedItems(); // 加载已发布商品数据
+    // 获取每一页的数据
+    const paginatedCartItems = computed(() => {
+      const start = (cartCurrentPage.value - 1) * pageSize;
+      return cartItems.value.slice(start, start + pageSize);
     });
 
+    const paginatedSalesRecords = computed(() => {
+      const start = (salesCurrentPage.value - 1) * pageSize;
+      return soldRecords.value.slice(start, start + pageSize);
+    });
+
+    const paginatedPurchaseRecords = computed(() => {
+      const start = (purchaseCurrentPage.value - 1) * pageSize;
+      return purchaseRecords.value.slice(start, start + pageSize);
+    });
+
+    const paginatedPublishedItems = computed(() => {
+      const start = (publishedCurrentPage.value - 1) * pageSize;
+      return publishedItems.value.slice(start, start + pageSize);
+    });
+
+    onMounted(() => {
+      getPublishedItems();
+    });
 
     return {
       user,
@@ -226,43 +292,25 @@ export default {
       soldRecords,
       purchaseRecords,
       publishedItems,
+      pageSize,
+      cartCurrentPage,
+      salesCurrentPage,
+      purchaseCurrentPage,
+      publishedCurrentPage,
       handleSelect,
-      editDialogVisible, // 添加到返回的对象中
-      showEditDialog, // 添加到返回的对象中
-
-      //获取用户列表的参数对象
-      queryInfo: {
-        query: "",
-        pagenum: 1, //当前的页数
-        pagesize: 2, //每页的数量
-      },
-      userList: [],
-      total: 0,
-      addDialogVisible: false, //控制添加用户对话框的显示与隐藏
-      //添加用户的表单数据
-      addUserForm: {},
-      //修改用户的表单数据
-      editUserForm: {},
-      /*
-      //修改表单的验证规则对象
-      editUserFormRules: {
-        picture: [{required:true,message:'请上传图片',trigger:'blur'}],
-        mobile: [{required:true,message:'请输入手机号',trigger:'blur'}]
-      },
-      //添加表单的验证规则对象
-      addUserFormRules: {
-        username: [{required:true,message:'请输入用户名',trigger:'blur'},
-          {min:3,max:10,message:'用户名长度在3~10个字符',trigger:'blur'}],
-        password: [{required:true,message:'请输入密码',trigger:'blur'},
-          {min:6,max:15,message:'密码长度在6~15个字符',trigger:'blur'}],
-        email: [{required:true,message:'请输入邮箱',trigger:'blur'}],
-        mobile: [{required:true,message:'请输入手机号',trigger:'blur'}]
-      }*/
+      handleCartPageChange,
+      handleSalesPageChange,
+      handlePurchasePageChange,
+      handlePublishedPageChange,
+      paginatedCartItems,
+      paginatedSalesRecords,
+      paginatedPurchaseRecords,
+      paginatedPublishedItems,
+      getPublishedItems
     };
   }
 };
 </script>
-
 
 <style scoped>
 /* 顶部用户信息样式 */

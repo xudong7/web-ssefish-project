@@ -12,7 +12,7 @@
         <el-input v-model="product.price" placeholder="Enter product price" class="short-input"></el-input>
       </el-form-item>
 
-<!--       新增 Location 输入框-->
+      <!--新增 Location 输入框-->
       <el-form-item label="地址" prop="location">
         <el-select v-model="product.address" placeholder="Select a province" class="short-input">
           <el-option v-for="province in provinces"
@@ -33,13 +33,24 @@
             :auto-upload="false"
             action="/api/upload"
         >
-        <template #trigger>
-          <el-button type="primary">选择文件</el-button>
-        </template>
+          <template #trigger>
+            <el-button type="primary">选择文件</el-button>
+          </template>
         </el-upload>
         <div v-if="product.image">
           <img :src="product.image" alt="Uploaded Image" class="uploaded-image" />
         </div>
+      </el-form-item>
+
+      <!--新增 condition 输入框-->
+      <el-form-item label="新旧程度" prop="condition">
+        <el-select v-model="product.condition" placeholder="Select a level" class="short-input">
+          <el-option v-for="level in levels"
+                     :key="level.code"
+                     :label="level.name"
+                     :value="level.code">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <!-- Description Input -->
@@ -69,7 +80,7 @@ export default {
         address: "",
         buyerId: "",
         sellerId: 1,
-        condition: 1,
+        condition:"",
         status: 1,
         createTime: "",
         likes: 0,
@@ -80,6 +91,10 @@ export default {
         { code: '3', name: '广州北校区' },
         { code: '4', name: '深圳校区' },
         { code: '5', name: '珠海校区' }
+      ],
+      levels: [
+        { code: '1', name: '二手' },
+        { code: '2', name: '全新' },
       ],
     };
   },
@@ -190,7 +205,7 @@ export default {
 .uploaded-image {
   width: 300px;
   height: 300px;
-  object-fit: cover;  /* Ensure the image covers the area without distortion */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
   border-radius: 8px;
   border: 1px solid #ddd;
   margin-top: 10px;
