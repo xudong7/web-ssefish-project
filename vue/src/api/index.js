@@ -105,3 +105,10 @@ export const toggleProductWantList = (userId, productId) => {
 }
 
 
+// trade api
+// 获取所有交易
+export const getTradeList = () => {
+    return axios.get('/trades');
+}
+
+

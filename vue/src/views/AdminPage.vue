@@ -107,6 +107,9 @@
               <th>卖家ID</th>
               <th>买家ID</th>
               <th>商品ID</th>
+              <th>商品名称</th>
+              <th>交易金额</th>
+              <th>交易时间</th>
             </tr>
             </thead>
             <tbody>
@@ -115,6 +118,9 @@
               <td>{{ trade.sellerId }}</td>
               <td>{{ trade.buyerId }}</td>
               <td>{{ trade.productId }}</td>
+              <td>{{ trade.productName }}</td>
+              <td>¥ {{ trade.totalAmount }}</td>
+              <td>{{ trade.createTime }}</td>
             </tr>
             </tbody>
           </table>
@@ -138,7 +144,7 @@
 
 <script>
 import { ElPagination } from 'element-plus';
-import { getProductList, deleteProductById, deleteUserById, getUserList, getUserById } from '../api';
+import {getProductList, deleteProductById, deleteUserById, getUserList, getUserById, getTradeList} from '../api';
 
 export default {
   name: 'AdminPage',
@@ -152,18 +158,7 @@ export default {
       currentPage: 1, // 当前页数
       products: [], // 商品数据
       users: [], // 用户数据
-      trades: [
-        { id: 1, buyerId: 1234, sellerId: 123, productId: 1 },
-        { id: 2, buyerId: 5678, sellerId: 567, productId: 2 },
-        { id: 3, buyerId: 2345, sellerId: 123, productId: 3 },
-        { id: 4, buyerId: 6789, sellerId: 456, productId: 4 },
-        { id: 5, buyerId: 3456, sellerId: 789, productId: 5 },
-        { id: 6, buyerId: 5670, sellerId: 890, productId: 6 },
-        { id: 7, buyerId: 2347, sellerId: 901, productId: 7 },
-        { id: 8, buyerId: 6780, sellerId: 101, productId: 8 },
-        { id: 9, buyerId: 1230, sellerId: 102, productId: 9 },
-        { id: 10, buyerId: 5675, sellerId: 103, productId: 10 }
-      ],
+      trades: [],
     };
   },
   computed: {
@@ -195,6 +190,11 @@ export default {
     getAllUsers() {
       getUserList().then(response => {
         this.users = response.data.data;
+      });
+    },
+    getAllTrades() {
+      getTradeList().then(response => {
+        this.trades = response.data.data;
       });
     },
     logout() {
@@ -244,6 +244,7 @@ export default {
   created() {
     this.getAllProducts();
     this.getAllUsers();
+    this.getAllTrades();
   }
 };
 </script>
