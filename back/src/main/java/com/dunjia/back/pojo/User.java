@@ -14,7 +14,7 @@ public class User {
     private String name;
     private String password;
     private String email;
-    private List<Integer> wantList; // 存放用户想要的商品的id
+    private String wantList; // 存放用户想要的商品的id
     private String phoneNumber;
     private String picture; // 头像
     private String intro; // 个人简介

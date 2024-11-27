@@ -50,14 +50,18 @@
               <thead>
               <tr>
                 <th>商品名称</th>
+                <th>图片</th>
                 <th>价格</th>
+                <th>情况</th>
                 <th>操作</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="item in paginatedCartItems" :key="item.id">
                 <td>{{ item.name }}</td>
+                <td><img :src="item.image" alt="商品图片" class="image" /></td>
                 <td>¥{{ item.price }}</td>
+                <td>{{ statusMap[item.status] }}</td>
                 <td>
                   <button>编辑</button>
                   <button>删除</button>
@@ -203,7 +207,7 @@
 <script>
 import {computed, onMounted, ref} from 'vue';
 import 'element-plus/dist/index.css';
-import {getPublishedProductBySellerId} from '@/api';
+import {getPublishedProductBySellerId, getWantListProduct} from '@/api';
 import router from "@/router"; // 导入API方法
 
 export default {
@@ -218,12 +222,14 @@ export default {
       router.push({name: 'Login'});
     };
 
+    const statusMap = {
+      '1': '未售出',
+      '2': '已售出'
+    };
+
     const user = ref(JSON.parse(localStorage.getItem('user')) || {});
     const activeIndex = ref('cart');
-    const cartItems = ref([
-      {id: 1, name: 'Product A', price: 100},
-      {id: 2, name: 'Product B', price: 200}
-    ]);
+    const cartItems = ref([]);
     const soldRecords = ref([
       {id: 1, name: 'Sold Item A', price: 150},
       {id: 2, name: 'Sold Item B', price: 250}
@@ -249,6 +255,16 @@ export default {
             console.error('Failed to fetch published items:', error);
           });
     };
+
+    const getCartItems = () => {
+      getWantListProduct(user.value.id)
+          .then(response => {
+            cartItems.value = response.data.data || [];
+          })
+          .catch(error => {
+            console.error('Failed to fetch cart items:', error);
+          });
+    }
 
     const handleSelect = (key) => {
       activeIndex.value = key;
@@ -295,11 +311,13 @@ export default {
 
     onMounted(() => {
       getPublishedItems();
+      getCartItems();
     });
 
     return {
       logout, //修改
       user,
+      statusMap,
       editDialogVisible,
       showEditDialog,
       handleSelect,

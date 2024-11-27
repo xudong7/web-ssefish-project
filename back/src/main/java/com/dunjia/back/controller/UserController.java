@@ -54,4 +54,13 @@ public class UserController {
         userService.deleteUserById(id);
         return Result.success(null);
     }
+
+    // 添加商品到wantList
+    @PutMapping("/users/wantList")
+    public Result toggleProductWantList(@RequestParam Integer userId, @RequestParam Integer productId) {
+        log.info("Add product to wantList: userId={}, productId={}", userId, productId);
+        userService.toggleProductInWantList(userId, productId);
+        return Result.success(null);
+    }
+
 }

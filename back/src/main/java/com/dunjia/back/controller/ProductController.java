@@ -86,12 +86,15 @@ public class ProductController {
         productService.addProduct(product);
         return Result.success(null);
     }
-    //添加商品之当前用户的购物车
-//    @GetMapping("/products/addProductsToCart")
-//    public Result addProductsToCart(@RequestBody List<Integer> wantList) {
-//        log.info("Add products to the cart: {}", wantList);
-//        productService.addProductsToCart(wantList);
-//    }
+
+    // 根据userId获取product信息
+    @GetMapping("/products/wantList/{userId}")
+    public Result getProductsByWantList(@PathVariable Integer userId) {
+        log.info("Get products by wantList: userId={}", userId);
+        List<Product> products = productService.getProductsByWantList(userId);
+        return Result.success(products);
+    }
+
     // 根据id删除product
     @DeleteMapping("/products/{id}")
     public Result deleteProductById(@PathVariable Integer id) {

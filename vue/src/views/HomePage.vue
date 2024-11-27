@@ -74,9 +74,13 @@
             <p class="product-price">¥ {{ product.price }}</p>
             <el-button class="view-details-btn" type="primary" @click="viewProductDetails(product)">查看详情</el-button>
             <el-button class="buy-btn" type="primary" @click="buyProduct(product)">购买</el-button>
-            <el-button class="add-btn" type="success" @click="addToFavorites">
+            <!-- Favorite button with dynamic state -->
+            <el-button
+                :type="product.isLiked ? 'danger' : 'success'"
+                @click="toggleFavorite(product)"
+            >
               <el-icon>
-                <star/>
+                <Star/>
               </el-icon>
             </el-button>
           </div>
@@ -104,7 +108,7 @@ import {
   getProductsListByPriceFromL,
   getProductsListByTime,
   getProductsListByTimeWeek,
-  getProductsListByTimeMonth
+  getProductsListByTimeMonth, toggleProductWantList
 } from '@/api';
 import {Star} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
@@ -260,8 +264,6 @@ export default {
         const subject = product.name;             // Product name
         const traceNo = product.id;               // Product ID (order trace number)
         const totalAmount = product.price;        // Product price
-        // const sellerId = product.sellerId;        // Seller ID
-        // const buyerId = JSON.parse(localStorage.getItem('user'))?.id; // Buyer ID from localStorage
 
         // Construct the payment URL with the necessary query parameters
         const paymentUrl = `http://127.0.0.1:8080/alipay/pay?subject=${encodeURIComponent(subject)}&traceNo=${traceNo}&totalAmount=${totalAmount}`;
@@ -278,10 +280,34 @@ export default {
       }
     },
 
-
-    addToFavorites() {
-      ElMessage.success('已添加购物车');
-    }
+    // Handle toggle favorite
+    toggleFavorite(product) {
+      // const userId = JSON.parse(localStorage.getItem('user')).id;
+      product.isLiked = !product.isLiked;
+      if (product.isLiked) {
+        toggleProductWantList(1, product.id).then(response => {
+          if (response && response.data && response.data.code === 1) {
+            ElMessage.success('已收藏');
+          } else {
+            ElMessage.error(response.data.message || '收藏失败');
+          }
+        }).catch(error => {
+          console.error('API call failed: ', error);
+          ElMessage.error('收藏失败，请稍后再试');
+        });
+      } else {
+        toggleProductWantList(1, product.id).then(response => {
+          if (response && response.data && response.data.code === 1) {
+            ElMessage.success('已取消收藏');
+          } else {
+            ElMessage.error(response.data.message || '取消收藏失败');
+          }
+        }).catch(error => {
+          console.error('API call failed: ', error);
+          ElMessage.error('取消收藏失败，请稍后再试');
+        });
+      }
+    },
   },
   created() {
     this.getProductList();

@@ -76,7 +76,7 @@ create table users
     name            VARCHAR(255) NOT NULL,          -- 用户名
     password        VARCHAR(255) NOT NULL,          -- 密码
     email           VARCHAR(255) NOT NULL UNIQUE,   -- 邮箱，唯一
-    wantList        JSON,                           -- 想要的商品ID列表，存储为JSON格式
+    wantList        varchar(255),                   -- 想要的商品ID列表，存储为JSON格式
     phoneNumber     VARCHAR(15),                    -- 手机号码
     picture         VARCHAR(255),                   -- 头像路径或URL
     intro           VARCHAR(255),                   -- 个人简介
@@ -102,14 +102,14 @@ create table products
 
 create table trades
 (
-    id         INT AUTO_INCREMENT PRIMARY KEY,               -- 交易ID，自增主键
-    buyerId    INT     NOT NULL DEFAULT 1,                   -- 买家ID
-    sellerId   INT     NOT NULL DEFAULT 1,                   -- 卖家ID
-    productId  INT     NOT NULL DEFAULT 1,                   -- 商品ID
-    productName VARCHAR(255) NOT NULL,                       -- 商品名称
-    totalAmount DECIMAL(10, 2) NOT NULL,                     -- 总金额
-    status     TINYINT NOT NULL CHECK (status IN (1, 2, 3)), -- 订单状态：进行中(1)、已完成(2)、取消(3)
-    createTime TIMESTAMP        DEFAULT CURRENT_TIMESTAMP   -- 交易创建时间
+    id          INT AUTO_INCREMENT PRIMARY KEY,                      -- 交易ID，自增主键
+    buyerId     INT            NOT NULL DEFAULT 1,                   -- 买家ID
+    sellerId    INT            NOT NULL DEFAULT 1,                   -- 卖家ID
+    productId   INT            NOT NULL DEFAULT 1,                   -- 商品ID
+    productName VARCHAR(255)   NOT NULL,                             -- 商品名称
+    totalAmount DECIMAL(10, 2) NOT NULL,                             -- 总金额
+    status      TINYINT        NOT NULL CHECK (status IN (1, 2, 3)), -- 订单状态：进行中(1)、已完成(2)、取消(3)
+    createTime  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP    -- 交易创建时间
 );
 
 ```
