@@ -257,26 +257,27 @@ export default {
 
     async buyProduct(product) {
       try {
-        // Prepare the necessary data for the purchase
-        const subject = product.name; // Product name
-        const traceNo = product.id;   // Product ID
-        const totalAmount = product.price; // Product price
+        const subject = product.name;             // Product name
+        const traceNo = product.id;               // Product ID (order trace number)
+        const totalAmount = product.price;        // Product price
+        // const sellerId = product.sellerId;        // Seller ID
+        // const buyerId = JSON.parse(localStorage.getItem('user'))?.id; // Buyer ID from localStorage
 
         // Construct the payment URL with the necessary query parameters
         const paymentUrl = `http://127.0.0.1:8080/alipay/pay?subject=${encodeURIComponent(subject)}&traceNo=${traceNo}&totalAmount=${totalAmount}`;
 
-        // Open the payment URL in the current window (redirects to the payment page)
-        // window.open(paymentUrl, '_self');
-        window.open(paymentUrl, '_blank');
+        // window.open(paymentUrl, '_blank'); // Open the payment URL in a new tab
+        window.open(paymentUrl, '_self'); // Open the payment URL in the same tab
 
         // Display a success message indicating the purchase has started
-        ElMessage.success(`已购买: ${subject}`);
+        ElMessage.success(`已开始购买: ${subject}`);
       } catch (error) {
         // Handle potential errors (like issues with API calls)
         console.error('Error during purchase: ', error);
         ElMessage.error('购买失败，请稍后再试');
       }
     },
+
 
     addToFavorites() {
       ElMessage.success('已添加购物车');

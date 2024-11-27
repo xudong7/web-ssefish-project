@@ -106,11 +106,10 @@ create table trades
     buyerId    INT     NOT NULL DEFAULT 1,                   -- 买家ID
     sellerId   INT     NOT NULL DEFAULT 1,                   -- 卖家ID
     productId  INT     NOT NULL DEFAULT 1,                   -- 商品ID
+    productName VARCHAR(255) NOT NULL,                       -- 商品名称
+    totalAmount DECIMAL(10, 2) NOT NULL,                     -- 总金额
     status     TINYINT NOT NULL CHECK (status IN (1, 2, 3)), -- 订单状态：进行中(1)、已完成(2)、取消(3)
-    createDate TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,   -- 交易创建时间
-    FOREIGN KEY (buyerId) REFERENCES users (id),             -- 关联买家ID
-    FOREIGN KEY (sellerId) REFERENCES users (id),            -- 关联卖家ID
-    FOREIGN KEY (productId) REFERENCES products (id)         -- 关联商品ID
+    createTime TIMESTAMP        DEFAULT CURRENT_TIMESTAMP   -- 交易创建时间
 );
 
 ```

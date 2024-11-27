@@ -4,15 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Trade {
-    private User buyer;
-    private User seller;
-    private Product product;
-    private String status; // 订单进行中 -- 1 已完成订单 -- 2 订单取消 -- 3
-    private Date createDate;
+    private Integer id;
+    private Integer buyerId;
+    private Integer sellerId;
+    private Integer productId;
+    private String productName;
+    private Double totalAmount;
+    private Integer status;
+    private LocalDateTime createTime;
 }

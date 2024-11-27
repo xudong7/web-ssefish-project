@@ -3,21 +3,23 @@ package com.dunjia.back.config;
 import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.kernel.Config;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 
 @Component
-@ConfigurationProperties(prefix = "alipay")
 public class AliPayConfig {
+    @Value("${alipay.appId}")
     private String appId;
+    @Value("${alipay.appPrivateKey}")
     private String appPrivateKey;
+    @Value("${alipay.alipayPublicKey}")
     private String alipayPublicKey;
-    //异步通知回调地址（可选）
+    @Value("${alipay.notifyUrl}")
     private String notifyUrl;
-    //支付成功后的回调地址
+    @Value("${alipay.returnUrl}")
     private String returnUrl;
-
 
     @PostConstruct
     public void init() {

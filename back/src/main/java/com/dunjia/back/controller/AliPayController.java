@@ -7,32 +7,35 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.easysdk.factory.Factory;
 import com.dunjia.back.config.AliPayConfig;
 import com.dunjia.back.pojo.AliPay;
+import com.dunjia.back.pojo.Trade;
+import com.dunjia.back.service.TradeService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("alipay")
 @Transactional(rollbackFor = Exception.class)
+@RequestMapping("/alipay")
 public class AliPayController {
 
     @Resource
     AliPayConfig aliPayConfig;
+
+    @Autowired
+    private TradeService tradeService;
 
     private static final String GATEWAY_URL = "https://openapi-sandbox.dl.alipaydev.com/gateway.do";
     private static final String FORMAT = "JSON";
     private static final String CHARSET = "utf-8";
     private static final String SIGN_TYPE = "RSA2";
 
-    @GetMapping("/pay") // 前端路径参数格式?subject=xxx&traceNo=xxx&totalAmount=xxx
+    @GetMapping("/pay") // 前端路径参数格式?subject=ExampleProduct&traceNo=123456&totalAmount=100.00
     public void pay(AliPay aliPay, HttpServletResponse httpResponse) throws Exception {
         AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL, aliPayConfig.getAppId(),
                 aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
@@ -65,14 +68,15 @@ public class AliPayController {
             Map<String, String> params = new HashMap<>();
             Map<String, String[]> requestParams = request.getParameterMap();
             for (String name : requestParams.keySet()) {
-                params.put(name, request.getParameter(name));
+                params.put(name, String.join(",", requestParams.get(name)));
             }
 
-            String tradeNo = params.get("out_trade_no");
-            String gmtPayment = params.get("gmt_payment");
-            String alipayTradeNo = params.get("trade_no");
+            System.out.println("支付宝异步回调参数: " + params);
+
             // 支付宝验签
             if (Factory.Payment.Common().verifyNotify(params)) {
+                // 验签通过
+                System.out.println("验签通过，开始保存数据...");
                 // 验签通过
                 System.out.println("交易名称: " + params.get("subject"));
                 System.out.println("交易状态: " + params.get("trade_status"));
@@ -85,7 +89,16 @@ public class AliPayController {
 
                 // 更新订单已支付的逻辑代码
                 // 在notify接口中的支付宝验签通过后，编写支付成功的逻辑。例如：修改订单状态、更新菜品销量、清空购物车等等。
-
+                Trade newTrade = new Trade();
+                newTrade.setTotalAmount(Double.parseDouble(params.get("total_amount")));
+                newTrade.setProductName(params.get("subject"));
+                newTrade.setCreateTime(java.time.LocalDateTime.now());
+                newTrade.setStatus(2); // 2表示已支付
+                newTrade.setSellerId(1);
+                newTrade.setBuyerId(1);
+                newTrade.setProductId(Integer.parseInt(params.get("out_trade_no"))); // 这里的out_trade_no是商品的id
+                // add to database
+                tradeService.addTrade(newTrade);
             }
         }
         return "success";
