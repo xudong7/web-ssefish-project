@@ -85,6 +85,7 @@
               <thead>
               <tr>
                 <th>商品名称</th>
+                <th>图片</th>
                 <th>价格</th>
                 <th>操作</th>
               </tr>
@@ -92,6 +93,7 @@
               <tbody>
               <tr v-for="item in paginatedSalesRecords" :key="item.id">
                 <td>{{ item.name }}</td>
+                <td><img :src="item.image" alt="商品图片" class="image" /></td>
                 <td>¥{{ item.price }}</td>
                 <td>
                   <button>编辑</button>
@@ -207,7 +209,7 @@
 <script>
 import {computed, onMounted, ref} from 'vue';
 import 'element-plus/dist/index.css';
-import {getPublishedProductBySellerId, getWantListProduct} from '@/api';
+import {getProductList, getPublishedProductBySellerId, getWantListProduct} from '@/api';
 import router from "@/router"; // 导入API方法
 
 export default {
@@ -230,10 +232,7 @@ export default {
     const user = ref(JSON.parse(localStorage.getItem('user')) || {});
     const activeIndex = ref('cart');
     const cartItems = ref([]);
-    const soldRecords = ref([
-      {id: 1, name: 'Sold Item A', price: 150},
-      {id: 2, name: 'Sold Item B', price: 250}
-    ]);
+    const soldRecords = ref([]);
     const purchaseRecords = ref([
       {id: 1, name: 'Bought Item A', price: 120},
       {id: 2, name: 'Bought Item B', price: 220}
@@ -263,6 +262,18 @@ export default {
           })
           .catch(error => {
             console.error('Failed to fetch cart items:', error);
+          });
+    }
+
+    const getSoldRecords = () => {
+      getProductList()
+          .then(response => {
+            soldRecords.value = response.data.data || [];
+            // 只要已售出且sellerId为当前用户的商品
+            soldRecords.value = soldRecords.value.filter(item => item.status === 2 && item.sellerId === user.value.id);
+          })
+          .catch(error => {
+            console.error('Failed to fetch sold records:', error);
           });
     }
 
@@ -312,6 +323,7 @@ export default {
     onMounted(() => {
       getPublishedItems();
       getCartItems();
+      getSoldRecords();
     });
 
     return {

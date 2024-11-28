@@ -238,6 +238,8 @@ export default {
       getProductList().then(response => {
         if (response && response.data && response.data.code === 1) {
           this.productList = response.data.data;
+          // only add product which status == 1
+          this.productList = this.productList.filter(product => product.status === 1);
           this.totalCount = this.productList.length;
         } else {
           this.$message.error(response.data.message || "No products available.");
