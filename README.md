@@ -112,6 +112,9 @@ create table trades
     createTime  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP    -- 交易创建时间
 );
 
+insert into users (id, name, password, email, wantList, phoneNumber, picture, intro, address) 
+values (1, 'admin', 'admin', 'admin@admin.com', null, '12345678901', 'https://img.icons8.com/ios/452/user' , '', '');
+
 ```
 
 

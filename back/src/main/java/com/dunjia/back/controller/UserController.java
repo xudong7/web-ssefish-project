@@ -63,4 +63,12 @@ public class UserController {
         return Result.success(null);
     }
 
+    // 根据id获取wantList
+    @GetMapping("/users/wantList/{userId}")
+    public Result getWantList(@PathVariable Integer userId) {
+        log.info("Get wantList by userId: {}", userId);
+        List<Integer> wantList = userService.getWantList(userId);
+        return Result.success(wantList);
+    }
+
 }

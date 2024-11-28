@@ -103,7 +103,10 @@ export const toggleProductWantList = (userId, productId) => {
         }
     });
 }
-
+// 获取wantList
+export const getWantList = (userId) => {
+    return axios.get(`/users/wantList/${userId}`);
+}
 
 // trade api
 // 获取所有交易

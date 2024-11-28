@@ -80,7 +80,7 @@
                 @click="toggleFavorite(product)"
             >
               <el-icon>
-                <Star/>
+                <Star />
               </el-icon>
             </el-button>
           </div>
@@ -108,7 +108,7 @@ import {
   getProductsListByPriceFromL,
   getProductsListByTime,
   getProductsListByTimeWeek,
-  getProductsListByTimeMonth, toggleProductWantList
+  getProductsListByTimeMonth, toggleProductWantList, getWantList
 } from '@/api';
 import {Star} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
@@ -119,6 +119,7 @@ export default {
     return {
       searchQuery: "",
       productList: [],
+      userWantList: [], // 用于存储用户的收藏列表
       currentPage: 1,
       totalCount: 10,
       pageSize: 8,
@@ -230,6 +231,51 @@ export default {
       });
     },
 
+    // 获取用户的收藏列表
+    fetchUserWantList() {
+      const userId = JSON.parse(localStorage.getItem('user')).id; // 从本地存储中获取用户 ID
+      getWantList(userId)
+          .then((response) => {
+            if (response && response.data && response.data.code === 1) {
+              this.userWantList = response.data.data; // 保存收藏列表
+              this.updateProductLikes(); // 更新商品的收藏状态
+            } else {
+              this.$message.error('无法加载收藏列表');
+            }
+          })
+          .catch((error) => {
+            console.error('API 请求失败：', error);
+            this.$message.error('加载收藏列表失败');
+          });
+    },
+
+    // 更新商品的收藏状态
+    updateProductLikes() {
+      this.productList.forEach((product) => {
+        product.isLiked = this.userWantList.includes(product.id); // 如果商品 id 在收藏列表中，设置为已收藏
+      });
+    },
+
+    // 切换商品的收藏状态
+    toggleFavorite(product) {
+      const userId = JSON.parse(localStorage.getItem('user')).id;
+      product.isLiked = !product.isLiked; // 切换收藏状态
+
+      toggleProductWantList(userId, product.id)
+          .then((response) => {
+            if (response && response.data && response.data.code === 1) {
+              const message = product.isLiked ? '已收藏' : '已取消收藏';
+              ElMessage.success(message);
+            } else {
+              ElMessage.error(response.data.message || '操作失败');
+            }
+          })
+          .catch((error) => {
+            console.error('API 请求失败：', error);
+            ElMessage.error('操作失败，请稍后重试');
+          });
+    },
+
     handleCurrentChange(val) {
       this.currentPage = val;
     },
@@ -240,6 +286,7 @@ export default {
           this.productList = response.data.data;
           // only add product which status == 1
           this.productList = this.productList.filter(product => product.status === 1);
+          this.updateProductLikes(); // 在商品加载完成后更新收藏状态
           this.totalCount = this.productList.length;
         } else {
           this.$message.error(response.data.message || "No products available.");
@@ -281,37 +328,9 @@ export default {
         ElMessage.error('购买失败，请稍后再试');
       }
     },
-
-    // Handle toggle favorite
-    toggleFavorite(product) {
-      // const userId = JSON.parse(localStorage.getItem('user')).id;
-      product.isLiked = !product.isLiked;
-      if (product.isLiked) {
-        toggleProductWantList(1, product.id).then(response => {
-          if (response && response.data && response.data.code === 1) {
-            ElMessage.success('已收藏');
-          } else {
-            ElMessage.error(response.data.message || '收藏失败');
-          }
-        }).catch(error => {
-          console.error('API call failed: ', error);
-          ElMessage.error('收藏失败，请稍后再试');
-        });
-      } else {
-        toggleProductWantList(1, product.id).then(response => {
-          if (response && response.data && response.data.code === 1) {
-            ElMessage.success('已取消收藏');
-          } else {
-            ElMessage.error(response.data.message || '取消收藏失败');
-          }
-        }).catch(error => {
-          console.error('API call failed: ', error);
-          ElMessage.error('取消收藏失败，请稍后再试');
-        });
-      }
-    },
   },
   created() {
+    this.fetchUserWantList();
     this.getProductList();
   }
 };

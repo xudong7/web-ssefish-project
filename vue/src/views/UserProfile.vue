@@ -7,7 +7,7 @@
           <el-avatar :src="user.picture" size="64"></el-avatar>
           <div class="user-info">
             <h2>{{ user.name }}</h2>
-            <p>ID: {{ user.id }}</p>
+            <p>ID: {{ user.id }} email: {{ user.email }}</p>
           </div>
         </div>
         <el-col :span="4" class="user-options">

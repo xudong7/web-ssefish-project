@@ -48,7 +48,8 @@ public class UserService {
 
         // Check if wantList is empty or null
         if (wantList == null || wantList.isEmpty()) {
-            updatedWantList.append(productId); // Add productId if list is empty
+            // If the list is empty, add the productId to the list
+            updatedWantList.append(productId);
         } else {
             // Split the current wantList by commas to get individual product IDs
             String[] productIds = wantList.split(",");
@@ -57,24 +58,28 @@ public class UserService {
             // Loop through the product IDs to check if the productId is already in the list
             for (String id : productIds) {
                 if (id.equals(String.valueOf(productId))) {
+                    // If the productId is found, don't add it again (remove it)
                     isProductIdPresent = true;
                 } else {
-                    // Add the id to the updated list if it's not the one we want to toggle
+                    // If the productId is not the one we want to toggle, retain it in the updated list
                     if (updatedWantList.length() > 0) {
-                        updatedWantList.append(","); // Add comma if not the first element
+                        updatedWantList.append(","); // Add a comma if not the first element
                     }
                     updatedWantList.append(id);
                 }
             }
 
-            // If the productId was not found, add it to the list (for toggling behavior)
+            // If the productId was not found, we need to add it
             if (!isProductIdPresent) {
                 if (updatedWantList.length() > 0) {
-                    updatedWantList.append(","); // Add comma before appending new productId
+                    updatedWantList.append(","); // Add a comma before appending new productId
                 }
                 updatedWantList.append(productId);
             }
         }
+
+        // If the productId was present and removed, updatedWantList will now exclude it.
+        // If the productId was not present, updatedWantList will now include it.
 
         // Update the wantList in the user object
         user.setWantList(updatedWantList.toString());
@@ -83,4 +88,19 @@ public class UserService {
         userMapper.updateUser(user);
     }
 
+
+    public List<Integer> getWantList(Integer userId) {
+        User user = userMapper.getUserById(userId);
+        String wantList = user.getWantList();
+        List<Integer> wantListIds = new ArrayList<>();
+
+        if (wantList != null && !wantList.isEmpty()) {
+            String[] productIds = wantList.split(",");
+            for (String id : productIds) {
+                wantListIds.add(Integer.parseInt(id));
+            }
+        }
+
+        return wantListIds;
+    }
 }
