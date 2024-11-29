@@ -30,8 +30,8 @@ alipay密码： 111111
 ---
 # *技术栈*
 
-## vue element-plus axios
-## springboot mybatis mysql pagehelper
+## vue3 element-plus axios vuex vue-router webpack
+## springboot mybatis mysql lombok
 ## natapp nginx
 
 ---
@@ -112,15 +112,97 @@ insert into users (id, name, password, email, wantList, picture,)
 values (1, 'admin', 'admin', 'admin@admin.com', null, 'https://img.icons8.com/ios/452/user');
 
 ```
+## 项目结构
+```
+├── README.md
+├── natapp
+│   ├── natapp.exe
+│   ├── start.bat
+├── vue
+│   ├── README.md
+│   ├── babel.config.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── favicon.ico
+│   │   ├── favicon.png
+│   │   └── index.html
+│   ├── src
+│   │   ├── App.vue
+│   │   ├── main.js
+│   │   ├── assets
+│   │   │   ├── loginBack.jpg
+│   │   │   └── logo.png
+│   │   ├── layout
+│   │   │   │── AdminLayout.vue
+│   │   │   │── LoginLayout.vue
+│   │   │   └── UserLayout.vue
+│   │   ├── views
+│   │   │   ├── AdminPage.vue
+│   │   │   ├── ChatPage.vue
+│   │   │   ├── LoginPage.vue
+│   │   │   ├── ProductDetail.vue
+│   │   │   ├── PublishProduct.vue
+│   │   │   ├── RegisterPage.vue
+│   │   │   ├── UserProfile.vue
+│   │   │   └── HomePage.vue
+│   │   ├── api
+│   │   │   └── index.js
+│   │   ├── router
+│   │   │   └── index.js
+│   │   └── store
+│   │       └── index.js
+│   └── vue.config.js
+└── back
+    ├── mvnw
+    ├── mvnw.cmd
+    ├── pom.xml
+    └── src
+        ├── main
+        │   ├── java
+        │   │   └── com
+        │   │       └── dunjia
+        │   │           └── back
+        │   │               ├── BackApplication.java
+        │   │               ├── config
+        │   │               │   ├── AliPayConfig.java
+        │   │               │   └── WebConfig.java
+        │   │               ├── controller
+        │   │               │   ├── AliPayController.java   
+        │   │               │   ├── LoginController.java
+        │   │               │   ├── UploadController.java                     
+        │   │               │   ├── ProductController.java
+        │   │               │   ├── TradeController.java
+        │   │               │   └── UserController.java
+        │   │               ├── mapper
+        │   │               │   ├── ProductMapper.java
+        │   │               │   ├── TradeMapper.java
+        │   │               │   └── UserMapper.java
+        │   │               ├── pojo
+        │   │               │   ├── Alipay.java
+        │   │               │   ├── Result.java                
+        │   │               │   ├── Product.java
+        │   │               │   ├── Trade.java
+        │   │               │   └── User.java
+        │   │               ├── service
+        │   │               │   ├── ProductService.java
+        │   │               │   ├── TradeService.java
+        │   │               │   └── UserService.java
+        │   │               └── utils
+        │   │                   ├── AliOSSUtils.java
+        │   │                   └── JwtUtils.java
+        │   └── resources
+        │       ├── application.properties
+        │       └── com.dunjia.back.mapper
+        │           ├── ProductMapper.xml
+        │           ├── TradeMapper.xml
+        │           └── UserMapper.xml
+        └── test
+            └── java
+                └── com
+                    └── dunjia
+                        └── back
+                            └── BackApplicationTests.java
+                                                     
+```
 
-
----
-# *接口*
-
-# getProductList
-### (/api/products)
-### Method: GET
-
-# searchProduct
-### (/api/products/search)
-### Method: GET
