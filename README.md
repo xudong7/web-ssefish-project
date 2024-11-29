@@ -72,16 +72,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ```sql
 create table users
 (
-    id              INT AUTO_INCREMENT PRIMARY KEY, -- 用户ID，自增主键
-    name            VARCHAR(255) NOT NULL,          -- 用户名
-    password        VARCHAR(255) NOT NULL,          -- 密码
-    email           VARCHAR(255) NOT NULL UNIQUE,   -- 邮箱，唯一
-    wantList        varchar(255),                   -- 想要的商品ID列表，存储为JSON格式
-    phoneNumber     VARCHAR(15),                    -- 手机号码
-    picture         VARCHAR(255),                   -- 头像路径或URL
-    intro           VARCHAR(255),                   -- 个人简介
-    address         VARCHAR(255),                   -- 地址
-    numTransactions INT DEFAULT 0                   -- 交易数或上架数，默认值为0
+    id       INT AUTO_INCREMENT PRIMARY KEY,                            -- 用户ID，自增主键
+    name     VARCHAR(255) NOT NULL,                                     -- 用户名
+    password VARCHAR(255) NOT NULL,                                     -- 密码
+    email    VARCHAR(255) NOT NULL UNIQUE,                              -- 邮箱，唯一
+    wantList varchar(255),                                              -- 想要的商品ID列表，存储为JSON格式
+    picture  VARCHAR(255) DEFAULT 'https://img.icons8.com/ios/452/user' -- 头像路径或URL
 );
 
 create table products
@@ -92,8 +88,8 @@ create table products
     image       VARCHAR(255),                                                     -- 商品图片路径或URL
     description VARCHAR(255),                                                     -- 商品描述
     address     INT,                                                              -- 地址
-    buyerId     INT,                                                              -- 买家ID，外键（可选）
-    sellerId    INT            NOT NULL DEFAULT 1,                                -- 卖家ID，外键
+    buyerId     INT,                                                              -- 买家ID
+    sellerId    INT            NOT NULL DEFAULT 1,                                -- 卖家ID
     `condition` TINYINT        NOT NULL DEFAULT 1 CHECK (`condition` IN (1, 2)),  -- 商品成色：二手(1)、全新(2)
     status      TINYINT        NOT NULL DEFAULT 1 CHECK (status IN (1, 2, 3, 4)), -- 状态：待支付(1)、已支付(2)、已发货(3)、已完成(4)
     createTime  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP,                -- 创建时间，默认当前时间
@@ -112,8 +108,8 @@ create table trades
     createTime  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP    -- 交易创建时间
 );
 
-insert into users (id, name, password, email, wantList, phoneNumber, picture, intro, address) 
-values (1, 'admin', 'admin', 'admin@admin.com', null, '12345678901', 'https://img.icons8.com/ios/452/user' , '', '');
+insert into users (id, name, password, email, wantList, picture,)
+values (1, 'admin', 'admin', 'admin@admin.com', null, 'https://img.icons8.com/ios/452/user');
 
 ```
 

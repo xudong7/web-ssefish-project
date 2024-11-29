@@ -5,9 +5,8 @@
 <mapper namespace="com.dunjia.back.mapper.UserMapper">
 
     <insert id="addUser">
-        insert into users (name, password, email, wantList, phoneNumber, picture, intro, address, numTransactions)
-        values (#{name}, #{password}, #{email}, #{wantList}, #{phoneNumber}, #{picture}, #{intro}, #{address},
-                #{numTransactions})
+        insert into users (name, password, email, wantList, picture)
+        values (#{name}, #{password}, #{email}, #{wantList}, #{picture})
     </insert>
 
     <update id="updateUser">
@@ -17,11 +16,7 @@
             <if test="password != null">password = #{password},</if>
             <if test="email != null">email = #{email},</if>
             <if test="wantList != null">wantList = #{wantList},</if>
-            <if test="phoneNumber != null">phoneNumber = #{phoneNumber},</if>
             <if test="picture != null">picture = #{picture},</if>
-            <if test="intro != null">intro = #{intro},</if>
-            <if test="address != null">address = #{address},</if>
-            <if test="numTransactions != null">numTransactions = #{numTransactions},</if>
         </set>
         where id = #{id}
     </update>
