@@ -4,6 +4,7 @@ import com.dunjia.back.mapper.ProductMapper;
 import com.dunjia.back.mapper.UserMapper;
 import com.dunjia.back.pojo.Product;
 import com.dunjia.back.pojo.User;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,7 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
 
-    private UserMapper UserMapper;
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     public List<Product> getAllProducts() {
@@ -95,5 +95,9 @@ public class ProductService {
             }
         }
         return products;
+    }
+
+    public void updateProductById(Product product) {
+        productMapper.updateProduct(product);
     }
 }

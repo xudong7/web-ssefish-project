@@ -72,6 +72,11 @@ export const getProductsListByTimeWeek = () => {
 export const getProductsListByTimeMonth = () => {
     return axios.get('/products/ByTimeMonth');
 }
+// 更新商品
+export const updateProduct = (product) => {
+    return axios.put(`/products`, product);
+};
+
 
 // 用户API
 // 添加用户
@@ -112,6 +117,14 @@ export const getWantList = (userId) => {
 // 获取所有交易
 export const getTradeList = () => {
     return axios.get('/trades');
+}
+// 根据productId获取交易
+export const getTradeByProductId = (productId) => {
+    return axios.get(`/trades/${productId}`);
+}
+// 根据productId更新交易
+export const updateTradeByProductId = (productId) => {
+    return axios.put(`/trades/${productId}`);
 }
 
 

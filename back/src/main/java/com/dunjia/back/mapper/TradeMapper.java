@@ -15,4 +15,9 @@ public interface TradeMapper {
 
     @Select("select * from trades")
     List<Trade> getAllTrades();
+
+    @Select("select * from trades where productId = #{productId}")
+    Trade getTradeByProductId(Integer productId);
+
+    void updateTradeByProductId(Trade trade);
 }

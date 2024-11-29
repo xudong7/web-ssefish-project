@@ -41,4 +41,5 @@ public interface ProductMapper {
 
     @Select("select * from products where createtime >= date_sub(now(), interval 1 month)")
     List<Product> getProductsListByTimeMonth();
+
 }

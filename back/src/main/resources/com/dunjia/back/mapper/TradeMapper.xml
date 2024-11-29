@@ -8,4 +8,17 @@
         insert into trades (buyerId, sellerId, productId, productName, totalAmount, status, createTime)
         values (#{buyerId}, #{sellerId}, #{productId}, #{productName}, #{totalAmount}, #{status}, #{createTime})
     </insert>
+
+    <update id="updateTradeByProductId">
+        update trades
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="totalAmount != null">totalAmount = #{totalAmount},</if>
+            <if test="buyerId != null">buyerId = #{buyerId},</if>
+            <if test="sellerId != null">sellerId = #{sellerId},</if>
+            <if test="productName != null">productName = #{productName},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+        </set>
+        where productId = #{productId}
+    </update>
 </mapper>

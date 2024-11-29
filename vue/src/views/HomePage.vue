@@ -283,9 +283,11 @@ export default {
     getProductList() {
       getProductList().then(response => {
         if (response && response.data && response.data.code === 1) {
-          this.productList = response.data.data;
+          const newProductList = response.data.data
+          this.productList = newProductList;
+
           // only add product which status == 1
-          this.productList = this.productList.filter(product => product.status === 1);
+          this.productList = newProductList.filter(product => product.status === 1);
           this.updateProductLikes(); // 在商品加载完成后更新收藏状态
           this.totalCount = this.productList.length;
         } else {

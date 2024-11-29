@@ -103,4 +103,12 @@ public class ProductController {
         return Result.success(null);
     }
 
+    // 更新product信息
+    @PutMapping("/products")
+    public Result updateProductById(@RequestBody Product product) {
+        log.info("update product by id: {}", product.getId());
+        productService.updateProductById(product);
+        return Result.success(null);
+    }
+
 }
