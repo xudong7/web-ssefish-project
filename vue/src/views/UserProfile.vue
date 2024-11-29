@@ -118,6 +118,7 @@
               <thead>
               <tr>
                 <th>商品名称</th>
+                <th>图片</th>
                 <th>价格</th>
                 <th>操作</th>
               </tr>
@@ -125,6 +126,7 @@
               <tbody>
               <tr v-for="item in paginatedPurchaseRecords" :key="item.id">
                 <td>{{ item.name }}</td>
+                <td><img :src="item.image" alt="商品图片" class="image" /></td>
                 <td>¥{{ item.price }}</td>
                 <td>
                   <button>编辑</button>
@@ -152,6 +154,7 @@
                 <th>图片</th>
                 <th>价格</th>
                 <th>创建时间</th>
+                <th>状态</th>
                 <th>操作</th>
               </tr>
               </thead>
@@ -161,6 +164,7 @@
                 <td><img :src="item.image" alt="商品图片" class="image" /></td>
                 <td>¥{{ item.price }}</td>
                 <td>{{ item.createTime }}</td>
+                <td>{{ statusMap[item.status] }}</td>
                 <td>
                   <button>编辑</button>
                   <button>删除</button>
@@ -233,10 +237,7 @@ export default {
     const activeIndex = ref('cart');
     const cartItems = ref([]);
     const soldRecords = ref([]);
-    const purchaseRecords = ref([
-      {id: 1, name: 'Bought Item A', price: 120},
-      {id: 2, name: 'Bought Item B', price: 220}
-    ]);
+    const purchaseRecords = ref([]);
     const publishedItems = ref([]);
 
     const pageSize = 5;
@@ -274,6 +275,18 @@ export default {
           })
           .catch(error => {
             console.error('Failed to fetch sold records:', error);
+          });
+    }
+
+    const getPurchaseRecords = () => {
+      getProductList()
+          .then(response => {
+            purchaseRecords.value = response.data.data || [];
+            // 只要已售出且sellerId为当前用户的商品
+            purchaseRecords.value = purchaseRecords.value.filter(item => item.status === 2 && item.buyerId === user.value.id);
+          })
+          .catch(error => {
+            console.error('Failed to fetch purchase records:', error);
           });
     }
 
@@ -324,6 +337,7 @@ export default {
       getPublishedItems();
       getCartItems();
       getSoldRecords();
+      getPurchaseRecords();
     });
 
     return {
