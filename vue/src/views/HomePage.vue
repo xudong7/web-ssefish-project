@@ -315,9 +315,13 @@ export default {
         const subject = product.name;             // Product name
         const traceNo = product.id;               // Product ID (order trace number)
         const totalAmount = product.price;        // Product price
+        const sellerId = product.sellerId;        // Seller ID
+        const buyerId = JSON.parse(localStorage.getItem('user')).id; // Buyer ID
+        // body = sellerId,buyerId
+        const body = sellerId + ',' + buyerId;
 
         // Construct the payment URL with the necessary query parameters
-        const paymentUrl = `http://127.0.0.1:8080/alipay/pay?subject=${encodeURIComponent(subject)}&traceNo=${traceNo}&totalAmount=${totalAmount}`;
+        const paymentUrl = `http://127.0.0.1:8080/alipay/pay?subject=${encodeURIComponent(subject)}&traceNo=${traceNo}&totalAmount=${totalAmount}&body=${body}`;
 
         // window.open(paymentUrl, '_blank'); // Open the payment URL in a new tab
         window.open(paymentUrl, '_self'); // Open the payment URL in the same tab

@@ -19,6 +19,11 @@ public class TradeService {
 
     public void addTrade(Trade newTrade) {
         tradeMapper.addTrade(newTrade);
+        Product product = productService.getProductById(newTrade.getProductId());
+        product.setStatus(2);
+        product.setSellerId(newTrade.getSellerId());
+        product.setBuyerId(newTrade.getBuyerId());
+        productService.updateProduct(product);
     }
 
     public List<Trade> getAllTrades() {
@@ -39,5 +44,9 @@ public class TradeService {
 
     public Trade getTradeByProductId(Integer productId) {
         return tradeMapper.getTradeByProductId(productId);
+    }
+
+    public void deleteTradeByProductId(Integer productId) {
+        tradeMapper.deleteTradeByProductId(productId);
     }
 }

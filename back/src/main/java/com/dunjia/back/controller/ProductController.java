@@ -107,7 +107,7 @@ public class ProductController {
     @PutMapping("/products")
     public Result updateProductById(@RequestBody Product product) {
         log.info("update product by id: {}", product.getId());
-        productService.updateProductById(product);
+        productService.updateProduct(product);
         return Result.success(null);
     }
 

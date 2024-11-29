@@ -12,4 +12,5 @@ public class AliPay {
     private String subject;
     //订单追踪号，商户自己生成，可已不使用
     private String alipayTraceNo;
+    private String body; // "sellerId,buyerId"
 }

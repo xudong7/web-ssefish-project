@@ -5,10 +5,7 @@ import com.dunjia.back.pojo.Trade;
 import com.dunjia.back.service.TradeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,6 +36,14 @@ public class TradeController {
     public Result updateTradeByProductId(@PathVariable Integer productId) {
         log.info("Update trade by productId: {}", productId);
          tradeService.updateTradeByProductId(productId);
+        return Result.success(null);
+    }
+
+    // 删除trade信息
+    @DeleteMapping("/trades/{productId}")
+    public Result deleteTradeByProductId(@PathVariable Integer productId) {
+        log.info("Delete trade by productId: {}", productId);
+        tradeService.deleteTradeByProductId(productId);
         return Result.success(null);
     }
 

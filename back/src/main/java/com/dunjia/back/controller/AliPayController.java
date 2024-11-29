@@ -35,7 +35,7 @@ public class AliPayController {
     private static final String CHARSET = "utf-8";
     private static final String SIGN_TYPE = "RSA2";
 
-    @GetMapping("/pay") // 前端路径参数格式?subject=ExampleProduct&traceNo=123456&totalAmount=100.00
+    @GetMapping("/pay") // 前端路径参数格式?subject=ExampleProduct&traceNo=123456&totalAmount=100.00&body=12,34
     public void pay(AliPay aliPay, HttpServletResponse httpResponse) throws Exception {
         AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL, aliPayConfig.getAppId(),
                 aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
@@ -45,7 +45,8 @@ public class AliPayController {
         request.setBizContent("{\"out_trade_no\":\"" + aliPay.getTraceNo() + "\","
                 + "\"total_amount\":\"" + aliPay.getTotalAmount() + "\","
                 + "\"subject\":\"" + aliPay.getSubject() + "\","
-                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\","
+                + "\"body\":\"" + aliPay.getBody() + "\"}");
         String form = "";
         try {
             // 调用SDK生成表单
@@ -94,8 +95,12 @@ public class AliPayController {
                 newTrade.setProductName(params.get("subject"));
                 newTrade.setCreateTime(java.time.LocalDateTime.now());
                 newTrade.setStatus(2); // 2表示已支付
-                newTrade.setSellerId(1);
-                newTrade.setBuyerId(1);
+                // body: "sellerId, buyerId"
+                String[] body = params.get("body").split(",");
+                newTrade.setSellerId(Integer.parseInt(body[0]));
+                newTrade.setBuyerId(Integer.parseInt(body[1]));
+//                newTrade.setSellerId(1);
+//                newTrade.setBuyerId(1);
                 newTrade.setProductId(Integer.parseInt(params.get("out_trade_no"))); // 这里的out_trade_no是商品的id
                 // add to database
                 tradeService.addTrade(newTrade);

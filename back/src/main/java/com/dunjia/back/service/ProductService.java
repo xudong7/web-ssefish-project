@@ -97,7 +97,7 @@ public class ProductService {
         return products;
     }
 
-    public void updateProductById(Product product) {
+    public void updateProduct(Product product) {
         productMapper.updateProduct(product);
     }
 }
