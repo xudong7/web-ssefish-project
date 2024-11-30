@@ -177,14 +177,14 @@
 
   <!-- 修改用户的对话框 -->
   <el-dialog title="修改头像" v-model="editDialogVisible" width="50%" @close="editDialogClosed" :close-on-click-modal="false">
-    <el-form :model="editUserForm" :rules="editUserFormRules" ref="editUserFormRef" label-width="70px">
+    <el-form :model="editUserForm" ref="editUserFormRef" label-width="70px">
       <el-form-item label="上传头像" prop="picture">
         <el-upload
-            action="/api/upload-avatar"
-            :on-success="handleAvatarSuccess"
-            :on-error="handleAvatarError"
+            :before-upload="handleBeforeUpload"
+            :on-change="handleAvatarChange"
             :limit="1"
             :auto-upload="false"
+            action="/api/upload"
         >
           <el-button type="primary">上传文件</el-button>
         </el-upload>
@@ -203,8 +203,9 @@
 <script>
 import {computed, onMounted, ref} from 'vue';
 import 'element-plus/dist/index.css';
-import {getProductList, getPublishedProductBySellerId, getWantListProduct} from '@/api';
-import router from "@/router"; // 导入API方法
+import {getProductList, getPublishedProductBySellerId, getWantListProduct, updateUser, upload} from '@/api';
+import router from "@/router";
+import {ElMessage} from "element-plus"; // 导入API方法
 
 export default {
   name: 'SidebarMenu',
@@ -291,12 +292,58 @@ export default {
       picture: user.value.picture || '',
     });
 
-    const handleAvatarSuccess = (response) => {
-      this.editUserForm.picture = response.data.url; // Assume the API returns a URL
+    const handleBeforeUpload = (file) => {
+      // 限制图片大小和格式
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJpgOrPng) {
+        ElMessage.error('上传图片只能是 JPG 或 PNG 格式!');
+        return false;
+      }
+      if (!isLt2M) {
+        ElMessage.error('上传图片大小不能超过 2MB!');
+        return false;
+      }
+      return true;
     };
 
-    const handleAvatarError = (error) => {
-      console.log('Error uploading avatar:', error);
+    const handleAvatarChange = (file) => {
+      const formData = new FormData();
+      formData.append('image', file.raw);
+
+      // 调用后端 API 上传文件
+      upload(formData)
+          .then((response) => {
+            if (response.data.code === 1) {
+              editUserForm.value.picture = response.data.data; // 返回头像 URL
+            } else {
+              ElMessage.error(response.data.message || '头像上传失败');
+            }
+          })
+          .catch((error) => {
+            console.error('Error uploading avatar:', error);
+            ElMessage.error('上传失败，请稍后重试');
+          });
+    };
+
+    const editUser = () => {
+      user.value.picture = editUserForm.value.picture;
+
+      updateUser(user.value)
+          .then((response) => {
+            if (response.data.code === 1) {
+              ElMessage.success('头像更新成功');
+              localStorage.setItem('user', JSON.stringify(user.value));
+              editDialogVisible.value = false; // 关闭对话框
+            } else {
+              ElMessage.error(response.data.message || '头像更新失败');
+            }
+          })
+          .catch((error) => {
+            console.error('Error updating user:', error);
+            ElMessage.error('更新失败，请稍后重试');
+          });
     };
 
     // 分页处理函数
@@ -367,8 +414,9 @@ export default {
       paginatedPublishedItems,
       editDialogVisible,
       editUserForm,
-      handleAvatarSuccess,
-      handleAvatarError,
+      handleAvatarChange,
+      editUser,
+      handleBeforeUpload,
     };
   }
 };
