@@ -13,7 +13,7 @@
         <el-col :span="4" class="user-options">
           <!-- 登出 -->
           <el-button type="success" @click="logout" style="width: 60px; background-color: #4CAF50; color: white; border-color: #4CAF50;">登出</el-button>
-          <el-button plain @click="showEditDialog">修改个人信息</el-button>
+          <el-button plain @click="showEditDialog">修改头像</el-button>
         </el-col>
       </el-header>
 
@@ -63,8 +63,7 @@
                 <td>¥{{ item.price }}</td>
                 <td>{{ statusMap[item.status] }}</td>
                 <td>
-                  <button>编辑</button>
-                  <button>删除</button>
+                  <el-button type="success">购买</el-button>
                 </td>
               </tr>
               </tbody>
@@ -87,7 +86,6 @@
                 <th>商品名称</th>
                 <th>图片</th>
                 <th>价格</th>
-                <th>操作</th>
               </tr>
               </thead>
               <tbody>
@@ -95,10 +93,6 @@
                 <td>{{ item.name }}</td>
                 <td><img :src="item.image" alt="商品图片" class="image" /></td>
                 <td>¥{{ item.price }}</td>
-                <td>
-                  <button>编辑</button>
-                  <button>删除</button>
-                </td>
               </tr>
               </tbody>
             </table>
@@ -120,7 +114,6 @@
                 <th>商品名称</th>
                 <th>图片</th>
                 <th>价格</th>
-                <th>操作</th>
               </tr>
               </thead>
               <tbody>
@@ -128,10 +121,6 @@
                 <td>{{ item.name }}</td>
                 <td><img :src="item.image" alt="商品图片" class="image" /></td>
                 <td>¥{{ item.price }}</td>
-                <td>
-                  <button>编辑</button>
-                  <button>删除</button>
-                </td>
               </tr>
               </tbody>
             </table>
@@ -166,8 +155,7 @@
                 <td>{{ item.createTime }}</td>
                 <td>{{ statusMap[item.status] }}</td>
                 <td>
-                  <button>编辑</button>
-                  <button>删除</button>
+                  <el-button type="danger">删除</el-button>
                 </td>
               </tr>
               </tbody>
@@ -188,25 +176,27 @@
   </div>
 
   <!-- 修改用户的对话框 -->
-  <el-dialog title="修改用户" v-model="editDialogVisible" width="50%" @close="editDialogClosed" :close-on-click-modal="false">
-    <!-- 内容主体区 -->
+  <el-dialog title="修改头像" v-model="editDialogVisible" width="50%" @close="editDialogClosed" :close-on-click-modal="false">
     <el-form :model="editUserForm" :rules="editUserFormRules" ref="editUserFormRef" label-width="70px">
-      <el-form-item label="头像" prop="picture">
-        <el-input v-model="editUserForm.picture"></el-input>
+      <el-form-item label="上传头像" prop="picture">
+        <el-upload
+            action="/api/upload-avatar"
+            :on-success="handleAvatarSuccess"
+            :on-error="handleAvatarError"
+            :limit="1"
+            :auto-upload="false"
+        >
+          <el-button type="primary">上传文件</el-button>
+        </el-upload>
+        <div v-if="editUserForm.picture" class="avatar-preview">
+          <el-avatar :src="editUserForm.picture" size="64"></el-avatar>
+        </div>
       </el-form-item>
-      <el-form-item label="校区" prop="address">
-        <el-input v-model="editUserForm.address"></el-input>
-      </el-form-item>
-      <el-form-item label="简介" prop="intro">
-        <el-input v-model="editUserForm.intro"></el-input>
-      </el-form-item>
-
     </el-form>
-    <!-- 底部区 -->
     <span class="dialog-footer">
-    <el-button @click="editDialogVisible = false">取消</el-button>
-    <el-button type="primary" @click="editUser">确定</el-button>
-  </span>
+      <el-button @click="editDialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="editUser">确定</el-button>
+    </span>
   </el-dialog>
 </template>
 
@@ -219,7 +209,6 @@ import router from "@/router"; // 导入API方法
 export default {
   name: 'SidebarMenu',
   setup() {
-
     //修改部分
     const logout = () => {
       localStorage.removeItem('token');
@@ -239,7 +228,7 @@ export default {
     const soldRecords = ref([]);
     const purchaseRecords = ref([]);
     const publishedItems = ref([]);
-
+    const editDialogVisible = ref(false);
     const pageSize = 5;
     const cartCurrentPage = ref(1);
     const salesCurrentPage = ref(1);
@@ -293,9 +282,21 @@ export default {
     const handleSelect = (key) => {
       activeIndex.value = key;
     };
-    const editDialogVisible = ref(false); // 控制对话框的显示与隐藏
+
     const showEditDialog = () => {
       editDialogVisible.value = true; // 显示对话框
+    };
+
+    const editUserForm = ref({
+      picture: user.value.picture || '',
+    });
+
+    const handleAvatarSuccess = (response) => {
+      this.editUserForm.picture = response.data.url; // Assume the API returns a URL
+    };
+
+    const handleAvatarError = (error) => {
+      console.log('Error uploading avatar:', error);
     };
 
     // 分页处理函数
@@ -344,7 +345,6 @@ export default {
       logout, //修改
       user,
       statusMap,
-      editDialogVisible,
       showEditDialog,
       handleSelect,
       activeIndex,
@@ -365,12 +365,10 @@ export default {
       paginatedSalesRecords,
       paginatedPurchaseRecords,
       paginatedPublishedItems,
-
-      addDialogVisible: false, //控制添加用户对话框的显示与隐藏
-      //添加用户的表单数据
-      addUserForm: {},
-      //修改用户的表单数据
-      editUserForm: {},
+      editDialogVisible,
+      editUserForm,
+      handleAvatarSuccess,
+      handleAvatarError,
     };
   }
 };

@@ -15,6 +15,7 @@
           <li @click="navigateTo('product')" :class="{ active: currentTab === 'product' }">商品管理</li>
           <li @click="navigateTo('user')" :class="{ active: currentTab === 'user' }">用户管理</li>
           <li @click="navigateTo('transaction')" :class="{ active: currentTab === 'transaction' }">交易记录</li>
+          <li @click="navigateTo('announcement')" :class="{ active: currentTab === 'announcement' }">公告发布</li> <!-- New Tab -->
         </ul>
       </div>
 
@@ -36,13 +37,12 @@
             <tbody>
             <tr v-for="product in pagedProducts" :key="product.id">
               <td>{{ product.name }}</td>
-              <td><img :src="product.image" alt="商品图片" class="image"/></td>
+              <td><img :src="product.image" alt="商品图片" class="image" /></td>
               <td>{{ product.price }}</td>
               <td>{{ product.address }}</td>
               <td>{{ product.createTime }}</td>
               <td>
-                <button @click="editProduct(product)">编辑</button>
-                <button @click="deleteProduct(product.id)">删除</button>
+                <el-button type="primary" @click="deleteProduct(product.id)">删除</el-button>
               </td>
             </tr>
             </tbody>
@@ -60,6 +60,7 @@
               @current-change="handlePageChange"
           />
         </div>
+
         <div v-if="currentTab === 'user'">
           <h3>用户管理</h3>
           <table>
@@ -79,8 +80,7 @@
               <td>{{ user.email }}</td>
               <td><img :src="user.picture" alt="头像" class="image" /></td>
               <td>
-                <button @click="editUser(user)">编辑</button>
-                <button @click="deleteUser(user.id)">删除</button>
+                <el-button type="primary" @click="deleteUser(user.id)">删除</el-button>
               </td>
             </tr>
             </tbody>
@@ -98,6 +98,7 @@
               @current-change="handlePageChange"
           />
         </div>
+
         <div v-if="currentTab === 'transaction'">
           <h3>交易记录</h3>
           <table>
@@ -137,6 +138,31 @@
               @current-change="handlePageChange"
           />
         </div>
+
+        <!-- Announcement Management Tab -->
+        <div v-if="currentTab === 'announcement'">
+          <h3>公告发布</h3>
+          <form @submit.prevent="submitAnnouncement">
+            <div>
+              <label for="title">公告标题</label>
+              <input type="text" id="title" v-model="announcement.title" required />
+            </div>
+            <div>
+              <label for="content">公告内容</label>
+              <textarea id="content" v-model="announcement.content" rows="6" required></textarea>
+            </div>
+            <button type="submit">发布公告</button>
+          </form>
+          <br>
+          <h3>历史公告</h3>
+          <ul>
+            <li v-for="(item, index) in announcements" :key="index">
+              <strong>{{ item.title }}</strong>
+              <p>{{ item.content }}</p>
+              <p><small>发布于: {{ item.createdAt }}</small></p> <!-- Display the creation time -->
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -144,12 +170,12 @@
 
 <script>
 import { ElPagination } from 'element-plus';
-import {getProductList, deleteProductById, deleteUserById, getUserList, getUserById, getTradeList} from '../api';
+import { getProductList, deleteProductById, deleteUserById, getUserList, getUserById, getTradeList } from '../api';
 
 export default {
   name: 'AdminPage',
   components: {
-    ElPagination
+    ElPagination,
   },
   data() {
     return {
@@ -158,7 +184,9 @@ export default {
       currentPage: 1, // 当前页数
       products: [], // 商品数据
       users: [], // 用户数据
-      trades: [],
+      trades: [], // 交易数据
+      announcements: [], // 公告数据
+      announcement: { title: '', content: '' }, // 当前发布的公告数据
     };
   },
   computed: {
@@ -179,7 +207,7 @@ export default {
       const start = (this.currentPage - 1) * this.pageSize;
       const end = start + this.pageSize;
       return this.trades.slice(start, end);
-    }
+    },
   },
   methods: {
     getAllProducts() {
@@ -206,23 +234,12 @@ export default {
     navigateTo(tab) {
       this.currentTab = tab;
     },
-    editProduct(product) {
-      const updatedProduct = {...product, price: product.price + 100};
-      const index = this.products.findIndex(p => p.id === product.id);
-      if (index !== -1) {
-        this.products.splice(index, 1, updatedProduct);
-      }
-      alert(`商品已编辑: ${updatedProduct.name}`);
-    },
     deleteProduct(id) {
       deleteProductById(id).then(() => {
         alert(`商品已删除`);
         // 刷新页面
         location.reload();
       });
-    },
-    editUser(user) {
-      alert(`编辑用户 ${user.email}`);
     },
     deleteUser(id) {
       getUserById(id).then(response => {
@@ -237,18 +254,24 @@ export default {
         }
       });
     },
-    handlePageChange(page) {
-      this.currentPage = page;
-    }
+    submitAnnouncement() {
+      if (this.announcement.title && this.announcement.content) {
+        // Add the current date and time to the announcement
+        const currentTime = new Date().toLocaleString();
+        this.announcements.push({ ...this.announcement, createdAt: currentTime });
+        this.announcement.title = '';
+        this.announcement.content = '';
+        alert('公告发布成功');
+      }
+    },
   },
-  created() {
+  mounted() {
     this.getAllProducts();
     this.getAllUsers();
     this.getAllTrades();
-  }
+  },
 };
 </script>
-
 
 <style scoped>
 .admin-container {
@@ -333,6 +356,12 @@ h3 {
   margin-bottom: 20px;
 }
 
+label {
+  display: block; /* 确保每个label在新的一行显示 */
+  margin-bottom: 15px; /* 增加与下方元素的间距 */
+  line-height: 1.8; /* 增大行距 */
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -364,8 +393,30 @@ button:hover {
   background-color: #d5d5d5;
 }
 
+form div {
+  margin-bottom: 15px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 8px;
+}
+
+button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
 .image {
   max-width: 100px;
   height: auto;
+
 }
 </style>

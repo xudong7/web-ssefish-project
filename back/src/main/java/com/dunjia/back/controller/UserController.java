@@ -71,4 +71,12 @@ public class UserController {
         return Result.success(wantList);
     }
 
+    // 更新user信息
+    @PutMapping("/users")
+    public Result updateUser(@RequestBody User user) {
+        log.info("Update user: {}", user);
+        userService.updateUser(user);
+        return Result.success(null);
+    }
+
 }

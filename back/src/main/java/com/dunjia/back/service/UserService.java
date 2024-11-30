@@ -103,4 +103,8 @@ public class UserService {
 
         return wantListIds;
     }
+
+    public void updateUser(User user) {
+        userMapper.updateUser(user);
+    }
 }

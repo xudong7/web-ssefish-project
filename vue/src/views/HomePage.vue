@@ -25,11 +25,11 @@
     <!-- Sorting Bar -->
     <el-row class="sorting-bar" type="flex" justify="start" align="middle" style="padding: 20px 0;">
       <!-- 综合排序 -->
-      <el-col :span="3">
-        <el-select v-model="sortType" placeholder="综合" style="width: 100%; min-width: 10px">
-          <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value"/>
-        </el-select>
-      </el-col>
+<!--      <el-col :span="3">-->
+<!--        <el-select v-model="sortType" placeholder="综合" style="width: 100%; min-width: 10px">-->
+<!--          <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value"/>-->
+<!--        </el-select>-->
+<!--      </el-col>-->
 
       <!-- 发布时间排序 -->
       <el-col :span="3">
@@ -129,11 +129,11 @@ export default {
       timeFilter: '',
       priceSort: '',
       // 数据选项
-      sortOptions: [
-        {value: 'recent', label: '最近发布'},
-        {value: 'nearby', label: '距离最近'},
-        {value: 'credit', label: '信用排序'}
-      ],
+      // sortOptions: [
+      //   {value: 'recent', label: '最近发布'},
+      //   {value: 'nearby', label: '距离最近'},
+      //   {value: 'credit', label: '信用排序'}
+      // ],
       timeOptions: [
         {value: 'd', label: '一天内'},
         {value: 'w', label: '一星期内'},
@@ -169,6 +169,8 @@ export default {
           .then(response => {
             if (response && response.data && response.data.code === 1) {
               this.productList = response.data.data;
+              // only add product which status == 1
+              this.productList = this.productList.filter(product => product.status === 1);
               this.totalCount = this.productList.length;
             } else {
               this.$message.error(response.data.message || "Unknown error occurred");
@@ -195,6 +197,8 @@ export default {
           .then(response => {
             if (response && response.data && response.data.code === 1) {
               this.productList = response.data.data;
+              // only add product which status == 1
+              this.productList = this.productList.filter(product => product.status === 1);
               this.totalCount = this.productList.length;
             } else {
               this.$message.error(response.data.message || "Unknown error occurred");
@@ -221,6 +225,8 @@ export default {
       searchProduct(this.searchQuery).then(response => {
         if (response && response.data && response.data.code === 1) {
           this.productList = response.data.data;
+          // only add product which status == 1
+          this.productList = this.productList.filter(product => product.status === 1);
           this.totalCount = this.productList.length;
         } else {
           this.$message.error(response.data.message || "No products found.");

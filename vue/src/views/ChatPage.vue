@@ -1,57 +1,36 @@
 <template>
-  <div class="chat-container">
-    <!-- 左侧历史会话列表 -->
-    <div class="chat-sidebar">
-      <div class="chat-history-title">会话</div>
-      <el-scrollbar class="chat-history-list">
+  <div class="announcement-container">
+    <!-- 左侧公告列表 -->
+    <div class="announcement-sidebar">
+      <div class="announcement-history-title">公告列表</div>
+      <el-scrollbar class="announcement-history-list">
         <div
-            v-for="(conversation, index) in conversations"
+            v-for="(announcement, index) in announcements"
             :key="index"
-            :class="['conversation-item', activeConversation === index ? 'active' : '']"
-            @click="selectConversation(index)"
+            :class="['announcement-item', activeAnnouncement === index ? 'active' : '']"
+            @click="selectAnnouncement(index)"
         >
-          <el-avatar :src="conversation.avatar"/>
-          <div class="conversation-info">
-            <div class="conversation-name">{{ conversation.name }}</div>
-            <div class="conversation-preview">
-              {{ conversation.messages[conversation.messages.length - 1]?.content || 'No messages yet' }}
+          <div class="announcement-info">
+            <div class="announcement-title">{{ announcement.title }}</div>
+            <div class="announcement-time">
+              {{ formatDate(announcement.publishedAt) }}
             </div>
           </div>
         </div>
       </el-scrollbar>
     </div>
 
-    <!-- 右侧聊天窗口 -->
-    <div class="chat-main">
-      <el-header class="chat-header">
-        <div class="chat-participants">
-          <el-avatar :src="currentConversation?.avatar"/>
-          <span class="chat-name">{{ currentConversation?.name || 'Select a conversation' }}</span>
-        </div>
+    <!-- 右侧公告详情 -->
+    <div class="announcement-main">
+      <el-header class="announcement-header">
+        <span class="announcement-name">{{ currentAnnouncement?.title || '请选择公告' }}</span>
       </el-header>
 
-      <el-main class="chat-messages-container">
-        <div class="chat-messages">
-          <div
-              v-for="(message, index) in currentConversation?.messages || []"
-              :key="index"
-              :class="['message', message.isMine ? 'mine' : 'partner']"
-          >
-            <div class="message-content">{{ message.content }}</div>
-          </div>
+      <el-main class="announcement-content-container">
+        <div class="announcement-content">
+          <div v-html="currentAnnouncement?.content || ''"></div>
         </div>
       </el-main>
-
-      <el-footer class="chat-footer">
-        <el-input
-            v-model="newMessage"
-            placeholder="Type a message..."
-            class="chat-input"
-            @keyup.enter="sendMessage"
-            :disabled="!currentConversation"
-        ></el-input>
-        <el-button type="primary" @click="sendMessage" :disabled="!currentConversation">发送</el-button>
-      </el-footer>
     </div>
   </div>
 </template>
@@ -60,71 +39,57 @@
 export default {
   data() {
     return {
-      // 历史会话数据
-      conversations: [
+      // 公告数据，包括发布时间
+      announcements: [
         {
-          name: "Seller A",
-          avatar: "/seller-a-avatar.png",
-          messages: [
-            {content: "Hi, is the item available?", isMine: false},
-            {content: "Yes, it's still available.", isMine: true},
-          ],
+          title: "公告 1",
+          content: "这是公告 1 的内容，详细内容将在点击后显示。",
+          publishedAt: "2024-11-29T10:00:00",  // 公告发布时间
         },
         {
-          name: "Buyer B",
-          avatar: "/buyer-b-avatar.png",
-          messages: [
-            {content: "Can you provide more details about the item?", isMine: false},
-          ],
+          title: "公告 2",
+          content: "这是公告 2 的内容，详细内容将在点击后显示。",
+          publishedAt: "2024-11-28T09:00:00",  // 公告发布时间
+        },
+        {
+          title: "公告 3",
+          content: "这是公告 3 的内容，详细内容将在点击后显示。",
+          publishedAt: "2024-11-27T08:00:00",  // 公告发布时间
         },
       ],
-      activeConversation: null, // 当前激活的会话索引
-      newMessage: "", // 当前输入的新消息
+      activeAnnouncement: null, // 当前选中的公告索引
     };
   },
   computed: {
-    currentConversation() {
-      return this.conversations[this.activeConversation];
+    currentAnnouncement() {
+      return this.announcements[this.activeAnnouncement];
     },
   },
   methods: {
-    selectConversation(index) {
-      this.activeConversation = index; // 切换当前会话
+    selectAnnouncement(index) {
+      this.activeAnnouncement = index; // 切换当前选中的公告
     },
-    sendMessage() {
-      if (!this.newMessage.trim() || this.activeConversation === null) return;
-
-      // 添加新消息到当前会话
-      this.currentConversation.messages.push({
-        content: this.newMessage,
-        isMine: true,
-      });
-
-      this.newMessage = ""; // 清空输入框
-
-      // 模拟对方的响应
-      setTimeout(() => {
-        this.currentConversation.messages.push({
-          content: "Thanks for reaching out! Let me check.",
-          isMine: false,
-        });
-      }, 1000);
+    // 格式化公告发布时间
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+      return date.toLocaleString('zh-CN', options);  // 返回中文格式的日期时间
     },
   },
 };
 </script>
 
 <style scoped>
-.chat-container {
+.announcement-container {
   display: flex;
   height: 100vh;
   border-radius: 12px; /* 圆角 */
   overflow: hidden; /* 禁止溢出 */
 }
 
-/* 左侧历史会话列表 */
-.chat-sidebar {
-  width: 25%;
+/* 左侧公告列表 */
+.announcement-sidebar {
+  width: 15%;
   background-color: #f7f7f7;
   border-right: 1px solid #ddd;
   display: flex;
@@ -134,7 +99,7 @@ export default {
   box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1); /* 加阴影 */
 }
 
-.chat-history-title {
+.announcement-history-title {
   padding: 18px 20px;
   font-weight: bold;
   font-size: 18px;
@@ -144,13 +109,13 @@ export default {
   border-top-left-radius: 12px;
 }
 
-.chat-history-list {
+.announcement-history-list {
   flex: 1;
   padding: 15px;
   overflow-y: auto;
 }
 
-.conversation-item {
+.announcement-item {
   display: flex;
   align-items: center;
   padding: 12px;
@@ -160,36 +125,34 @@ export default {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.conversation-item:hover {
+.announcement-item:hover {
   background-color: #e6f7ff;
   transform: scale(1.02);
 }
 
-.conversation-item.active {
+.announcement-item.active {
   background-color: #4fa3f7;
   color: white;
 }
 
-.conversation-info {
+.announcement-info {
   margin-left: 15px;
   flex: 1;
 }
 
-.conversation-name {
+.announcement-title {
   font-weight: bold;
   font-size: 16px;
 }
 
-.conversation-preview {
-  font-size: 14px;
+.announcement-time {
+  font-size: 12px;
   color: #888;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-top: 5px;
 }
 
-/* 右侧聊天窗口 */
-.chat-main {
+/* 右侧公告详情 */
+.announcement-main {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -198,7 +161,7 @@ export default {
   border-bottom-right-radius: 12px;
 }
 
-.chat-header {
+.announcement-header {
   background-color: #4fa3f7;
   color: white;
   padding: 12px 20px;
@@ -207,65 +170,19 @@ export default {
   border-top-right-radius: 12px;
 }
 
-.chat-participants {
-  display: flex;
-  align-items: center;
-}
-
-.chat-name {
-  margin-left: 10px;
+.announcement-name {
   font-size: 18px;
 }
 
-.chat-messages-container {
+.announcement-content-container {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
 }
 
-.chat-messages {
-  display: flex;
-  flex-direction: column;
-}
-
-.message {
-  max-width: 70%;
-  padding: 12px;
-  border-radius: 10px;
-  margin: 8px 0;
-  word-wrap: break-word;
-}
-
-.message.mine {
-  align-self: flex-end;
-  background-color: #4fa3f7;
-  color: white;
-  border-radius: 12px 12px 0 12px;
-}
-
-.message.partner {
-  align-self: flex-start;
-  background-color: #f0f0f0;
-  border-radius: 12px 12px 12px 0;
-}
-
-/* 底部输入栏 */
-.chat-footer {
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  background-color: #f7f7f7;
-  border-bottom-right-radius: 12px;
-}
-
-.chat-input {
-  flex: 1;
-  margin-right: 15px;
-  border-radius: 20px;
-  padding: 10px;
-}
-
-.el-button {
-  border-radius: 50px; /* 圆形按钮 */
+.announcement-content {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
 }
 </style>

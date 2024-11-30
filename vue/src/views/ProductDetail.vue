@@ -2,11 +2,12 @@
   <div class="common-layout">
     <el-container>
       <!-- 侧边栏：产品展示部分 -->
-      <el-aside width="700px" class="aside-container">
+      <el-aside width="45%" class="aside-container">
         <el-card>
           <div class="card-body">
             <img :src="product.image" alt="product image" style="max-width: 60%; height: auto;"/>
           </div>
+          <p><strong>描述:</strong> {{ product.description }}</p>
         </el-card>
       </el-aside>
 
@@ -14,7 +15,7 @@
       <el-main class="main-container">
         <p><strong>名称:</strong> {{product.name}}</p>
         <p><strong>价格:</strong> ¥ {{ product.price }}</p>
-        <p><strong>描述:</strong> {{ product.description }}</p>
+
         <p><strong>卖家:</strong> {{ seller.name }} </p>
         <p><strong>商品新旧程度:</strong> {{ conditions[product.condition] }}</p>
         <p><strong>售卖状态:</strong> {{ status[product.status] }}</p>
@@ -24,20 +25,38 @@
         <el-button type="primary" @click="buyProduct">购买</el-button>
         <!-- 收藏按钮（星星图标） -->
         <el-button type="success" @click="addToFavorites">
-          <el-icon><star /></el-icon>
+          <el-icon>
+            <star/>
+          </el-icon>
         </el-button>
 
         <!-- 返回首页按钮 -->
         <el-button @click="goToHome">返回</el-button>
       </el-main>
+
+      <!-- 新增：右侧栏：卖家的其他商品展示 -->
+      <el-aside width="25%" class="related-products">
+        <h3>卖家的其他商品</h3>
+
+        <!-- 右侧栏：卖家的其他商品展示 -->
+        <el-aside width="25%" class="related-products">
+          <h3>卖家的其他商品</h3>
+          <div v-for="item in sellerProducts" :key="item.id" class="product-card">
+            <img :src="item.image" alt="商品图片" class="product-image"/>
+            <p>{{ item.name }}</p>
+            <p>¥{{ item.price }}</p>
+            <el-button @click="viewProductDetail(item.id)">查看详情</el-button>
+          </div>
+        </el-aside>
+      </el-aside>
     </el-container>
   </div>
 </template>
 
 <script>
-import {getProductDetail, getSellerById} from '@/api'; // Import API method
-import { ElMessage } from 'element-plus'; // Import ElMessage for notifications
-import { Star } from '@element-plus/icons-vue'; // Import Star icon for the favorite button
+import {getProductDetail, getSellerById, getSellerProducts} from '@/api'; // Import API method
+import {ElMessage} from 'element-plus'; // Import ElMessage for notifications
+import {Star} from '@element-plus/icons-vue'; // Import Star icon for the favorite button
 
 export default {
   components: {
@@ -47,6 +66,7 @@ export default {
     return {
       product: {}, // Store product details here
       seller: {}, // Store seller details here
+      sellerProducts: [], // 存放卖家发布的商品
       addressMap: {
         1: '南校区',
         2: '东校区',
@@ -88,6 +108,17 @@ export default {
             this.$message.error('Failed to fetch product details');
           });
     },
+    // 获取卖家发布的商品
+    fetchSellerProducts(sellerId) {
+      getSellerProducts(sellerId)
+          .then(response => {
+            this.sellerProducts = response.data.data; // 更新卖家商品列表
+          })
+    },
+    // 查看商品详情
+    viewProductDetail(productId) {
+      this.$router.push(`/product/${productId}`);
+    },
     goToHome() {
       this.$router.push('/home'); // Navigate to the home page
     },
@@ -116,6 +147,21 @@ export default {
 .main-container {
   border-left: 1px solid #e0e0e0;
   padding-left: 20px;
+}
+
+.related-products {
+  padding-left: 20px;
+}
+
+.product-card {
+  margin-bottom: 20px;
+  padding: 10px;
+  text-align: center;
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
 }
 
 /* 侧边栏商品展示 */

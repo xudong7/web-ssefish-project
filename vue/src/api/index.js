@@ -112,6 +112,11 @@ export const toggleProductWantList = (userId, productId) => {
 export const getWantList = (userId) => {
     return axios.get(`/users/wantList/${userId}`);
 }
+// 更新用户信息
+export const updateUser = (user) => {
+    return axios.put('/users', user);
+}
+
 
 // trade api
 // 获取所有交易
