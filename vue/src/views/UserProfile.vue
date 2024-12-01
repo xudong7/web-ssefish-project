@@ -63,7 +63,7 @@
                 <td>¥{{ item.price }}</td>
                 <td>{{ statusMap[item.status] }}</td>
                 <td>
-                  <el-button type="success">购买</el-button>
+                  <el-button type="success" @click="buyProduct(item)">购买</el-button>
                 </td>
               </tr>
               </tbody>
@@ -155,7 +155,7 @@
                 <td>{{ item.createTime }}</td>
                 <td>{{ statusMap[item.status] }}</td>
                 <td>
-                  <el-button type="danger">删除</el-button>
+                  <el-button type="danger" @click="deleteProduct(item.id, item.status)">删除</el-button>
                 </td>
               </tr>
               </tbody>
@@ -203,7 +203,14 @@
 <script>
 import {computed, onMounted, ref} from 'vue';
 import 'element-plus/dist/index.css';
-import {getProductList, getPublishedProductBySellerId, getWantListProduct, updateUser, upload} from '@/api';
+import {
+  deleteProductById,
+  getProductList,
+  getPublishedProductBySellerId,
+  getWantListProduct,
+  updateUser,
+  upload
+} from '@/api';
 import router from "@/router";
 import {ElMessage} from "element-plus"; // 导入API方法
 
@@ -250,6 +257,8 @@ export default {
       getWantListProduct(user.value.id)
           .then(response => {
             cartItems.value = response.data.data || [];
+            // status = 1 only
+            cartItems.value = cartItems.value.filter(item => item.status === 1);
           })
           .catch(error => {
             console.error('Failed to fetch cart items:', error);
@@ -346,6 +355,51 @@ export default {
           });
     };
 
+    const buyProduct = (product) => {
+      try {
+        const subject = product.name;             // Product name
+        const traceNo = product.id;               // Product ID (order trace number)
+        const totalAmount = product.price;        // Product price
+        const sellerId = product.sellerId;        // Seller ID
+        const buyerId = JSON.parse(localStorage.getItem('user')).id; // Buyer ID
+        // body = sellerId,buyerId
+        const body = sellerId + ',' + buyerId;
+
+        // Construct the payment URL with the necessary query parameters
+        const paymentUrl = `http://127.0.0.1:8080/alipay/pay?subject=${encodeURIComponent(subject)}&traceNo=${traceNo}&totalAmount=${totalAmount}&body=${body}`;
+
+        // window.open(paymentUrl, '_blank'); // Open the payment URL in a new tab
+        window.open(paymentUrl, '_self'); // Open the payment URL in the same tab
+
+        // Display a success message indicating the purchase has started
+        ElMessage.success(`已开始购买: ${subject}`);
+      } catch (error) {
+        // Handle potential errors (like issues with API calls)
+        console.error('Error during purchase: ', error);
+        ElMessage.error('购买失败，请稍后再试');
+      }
+    };
+
+    const deleteProduct = (productId, productStatus) => {
+      if (productStatus === 2) {
+        ElMessage.error('已售出的商品无法删除');
+        return;
+      }
+      deleteProductById(productId)
+          .then(response => {
+            if (response.data.code === 1) {
+              ElMessage.success('商品删除成功');
+              getPublishedItems();
+            } else {
+              ElMessage.error(response.data.message || '删除商品失败');
+            }
+          })
+          .catch(error => {
+            console.error('Error deleting product:', error);
+            ElMessage.error('删除商品失败，请稍后再试');
+          });
+    };
+
     // 分页处理函数
     const handleCartPageChange = (page) => {
       cartCurrentPage.value = page;
@@ -417,6 +471,8 @@ export default {
       handleAvatarChange,
       editUser,
       handleBeforeUpload,
+      buyProduct,
+      deleteProduct,
     };
   }
 };
