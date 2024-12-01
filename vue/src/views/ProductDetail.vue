@@ -13,7 +13,7 @@
 
       <!-- 主体：商品详情部分 -->
       <el-main class="main-container">
-        <p><strong>名称:</strong> {{product.name}}</p>
+        <p><strong>名称:</strong> {{ product.name }}</p>
         <p><strong>价格:</strong> ¥ {{ product.price }}</p>
 
         <p><strong>卖家:</strong> {{ seller.name }} </p>
@@ -36,15 +36,13 @@
 
       <!-- 新增：右侧栏：卖家的其他商品展示 -->
       <el-aside width="25%" class="related-products">
-        <h3>卖家的其他商品</h3>
-
         <!-- 右侧栏：卖家的其他商品展示 -->
-        <el-aside width="25%" class="related-products">
+        <el-aside width="75%" class="related-products">
           <h3>卖家的其他商品</h3>
           <div v-for="item in sellerProducts" :key="item.id" class="product-card">
             <img :src="item.image" alt="商品图片" class="product-image"/>
-            <p>{{ item.name }}</p>
-            <p>¥{{ item.price }}</p>
+            <p><strong>名称:</strong> {{ item.name }}</p>
+            <p><strong>价格:</strong> ¥ {{ item.price }}</p>
             <el-button @click="viewProductDetail(item.id)">查看详情</el-button>
           </div>
         </el-aside>
@@ -54,7 +52,7 @@
 </template>
 
 <script>
-import {getProductDetail, getSellerById, getSellerProducts} from '@/api'; // Import API method
+import {getProductDetail, getSellerById, getProductList} from '@/api'; // Import API method
 import {ElMessage} from 'element-plus'; // Import ElMessage for notifications
 import {Star} from '@element-plus/icons-vue'; // Import Star icon for the favorite button
 
@@ -86,6 +84,7 @@ export default {
   },
   methods: {
     findSeller(sellerId) {
+      this.product.sellerId = sellerId;
       getSellerById(sellerId)
           .then(response => {
             this.seller = response.data.data;
@@ -102,6 +101,7 @@ export default {
           .then(response => {
             this.product = response.data.data; // Store product details in data
             this.findSeller(this.product.sellerId); // fetch seller details by seller ID of the product
+            this.fetchSellerProducts(this.product.sellerId); // 获取卖家发布的商品
           })
           .catch(error => {
             console.error("Failed to fetch product details:", error);
@@ -110,10 +110,15 @@ export default {
     },
     // 获取卖家发布的商品
     fetchSellerProducts(sellerId) {
-      getSellerProducts(sellerId)
+      getProductList()
           .then(response => {
-            this.sellerProducts = response.data.data; // 更新卖家商品列表
+            // Filter products by seller ID and not this product and only 3 products and status is 1
+            this.sellerProducts = response.data.data.filter(product => product.sellerId === sellerId && product.id !== this.product.id && product.status === 1).slice(0, 3);
           })
+          .catch(error => {
+            console.error("Failed to fetch seller products:", error);
+            this.$message.error('Failed to fetch seller products');
+          });
     },
     // 查看商品详情
     viewProductDetail(productId) {
