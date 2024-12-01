@@ -167,9 +167,9 @@ export default {
           });
     },
 
-    // 查看商品详情
+    // 查看推荐商品详情
     viewProductDetail(productId) {
-      this.$router.push(`/product/${productId}`); // Navigate to the product detail page
+      this.$router.push('/products/' + productId); // 跳转到商品详情页
     },
     goToHome() {
       this.$router.push('/home'); // Navigate to the home page
@@ -199,10 +199,17 @@ export default {
       }
     },
   },
+  watch: {
+    // Watch for changes in the route and fetch product details again
+    '$route'() {
+      this.fetchProductDetail(); // Re-fetch product details and update the page
+      this.fetchUserWantList();  // Re-fetch user's favorite list
+    }
+  },
   created() {
     this.fetchProductDetail(); // Fetch product details when the component is created
     this.fetchUserWantList(); // 获取用户的收藏列表
-  }
+  },
 };
 </script>
 
