@@ -12,7 +12,10 @@
         </el-form-item>
 
         <el-form-item label="密码" prop="password"
-                      :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
+                      :rules="[
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+
+                      ]">
           <el-input type="password" v-model="user.password"
                     placeholder="输入密码"
                     class="input-white"></el-input>
@@ -36,14 +39,14 @@
 </template>
 
 <script>
-import { addUser} from "@/api";
+import { addUser } from "@/api";
 
 export default {
   data() {
     return {
       user: {
         name: "",
-        Password: "",
+        password: "", // Ensure password is correctly named
         email: "",
       },
       loading: false // Loading state
@@ -60,13 +63,11 @@ export default {
           })
           .catch(error => {
             console.error('Failed to register:', error);
-            this.$message.error('注册失败'); // Show error message
+            this.$message.error('注册失败'); // Show generic error message
           })
           .finally(() => {
             this.loading = false; // End loading
           });
-
-      this.loading = false; // End loading
     },
     goToLogin() {
       this.$router.push({name: 'Login'}); // 跳转到登录页

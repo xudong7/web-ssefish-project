@@ -2,45 +2,45 @@
   <div class="common-layout">
     <el-container>
       <!-- 侧边栏：产品展示部分 -->
-      <el-aside width="45%" class="aside-container">
+      <el-main width="80%" class="aside-container">
         <el-card>
           <div class="card-body">
-            <img :src="product.image" alt="product image" style="max-width: 60%; height: auto;"/>
+            <img :src="product.image" alt="product image" style="max-width: 85%; height: auto;"/>
           </div>
-          <p><strong>描述:</strong> {{ product.description }}</p>
         </el-card>
-      </el-aside>
 
-      <!-- 主体：商品详情部分 -->
-      <el-main class="main-container">
-        <p><strong>名称:</strong> {{ product.name }}</p>
-        <p><strong>价格:</strong> ¥ {{ product.price }}</p>
+        <!-- 主体：商品详情部分 -->
+        <div class="main-container">
+          <p><strong>描述:</strong> {{ product.description }}</p>
+          <p><strong>名称:</strong> {{ product.name }}</p>
+          <p><strong>价格:</strong> ¥ {{ product.price }}</p>
 
-        <p><strong>卖家:</strong> {{ seller.name }} </p>
-        <p><strong>商品新旧程度:</strong> {{ conditions[product.condition] }}</p>
-        <p><strong>售卖状态:</strong> {{ status[product.status] }}</p>
-        <p><strong>地址:</strong> {{ addressMap[product.address] }}</p>
+          <p><strong>卖家:</strong> {{ seller.name }} </p>
+          <p><strong>商品新旧程度:</strong> {{ conditions[product.condition] }}</p>
+          <p><strong>售卖状态:</strong> {{ status[product.status] }}</p>
+          <p><strong>地址:</strong> {{ addressMap[product.address] }}</p>
 
-        <!-- 购买按钮 -->
-        <el-button type="primary" @click="buyProduct">购买</el-button>
-        <!-- 收藏按钮（星星图标） -->
-        <el-button
-            :type="this.product.isLiked ? 'danger' : 'success'"
-            @click="toggleFavorite"
-        >
-          <el-icon>
-            <Star />
-          </el-icon>
-        </el-button>
+          <!-- 购买按钮 -->
+          <el-button type="primary" @click="buyProduct">购买</el-button>
+          <!-- 收藏按钮（星星图标） -->
+          <el-button
+              :type="this.product.isLiked ? 'danger' : 'success'"
+              @click="toggleFavorite"
+          >
+            <el-icon>
+              <Star/>
+            </el-icon>
+          </el-button>
 
-        <!-- 返回首页按钮 -->
-        <el-button @click="goToHome">返回</el-button>
+          <!-- 返回首页按钮 -->
+          <el-button @click="goToHome">返回</el-button>
+        </div>
       </el-main>
 
       <!-- 新增：右侧栏：卖家的其他商品展示 -->
-      <el-aside width="25%" class="related-products">
+      <el-aside width="20%" class="related-products">
         <!-- 右侧栏：卖家的其他商品展示 -->
-        <el-aside width="75%" class="related-products">
+<!--        <el-aside width="75%" class="related-products">-->
           <h3>卖家的其他商品</h3>
           <div v-for="item in sellerProducts" :key="item.id" class="product-card">
             <img :src="item.image" alt="商品图片" class="product-image"/>
@@ -49,7 +49,7 @@
             <el-button @click="viewProductDetail(item.id)">查看详情</el-button>
           </div>
         </el-aside>
-      </el-aside>
+<!--      </el-aside>-->
     </el-container>
   </div>
 </template>
@@ -223,6 +223,7 @@ export default {
 .main-container {
   border-left: 1px solid #e0e0e0;
   padding-left: 20px;
+  text-align: center;
 }
 
 .related-products {
