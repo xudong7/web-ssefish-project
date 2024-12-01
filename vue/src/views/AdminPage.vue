@@ -31,6 +31,7 @@
               <th>价格</th>
               <th>地址</th>
               <th>创建时间</th>
+              <th>状态</th>
               <th>操作</th>
             </tr>
             </thead>
@@ -41,6 +42,7 @@
               <td>{{ product.price }}</td>
               <td>{{ product.address }}</td>
               <td>{{ product.createTime }}</td>
+              <td>{{ product.status === 1 ? '在售' : '已售出' }}</td>
               <td>
                 <el-button type="primary" @click="deleteProduct(product.id)">删除</el-button>
               </td>
@@ -109,6 +111,7 @@
               <th>买家ID</th>
               <th>商品ID</th>
               <th>商品名称</th>
+              <th>商品图片</th>
               <th>交易金额</th>
               <th>交易时间</th>
             </tr>
@@ -120,6 +123,7 @@
               <td>{{ trade.buyerId }}</td>
               <td>{{ trade.productId }}</td>
               <td>{{ trade.productName }}</td>
+              <td><img :src="products.find(product => product.id === trade.productId).image" alt="商品图片" class="image" /></td>
               <td>¥ {{ trade.totalAmount }}</td>
               <td>{{ trade.createTime }}</td>
             </tr>
@@ -224,6 +228,9 @@ export default {
       getTradeList().then(response => {
         this.trades = response.data.data;
       });
+    },
+    handlePageChange(page) {
+      this.currentPage = page;
     },
     logout() {
       localStorage.removeItem('token'); // Remove the token from local storage

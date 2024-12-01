@@ -18,19 +18,12 @@
       </el-col>
       <el-col :span="4" class="user-options">
         <el-button type="success" @click="logout">登出</el-button>
-        <el-button @click="navigateChat">消息</el-button>
+        <el-button @click="navigateChat">公告</el-button>
       </el-col>
     </el-row>
 
     <!-- Sorting Bar -->
     <el-row class="sorting-bar" type="flex" justify="start" align="middle" style="padding: 20px 0;">
-      <!-- 综合排序 -->
-<!--      <el-col :span="3">-->
-<!--        <el-select v-model="sortType" placeholder="综合" style="width: 100%; min-width: 10px">-->
-<!--          <el-option v-for="item in sortOptions" :key="item.value" :label="item.label" :value="item.value"/>-->
-<!--        </el-select>-->
-<!--      </el-col>-->
-
       <!-- 发布时间排序 -->
       <el-col :span="3">
         <el-select v-model="timeFilter" placeholder="发布时间" style="width: 100%; min-width: 10px"
