@@ -128,12 +128,6 @@ export default {
       sortType: '',
       timeFilter: '',
       priceSort: '',
-      // 数据选项
-      // sortOptions: [
-      //   {value: 'recent', label: '最近发布'},
-      //   {value: 'nearby', label: '距离最近'},
-      //   {value: 'credit', label: '信用排序'}
-      // ],
       timeOptions: [
         {value: 'd', label: '一天内'},
         {value: 'w', label: '一星期内'},
