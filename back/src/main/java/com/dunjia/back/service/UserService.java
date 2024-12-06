@@ -1,7 +1,10 @@
 package com.dunjia.back.service;
 
+import com.dunjia.back.mapper.ProductMapper;
 import com.dunjia.back.mapper.UserMapper;
+import com.dunjia.back.pojo.Product;
 import com.dunjia.back.pojo.User;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,8 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserMapper userMapper;
+    @Resource
+    private ProductMapper productMapper;
 
     public User login(User user) {
         return userMapper.getByUserNameAndPassword(user);
@@ -30,6 +35,12 @@ public class UserService {
     }
 
     public void deleteUserById(Integer id) {
+        List<Product> products = productMapper.getAllProducts();
+        for (Product product : products) {
+            if (product.getSellerId().equals(id)) {
+                productMapper.deleteProductById(product.getId());
+            }
+        }
         userMapper.deleteUserById(id);
     }
 
