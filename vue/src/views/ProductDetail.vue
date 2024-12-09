@@ -58,6 +58,7 @@
 import {getProductDetail, getSellerById, getProductList, toggleProductWantList, getWantList} from '@/api'; // Import API method
 import {ElMessage} from 'element-plus'; // Import ElMessage for notifications
 import {Star} from '@element-plus/icons-vue'; // Import Star icon for the favorite button
+import { v4 as uuidv4 } from 'uuid'; // 引入 uuid 库
 
 export default {
   components: {
@@ -177,7 +178,7 @@ export default {
     async buyProduct() {
       try {
         const subject = this.product.name;             // Product name
-        const traceNo = this.product.id;               // Product ID (order trace number)
+        const traceNo = this.product.id + '-' + uuidv4();               // Product ID (order trace number)
         const totalAmount = this.product.price;        // Product price
         const sellerId = this.product.sellerId;        // Seller ID
         const buyerId = JSON.parse(localStorage.getItem('user')).id; // Buyer ID
