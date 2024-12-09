@@ -213,6 +213,7 @@ import {
 } from '@/api';
 import router from "@/router";
 import {ElMessage} from "element-plus"; // 导入API方法
+import { v4 as uuidv4 } from 'uuid'; // 引入 uuid 库
 
 export default {
   name: 'SidebarMenu',
@@ -358,7 +359,7 @@ export default {
     const buyProduct = (product) => {
       try {
         const subject = product.name;             // Product name
-        const traceNo = product.id;               // Product ID (order trace number)
+        const traceNo = product.id + '-' + uuidv4();               // Product ID (order trace number)
         const totalAmount = product.price;        // Product price
         const sellerId = product.sellerId;        // Seller ID
         const buyerId = JSON.parse(localStorage.getItem('user')).id; // Buyer ID
