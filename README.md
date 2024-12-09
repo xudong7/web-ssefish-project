@@ -23,6 +23,7 @@ replace the url in application.properties
 ```
 ## 4. open browser and enter the url
 ```
+sandbox-app: https://open.alipay.com/portal/forum/post/191601027
 alipay账号： whaphg2436@sandbox.com
 alipay密码： 111111
 ```

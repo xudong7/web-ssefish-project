@@ -101,7 +101,8 @@ public class AliPayController {
                 newTrade.setBuyerId(Integer.parseInt(body[1]));
 //                newTrade.setSellerId(1);
 //                newTrade.setBuyerId(1);
-                newTrade.setProductId(Integer.parseInt(params.get("out_trade_no"))); // 这里的out_trade_no是商品的id
+                // traceNo: productId + '-' + UUID
+                newTrade.setProductId(Integer.parseInt(params.get("out_trade_no").split("-")[0]));
                 // add to database
                 tradeService.addTrade(newTrade);
             }
