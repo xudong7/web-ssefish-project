@@ -46,6 +46,10 @@ alipay密码： 111111
 ---
 ## front setup
 ```
+$ node -v
+v20.18.0
+```
+```
 npm install
 ```
 
