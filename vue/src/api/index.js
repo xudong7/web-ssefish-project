@@ -1,11 +1,12 @@
 import axios from 'axios';
+import store from '@/store';
 
 // backend API 地址
 axios.defaults.baseURL = 'http://localhost:8080';
 
 // 添加请求拦截器，自动带上 token
 axios.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
+    const token = store.getters.getToken;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }

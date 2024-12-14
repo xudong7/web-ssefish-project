@@ -214,15 +214,14 @@ import {
 import router from "@/router";
 import {ElMessage} from "element-plus"; // 导入API方法
 import { v4 as uuidv4 } from 'uuid'; // 引入 uuid 库
+import store from "@/store";
 
 export default {
   name: 'SidebarMenu',
   setup() {
     //修改部分
     const logout = () => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('userRole');
+      store.dispatch('logout');
       router.push({name: 'Login'});
     };
 
@@ -231,7 +230,7 @@ export default {
       '2': '已售出'
     };
 
-    const user = ref(JSON.parse(localStorage.getItem('user')) || {});
+    const user = ref(store.getters.getUser);
     const activeIndex = ref('cart');
     const cartItems = ref([]);
     const soldRecords = ref([]);
@@ -344,7 +343,7 @@ export default {
           .then((response) => {
             if (response.data.code === 1) {
               ElMessage.success('头像更新成功');
-              localStorage.setItem('user', JSON.stringify(user.value));
+              store.commit('setUser', user.value); // 更新用户信息
               editDialogVisible.value = false; // 关闭对话框
             } else {
               ElMessage.error(response.data.message || '头像更新失败');
@@ -362,7 +361,7 @@ export default {
         const traceNo = product.id + '-' + uuidv4();               // Product ID (order trace number)
         const totalAmount = product.price;        // Product price
         const sellerId = product.sellerId;        // Seller ID
-        const buyerId = JSON.parse(localStorage.getItem('user')).id; // Buyer ID
+        const buyerId = store.getters.getUser.id;      // Buyer ID
         // body = sellerId,buyerId
         const body = sellerId + ',' + buyerId;
 

@@ -59,6 +59,7 @@ import {getProductDetail, getSellerById, getProductList, toggleProductWantList, 
 import {ElMessage} from 'element-plus'; // Import ElMessage for notifications
 import {Star} from '@element-plus/icons-vue'; // Import Star icon for the favorite button
 import { v4 as uuidv4 } from 'uuid'; // 引入 uuid 库
+import store from "@/store";
 
 export default {
   components: {
@@ -129,7 +130,7 @@ export default {
 
     // 获取用户的收藏列表
     fetchUserWantList() {
-      const userId = JSON.parse(localStorage.getItem('user')).id; // 从本地存储中获取用户 ID
+      const userId = store.getters.getUser.id;
       getWantList(userId)
           .then((response) => {
             if (response && response.data && response.data.code === 1) {
@@ -150,7 +151,7 @@ export default {
     },
 
     toggleFavorite() {
-      const userId = JSON.parse(localStorage.getItem('user')).id;
+      const userId = store.getters.getUser.id;
       this.product.isLiked = !this.product.isLiked;
 
       toggleProductWantList(userId, this.product.id)
@@ -181,7 +182,7 @@ export default {
         const traceNo = this.product.id + '-' + uuidv4();               // Product ID (order trace number)
         const totalAmount = this.product.price;        // Product price
         const sellerId = this.product.sellerId;        // Seller ID
-        const buyerId = JSON.parse(localStorage.getItem('user')).id; // Buyer ID
+        const buyerId = store.getters.getUser.id;      // Buyer ID
         // body = sellerId,buyerId
         const body = sellerId + ',' + buyerId;
 

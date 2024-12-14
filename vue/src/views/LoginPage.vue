@@ -46,6 +46,7 @@
 
 <script>
 import { login } from '@/api'; // Import login API method
+import store from "@/store";
 
 export default {
   data() {
@@ -68,24 +69,17 @@ export default {
             if (res.data.code === 1) {
               this.$message.success('登录成功'); // 提示登录成功
 
-              localStorage.setItem('token', res.data.data.token); // 保存token
-              localStorage.setItem('user', JSON.stringify(res.data.data.user)); // 保存登录用户
+              store.commit('setToken', res.data.data.token)
+              store.commit('setUser', res.data.data.user)
 
               // 模拟登录逻辑，根据用户名分配角色
               setTimeout(() => {
                 if (this.loginData.name === 'admin' && this.loginData.password === 'admin') {
-                  localStorage.setItem('userRole', 'admin'); // 保存角色为管理员
+                  store.commit('setUserRole', 'admin'); // 保存角色为管理员
                   this.$router.push('/admin'); // 跳转到管理员页面
                 } else if (this.loginData.name !== '' && this.loginData.password !== '') {
-                  localStorage.setItem('userRole', 'user'); // 保存角色为普通用户
+                  store.commit('setUserRole', 'user'); // 保存角色为用户
                   this.$router.push('/home'); // 跳转到主页
-                }
-
-                // 登录成功后删除用户密码 避免密码泄露
-                const storedUser = JSON.parse(localStorage.getItem('user'));
-                if (storedUser && storedUser.password) {
-                  delete storedUser.password; // Remove the password from user data
-                  localStorage.setItem('user', JSON.stringify(storedUser)); // Update user in localStorage
                 }
 
                 // 停止加载状态
@@ -111,7 +105,7 @@ export default {
     },
     // 检查是否已经登录
     checkLoginStatus() {
-      const user = localStorage.getItem('user');
+      const user = store.getters.getUser; // Get the user data from the store
 
       // Retrieve user info and set the login data
       if (user) {

@@ -174,7 +174,8 @@
 
 <script>
 import { ElPagination } from 'element-plus';
-import { getProductList, deleteProductById, deleteUserById, getUserList, getUserById, getTradeList } from '../api';
+import { getProductList, deleteProductById, deleteUserById, getUserList, getUserById, getTradeList } from '@/api';
+import store from '@/store';
 
 export default {
   name: 'AdminPage',
@@ -233,9 +234,7 @@ export default {
       this.currentPage = page;
     },
     logout() {
-      localStorage.removeItem('token'); // Remove the token from local storage
-      localStorage.removeItem('user'); // Remove the user object from local storage
-      localStorage.removeItem('userRole'); // Remove the user role from local storage
+      store.dispatch('logout'); // Clear the user data in the store
       this.$router.push({ name: 'Login' }); // Navigate to the Login page
     },
     navigateTo(tab) {

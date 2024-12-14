@@ -7,6 +7,7 @@ import ProductDetail from '../views/ProductDetail.vue';
 import Admin from '@/views/AdminPage.vue';
 import RegisterPage from '@/views/RegisterPage.vue';
 import ChatPage from '@/views/ChatPage.vue';
+import store from '@/store';
 
 const routes = [
     { path: '/', name: 'Login', component: LoginPage, meta: { requiresAuth: false } },
@@ -26,8 +27,8 @@ const router = createRouter({
 
 // 路由守卫：根据认证状态和角色重定向
 router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem('token'); // 获取 token
-    const role = localStorage.getItem('userRole'); // 获取用户角色
+    const token = store.getters.getToken; // 获取用户令牌
+    const role = store.getters.getUserRole; // 获取用户角色
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth); // 是否需要认证
 
     // 如果页面需要认证并且没有 token，跳转到登录页面

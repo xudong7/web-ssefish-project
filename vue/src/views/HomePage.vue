@@ -106,6 +106,7 @@ import {
 import {Star} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import { v4 as uuidv4 } from 'uuid'; // 引入 uuid 库
+import store from '@/store';
 
 export default {
   components: {Star},
@@ -199,9 +200,7 @@ export default {
     },
 
     logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('userRole');
+      store.dispatch('logout');
       this.$router.push({name: 'Login'});
     },
 
@@ -227,7 +226,7 @@ export default {
 
     // 获取用户的收藏列表
     fetchUserWantList() {
-      const userId = JSON.parse(localStorage.getItem('user')).id; // 从本地存储中获取用户 ID
+      const userId = store.getters.getUser.id;
       getWantList(userId)
           .then((response) => {
             if (response && response.data && response.data.code === 1) {
@@ -252,7 +251,7 @@ export default {
 
     // 切换商品的收藏状态
     toggleFavorite(product) {
-      const userId = JSON.parse(localStorage.getItem('user')).id;
+      const userId = store.getters.getUser.id;
       product.isLiked = !product.isLiked; // 切换收藏状态
 
       toggleProductWantList(userId, product.id)
@@ -310,7 +309,7 @@ export default {
         const traceNo = product.id + '-' + uuidv4();               // Product ID (order trace number)
         const totalAmount = product.price;        // Product price
         const sellerId = product.sellerId;        // Seller ID
-        const buyerId = JSON.parse(localStorage.getItem('user')).id; // Buyer ID
+        const buyerId = store.getters.getUser.id; // Buyer ID
         // body = sellerId,buyerId
         const body = sellerId + ',' + buyerId;
 

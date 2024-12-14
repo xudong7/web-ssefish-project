@@ -8,6 +8,7 @@
 import AdminLayout from './layout/AdminLayout.vue';
 import UserLayout from './layout/UserLayout.vue';
 import LoginLayout from './layout/LoginLayout.vue';
+import store from "@/store";
 
 export default {
   data() {
@@ -19,7 +20,7 @@ export default {
     getLayout() {
       if (this.$route.path === '/' || this.$route.path === '/register') return LoginLayout; // 登录页面使用独立布局
       // 根据角色决定加载哪个布局
-      const role = localStorage.getItem('userRole');
+      const role = store.getters.getUserRole;
       if (role === 'admin') return AdminLayout;
       else if (role === 'user') return UserLayout;
 
