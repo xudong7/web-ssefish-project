@@ -21,14 +21,16 @@ import java.util.UUID;
 public class AliOSSUtils {
 
     // Hardcoded values for Access Key ID and Secret
-    private static final String ACCESS_KEY_ID = "LTAI5tJSiQGQZuMpxgmRCP8Q";
-    private static final String ACCESS_KEY_SECRET = "Vh8AGnBiJmP3JTpVdcBEI4dv90Vvf7";
+    // TODO: 请替换为您的阿里云账号的 Access Key ID 和 Access Key Secret
+    private static final String ACCESS_KEY_ID = "your_access_key_id";
+    private static final String ACCESS_KEY_SECRET = "your_access_key_secret";
 
+    // TODO: 请替换为您的阿里云 OSS Bucket 名称
 //    @Value("${aliyun.oss.endpoint}")
     private String endpoint = "https://oss-cn-hangzhou.aliyuncs.com";
-//    @Value("${aliyun.oss.bucketName}")
+    //    @Value("${aliyun.oss.bucketName}")
     private String bucketName = "web-dunjia";
-//    @Value("${aliyun.oss.region}")
+    //    @Value("${aliyun.oss.region}")
     private String region = "cn-hangzhou";
 
     private EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
@@ -93,7 +95,6 @@ public class AliOSSUtils {
         return url;
     }
 }
-
 
 
 
