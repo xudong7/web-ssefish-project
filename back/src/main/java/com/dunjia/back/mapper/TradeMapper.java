@@ -23,4 +23,7 @@ public interface TradeMapper {
 
     @Delete("delete from trades where productId = #{productId}")
     void deleteTradeByProductId(Integer productId);
+
+    @Delete("delete from trades where id = #{id}")
+    void deleteTradeById(Integer id);
 }

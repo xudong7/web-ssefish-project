@@ -1,8 +1,10 @@
 package com.dunjia.back.service;
 
 import com.dunjia.back.mapper.ProductMapper;
+import com.dunjia.back.mapper.TradeMapper;
 import com.dunjia.back.mapper.UserMapper;
 import com.dunjia.back.pojo.Product;
+import com.dunjia.back.pojo.Trade;
 import com.dunjia.back.pojo.User;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class UserService {
     private UserMapper userMapper;
     @Resource
     private ProductMapper productMapper;
+    @Resource
+    private TradeMapper tradeMapper;
 
     public User login(User user) {
         return userMapper.getByUserNameAndPassword(user);
@@ -39,6 +43,12 @@ public class UserService {
         for (Product product : products) {
             if (product.getSellerId().equals(id)) {
                 productMapper.deleteProductById(product.getId());
+            }
+        }
+        List<Trade> trades = tradeMapper.getAllTrades();
+        for (Trade trade : trades) {
+            if (trade.getBuyerId().equals(id) || trade.getSellerId().equals(id)) {
+                tradeMapper.deleteTradeById(trade.getId());
             }
         }
         userMapper.deleteUserById(id);
