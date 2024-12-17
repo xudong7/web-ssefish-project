@@ -1,5 +1,6 @@
 # ssefish
-[English](#) | [Chinese](#)
+- [English](README.md)
+- [Chinese](README/README_zh.md)
 
 ## Introduction
 This project is inspired by the "Software Engineering Market" project from our college, and addresses the need for second-hand transactions among students. We developed "Software Engineering Second-hand Fish" to help students with these transactions.

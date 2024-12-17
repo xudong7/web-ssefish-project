@@ -1,57 +1,60 @@
-# ssefish
-[English](#) | [Chinese](#)
+# 软工闲鱼
+- [English](README.md)
+- [Chinese](README/README_zh.md)
 
-## Introduction
-This project is inspired by the "Software Engineering Market" project from our college, and addresses the need for second-hand transactions among students. We developed "Software Engineering Second-hand Fish" to help students with these transactions.
-
+## 介绍
+本项目灵感来源于我们学院的“软工集市”项目，针对学生之间二手交易的需求，我们开发了“软工闲鱼”来帮助学生进行这些交易。
 ---
 
-## How to run 
+## 如何运行
 
-### 1. Run the Backend Server
+### 1. 运行后端服务器
 ```
-Find the BackApplication.java and run it.
-Please make sure you have changed settings in application.properties
-and other settings used in the project.
-TODO tags have been added in the project.
+找到 BackApplication.java 并运行。
+
+请确保您已更改 application.properties 中的设置
+
+以及项目中使用的其他设置。
+
+项目中已添加 TODO 标签。
 ```
 
-### 2. Run the Frontend Server 
-#### Run the following commands:
+### 2. 运行前端服务器
+#### 运行以下命令：
 ```
 cd vue
 npm install
 npm run serve
 ```
 
-### 3. Start Natapp 
+### 3. 启动 Natapp
 ```
-Open the Natapp directory and click start.bat.
-Remember Natapp's URL (e.g., http://xxxx.natapp.cc).
-Replace the URL in application.properties.
+打开 Natapp 目录并单击 start.bat。
+记住Natapp的URL（例如http://xxxx.natapp.cc）。
+替换application.properties中的URL。
 ```
 
-### 4. Open the Browser 
+### 4. 打开浏览器
 ```
-Download the Alipay sandbox app to make payments.
+下载支付宝沙盒应用进行支付。
 ```
-Use your own sandbox account and password.  
-Alipay account: whaphg2436@sandbox.com  
-Alipay password: 111111
+使用您自己的沙盒账户和密码。
+支付宝账号：whaphg2436@sandbox.com
+支付宝密码：111111
 
 ---
 
-## Tech Stack
-- **Frontend**: Vue 3, Element-Plus, Axios, Vuex, Vue-Router, Webpack
-- **Backend**: Spring Boot, MyBatis, MySQL, Lombok
-- **Other**: Natapp, Nginx, ...
+## 技术栈
+- **前端**: Vue 3, Element-Plus, Axios, Vuex, Vue-Router, Webpack
+- **后端**: Spring Boot, MyBatis, MySQL, Lombok
+- **其他**: Natapp, Nginx, ...
 
 ---
 
-## Port Configuration
+## 端口配置
 
 ```
-Backend Server: 8080
-Frontend Server: 3000
-If you want to change, remember to update cross-origin settings in WebConfig.java on the backend.
+后端服务器：8080
+前端服务器：3000
+如果要更改，记得在后端的 WebConfig.java 中更新跨域设置。
 ```
