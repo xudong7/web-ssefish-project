@@ -1,54 +1,58 @@
-# 中山大学软件工程java期末项目
-# 软工闲鱼
-# 项目简介
-本项目受到学院项目软工集市影响，联想到校内同学对于二手交易的需求，因此开发了软工闲鱼，希望能够帮助同学们更好地进行二手交易。
+# ssefish
+- [English](README.md)
+- [Chinese](README/README_zh.md)
+
+## Introduction
+This project is inspired by the "Software Engineering Market" project from our college, and addresses the need for second-hand transactions among students. We developed "Software Engineering Second-hand Fish" to help students with these transactions.
+
 ---
-# How to run
-## 1. run back server
+
+## How to run
+
+### 1. Run the Backend Server
 ```
-find the BackApplication.java and run it
-please make sure you have change settings in application.properties
-and other settings which used in the project
-TODO tag has been added in the project
+Find the BackApplication.java and run it.
+Please make sure you have changed settings in application.properties
+and other settings used in the project.
+TODO tags have been added in the project.
 ```
-## 2. run front server
-### run the following command
+
+### 2. Run the Frontend Server
+#### Run the following commands:
 ```
 cd vue
-```
-```
-npm install 
-```
-```
+npm install
 npm run serve
 ```
-## 3. open natapp dir and click start.bat
+
+### 3. Start Natapp
 ```
-ps. 
-remember natapp's url(like http://xxxx.natapp.cc)
-replace the url in application.properties
+Open the Natapp directory and click start.bat.
+Remember Natapp's URL (e.g., http://xxxx.natapp.cc).
+Replace the URL in application.properties.
 ```
-## 4. open browser and enter the url
+
+### 4. Open the Browser
 ```
-download alipay sandbox app to pay
-```   
+Download the Alipay sandbox app to make payments.
 ```
-(:使用你自己的沙箱账号和密码
-alipay账号： whaphg2436@sandbox.com
-alipay密码： 111111
-```
+Use your own sandbox account and password.  
+Alipay account: whaphg2436@sandbox.com  
+Alipay password: 111111
 
 ---
-# 技术栈
 
-## vue3 element-plus axios vuex vue-router webpack
-## springboot mybatis mysql lombok
-## natapp nginx ...
+## Tech Stack
+- **Frontend**: Vue 3, Element-Plus, Axios, Vuex, Vue-Router, Webpack
+- **Backend**: Spring Boot, MyBatis, MySQL, Lombok
+- **Other**: Natapp, Nginx, ...
 
 ---
-# 端口设置
+
+## Port Configuration
+
 ```
-back server 8080
-front server 3000
-如果你要更改，记得在后端的WebConfig.java中更改跨域设置
+Backend Server: 8080
+Frontend Server: 3000
+If you want to change, remember to update cross-origin settings in WebConfig.java on the backend.
 ```
