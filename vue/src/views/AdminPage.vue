@@ -15,7 +15,7 @@
           <li @click="navigateTo('product')" :class="{ active: currentTab === 'product' }">商品管理</li>
           <li @click="navigateTo('user')" :class="{ active: currentTab === 'user' }">用户管理</li>
           <li @click="navigateTo('transaction')" :class="{ active: currentTab === 'transaction' }">交易记录</li>
-          <li @click="navigateTo('announcement')" :class="{ active: currentTab === 'announcement' }">公告发布</li> <!-- New Tab -->
+          <li @click="navigateTo('announcement')" :class="{ active: currentTab === 'announcement' }">公告发布</li>
         </ul>
       </div>
 
@@ -38,7 +38,7 @@
             <tbody>
             <tr v-for="product in pagedProducts" :key="product.id">
               <td>{{ product.name }}</td>
-              <td><img :src="product.image" alt="商品图片" class="image" /></td>
+              <td><img :src="product.image" alt="商品图片" class="image"/></td>
               <td>{{ product.price }}</td>
               <td>{{ product.address }}</td>
               <td>{{ product.createTime }}</td>
@@ -80,7 +80,7 @@
               <td>{{ user.id }}</td>
               <td>{{ user.name }}</td>
               <td>{{ user.email }}</td>
-              <td><img :src="user.picture" alt="头像" class="image" /></td>
+              <td><img :src="user.picture" alt="头像" class="image"/></td>
               <td>
                 <el-button type="primary" @click="deleteUser(user.id)">删除</el-button>
               </td>
@@ -123,7 +123,8 @@
               <td>{{ trade.buyerId }}</td>
               <td>{{ trade.productId }}</td>
               <td>{{ trade.productName }}</td>
-              <td><img :src="products.find(product => product.id === trade.productId).image" alt="商品图片" class="image" /></td>
+              <td><img :src="products.find(product => product.id === trade.productId).image" alt="商品图片"
+                       class="image"/></td>
               <td>¥ {{ trade.totalAmount }}</td>
               <td>{{ trade.createTime }}</td>
             </tr>
@@ -149,7 +150,7 @@
           <form @submit.prevent="submitAnnouncement">
             <div>
               <label for="title">公告标题</label>
-              <input type="text" id="title" v-model="announcement.title" required />
+              <input type="text" id="title" v-model="announcement.title" required/>
             </div>
             <div>
               <label for="content">公告内容</label>
@@ -157,15 +158,34 @@
             </div>
             <button type="submit" @click="addNewAnnouncement">发布公告</button>
           </form>
-          <br>
           <h3>历史公告</h3>
-          <ul>
-            <li v-for="(item, index) in announcements" :key="index">
-              <strong>{{ item.title }}</strong>
-              <p>{{ item.content }}</p>
-              <p><small>发布于: {{ item.createTime }}</small></p> <!-- Display the creation time -->
-            </li>
-          </ul>
+          <table>
+            <thead>
+            <tr>
+              <th>公告标题</th>
+              <th>公告内容</th>
+              <th>发布时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="announcement in pagedAnnouncements" :key="announcement.id">
+              <td>{{ announcement.title }}</td>
+              <td>{{ announcement.content }}</td>
+              <td>{{ announcement.createTime }}</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <br>
+          <!-- Pagination for trades -->
+          <el-pagination
+              background
+              layout="prev, pager, next"
+              :total="announcements.length"
+              :page-size="pageSize"
+              :current-page="currentPage"
+              @current-change="handlePageChange"
+          />
         </div>
       </div>
     </div>
@@ -199,7 +219,7 @@ export default {
       users: [], // 用户数据
       trades: [], // 交易数据
       announcements: [], // 公告数据
-      announcement: { title: '', content: '' }, // 当前发布的公告数据
+      announcement: {title: '', content: ''}, // 当前发布的公告数据
     };
   },
   computed: {
@@ -220,6 +240,11 @@ export default {
       const start = (this.currentPage - 1) * this.pageSize;
       const end = start + this.pageSize;
       return this.trades.slice(start, end);
+    },
+    pagedAnnouncements() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.announcements.slice(start, end);
     },
   },
   methods: {
@@ -245,7 +270,7 @@ export default {
       localStorage.removeItem('token'); // Remove the token from local storage
       localStorage.removeItem('user'); // Remove the user object from local storage
       localStorage.removeItem('userRole'); // Remove the user role from local storage
-      this.$router.push({ name: 'Login' }); // Navigate to the Login page
+      this.$router.push({name: 'Login'}); // Navigate to the Login page
     },
     navigateTo(tab) {
       this.currentTab = tab;
@@ -274,7 +299,7 @@ export default {
       if (this.announcement.title && this.announcement.content) {
         // Add the current date and time to the announcement
         const currentTime = new Date().toLocaleString();
-        this.announcements.push({ ...this.announcement, createdAt: currentTime });
+        this.announcements.push({...this.announcement, createdAt: currentTime});
         this.announcement.title = '';
         this.announcement.content = '';
         ElMessage.success('公告发布成功');
@@ -344,10 +369,12 @@ export default {
   display: flex;
   flex-grow: 1;
   background-color: #ffffff;
+  overflow: hidden; /* 确保内容不溢出 */
 }
 
 .sidebar {
   width: 200px;
+  flex-shrink: 0; /* 防止被压缩 */
   background-color: lightskyblue;
   color: white;
   padding-top: 30px;
@@ -377,6 +404,7 @@ export default {
   flex-grow: 1;
   padding: 30px;
   overflow-y: auto;
+  overflow-x: hidden; /* 避免出现水平滚动条 */
 }
 
 h3 {
@@ -386,9 +414,9 @@ h3 {
 }
 
 label {
-  display: block; /* 确保每个label在新的一行显示 */
-  margin-bottom: 15px; /* 增加与下方元素的间距 */
-  line-height: 1.8; /* 增大行距 */
+  display: block;
+  margin-bottom: 15px;
+  line-height: 1.8;
 }
 
 table {
@@ -397,6 +425,7 @@ table {
   margin-top: 20px;
   background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  table-layout: fixed; /* 固定表格布局，防止列宽自动调整 */
 }
 
 table th, table td {
@@ -404,11 +433,17 @@ table th, table td {
   text-align: left;
   border-bottom: 1px solid #ddd;
   font-size: 14px;
+  word-wrap: break-word; /* 处理长文本换行 */
 }
 
 table th {
   background-color: #ecf0f1;
   color: #34495e;
+  white-space: nowrap; /* 避免表头文字换行 */
+}
+
+table td {
+  white-space: normal; /* 允许单元格内容换行 */
 }
 
 button {
@@ -446,6 +481,5 @@ button[type="submit"]:hover {
 .image {
   max-width: 100px;
   height: auto;
-
 }
 </style>
