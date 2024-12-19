@@ -29,6 +29,7 @@ public class UploadController {
 
         // 上传到阿里云OSS
 //        String url = aliOSSUtils.upload(image);
+        // 上传到本地
         String url = aliOSSUtils.localUpload(image);
         log.info("上传成功，url：{}", url);
 

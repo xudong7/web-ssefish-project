@@ -109,7 +109,7 @@ export default {
             if (result.data.code === 1) {
               // Assuming the URL of the image is returned in the response data
               this.product.image = result.data.data;  // Store the image URL
-              alert(this.product.image);
+              // alert(this.product.image);
               this.$message({
                 message: 'Image uploaded successfully!',
                 type: 'success',
