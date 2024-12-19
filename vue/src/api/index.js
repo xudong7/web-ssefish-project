@@ -132,4 +132,19 @@ export const updateTradeByProductId = (productId) => {
     return axios.put(`/trades/${productId}`);
 }
 
+// announcement api
+// 获取所有公告
+export const getAnnouncementList = () => {
+    return axios.get('/announcements');
+}
+
+// 根据id获取公告
+export const getAnnouncementById = (id) => {
+    return axios.get(`/announcements/${id}`);
+}
+
+// 添加公告
+export const addAnnouncement = (announcement) => {
+    return axios.post('/announcements', announcement);
+}
 

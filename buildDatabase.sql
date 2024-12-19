@@ -38,5 +38,13 @@ create table trades
     createTime  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP    -- 交易创建时间
 );
 
+create table announcements
+(
+    id          INT AUTO_INCREMENT PRIMARY KEY,                      -- 通知ID，自增主键
+    title       VARCHAR(255)   NOT NULL,                             -- 通知标题
+    content     VARCHAR(255)   NOT NULL,                             -- 通知内容
+    createTime  TIMESTAMP               DEFAULT CURRENT_TIMESTAMP    -- 通知创建时间
+);
+
 insert into users (id, name, password, email, wantList, picture)
 values (1, 'admin', 'admin', 'admin@admin.com', null, 'https://img.icons8.com/ios/452/user');

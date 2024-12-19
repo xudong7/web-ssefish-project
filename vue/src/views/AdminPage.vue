@@ -155,7 +155,7 @@
               <label for="content">公告内容</label>
               <textarea id="content" v-model="announcement.content" rows="6" required></textarea>
             </div>
-            <button type="submit">发布公告</button>
+            <button type="submit" @click="addNewAnnouncement">发布公告</button>
           </form>
           <br>
           <h3>历史公告</h3>
@@ -163,7 +163,7 @@
             <li v-for="(item, index) in announcements" :key="index">
               <strong>{{ item.title }}</strong>
               <p>{{ item.content }}</p>
-              <p><small>发布于: {{ item.createdAt }}</small></p> <!-- Display the creation time -->
+              <p><small>发布于: {{ item.createTime }}</small></p> <!-- Display the creation time -->
             </li>
           </ul>
         </div>
@@ -173,8 +173,17 @@
 </template>
 
 <script>
-import { ElPagination } from 'element-plus';
-import { getProductList, deleteProductById, deleteUserById, getUserList, getUserById, getTradeList } from '../api';
+import {ElMessage, ElPagination} from 'element-plus';
+import {
+  getProductList,
+  deleteProductById,
+  deleteUserById,
+  getUserList,
+  getUserById,
+  getTradeList,
+  addAnnouncement,
+  getAnnouncementList
+} from '@/api';
 
 export default {
   name: 'AdminPage',
@@ -243,7 +252,7 @@ export default {
     },
     deleteProduct(id) {
       deleteProductById(id).then(() => {
-        alert(`商品已删除`);
+        ElMessage.success(`商品已删除`);
         // 刷新页面
         location.reload();
       });
@@ -251,10 +260,10 @@ export default {
     deleteUser(id) {
       getUserById(id).then(response => {
         if (response.data.data.name === 'admin') {
-          alert('不能删除管理员');
+          ElMessage.error('不能删除管理员');
         } else {
           deleteUserById(id).then(() => {
-            alert(`用户已删除`);
+            ElMessage.success(`用户已删除`);
             // 刷新页面
             location.reload();
           });
@@ -268,14 +277,27 @@ export default {
         this.announcements.push({ ...this.announcement, createdAt: currentTime });
         this.announcement.title = '';
         this.announcement.content = '';
-        alert('公告发布成功');
+        ElMessage.success('公告发布成功');
+        location.reload();
       }
+    },
+    getAllAnnouncements() {
+      getAnnouncementList().then(response => {
+        this.announcements = response.data.data;
+      });
+    },
+    addNewAnnouncement() {
+      addAnnouncement(this.announcement).then(() => {
+        this.announcement.title = '';
+        this.announcement.content = '';
+      });
     },
   },
   mounted() {
     this.getAllProducts();
     this.getAllUsers();
     this.getAllTrades();
+    this.getAllAnnouncements();
   },
 };
 </script>

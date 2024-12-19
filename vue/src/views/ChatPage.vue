@@ -3,21 +3,20 @@
     <!-- 左侧公告列表 -->
     <div class="announcement-sidebar">
       <div class="announcement-history-title">公告列表</div>
-      <el-scrollbar class="announcement-history-list">
+      <div class="announcement-history-list">
         <div
-            v-for="(announcement, index) in announcements"
-            :key="index"
-            :class="['announcement-item', activeAnnouncement === index ? 'active' : '']"
-            @click="selectAnnouncement(index)"
+          v-for="(announcement, index) in announcements"
+          :key="announcement.id"
+          class="announcement-item"
+          :class="{ active: index === activeAnnouncement }"
+          @click="selectAnnouncement(index)"
         >
           <div class="announcement-info">
             <div class="announcement-title">{{ announcement.title }}</div>
-            <div class="announcement-time">
-              {{ formatDate(announcement.publishedAt) }}
-            </div>
+            <div class="announcement-time">{{ formatDate(announcement.createTime) }}</div>
           </div>
         </div>
-      </el-scrollbar>
+      </div>
     </div>
 
     <!-- 右侧公告详情 -->
@@ -36,27 +35,13 @@
 </template>
 
 <script>
+import { getAnnouncementList } from '@/api';
+
 export default {
   data() {
     return {
       // 公告数据，包括发布时间
-      announcements: [
-        {
-          title: "公告 1",
-          content: "这是公告 1 的内容，详细内容将在点击后显示。",
-          publishedAt: "2024-11-29T10:00:00",  // 公告发布时间
-        },
-        {
-          title: "公告 2",
-          content: "这是公告 2 的内容，详细内容将在点击后显示。",
-          publishedAt: "2024-11-28T09:00:00",  // 公告发布时间
-        },
-        {
-          title: "公告 3",
-          content: "这是公告 3 的内容，详细内容将在点击后显示。",
-          publishedAt: "2024-11-27T08:00:00",  // 公告发布时间
-        },
-      ],
+      announcements: [],
       activeAnnouncement: null, // 当前选中的公告索引
     };
   },
@@ -75,6 +60,14 @@ export default {
       const options = {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
       return date.toLocaleString('zh-CN', options);  // 返回中文格式的日期时间
     },
+    getAllAnnouncements() {
+      getAnnouncementList().then(response => {
+        this.announcements = response.data.data;
+      });
+    },
+  },
+  created() {
+    this.getAllAnnouncements();
   },
 };
 </script>
