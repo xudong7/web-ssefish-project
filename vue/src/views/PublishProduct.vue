@@ -31,7 +31,7 @@
             :limit="1"
             :on-change="handleFileChange"
             :auto-upload="false"
-            action="/api/upload"
+            action="/upload"
         >
           <template #trigger>
             <el-button type="primary">选择文件</el-button>
@@ -109,6 +109,7 @@ export default {
             if (result.data.code === 1) {
               // Assuming the URL of the image is returned in the response data
               this.product.image = result.data.data;  // Store the image URL
+              alert(this.product.image);
               this.$message({
                 message: 'Image uploaded successfully!',
                 type: 'success',

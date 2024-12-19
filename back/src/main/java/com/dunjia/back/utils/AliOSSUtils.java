@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -32,6 +33,8 @@ public class AliOSSUtils {
     private String bucketName = "web-dunjia";
 //    @Value("${aliyun.oss.region}")
     private String region = "cn-hangzhou";
+    @Value("${imagepath}")
+    private String imagepath;
 
     private EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
 
@@ -93,6 +96,18 @@ public class AliOSSUtils {
         // Shutdown the client
         ossClient.shutdown();
         return url;
+    }
+
+    public String localUpload(MultipartFile image) throws IOException {
+        // 将前端传来的图片存到本地(如果没有文件夹，则创建一个)，同时将图片在本地的路径返回，使用/image/**访问
+        String originalFilename = image.getOriginalFilename();
+        String fileName = UUID.randomUUID().toString() + originalFilename.substring(originalFilename.lastIndexOf("."));
+        File file = new File(imagepath + fileName);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        image.transferTo(file);
+        return "http://localhost:8080/image/" + fileName;
     }
 }
 
