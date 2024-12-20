@@ -7,23 +7,25 @@
         <el-form-item
             label="用户名"
             prop="username"
-            :rules="[{ required: true, message: 'Please input username', trigger: 'blur' }]">
+            :rules="[{ required: true, message: '请输入用户名', trigger: 'blur' }]">
           <el-input
               v-model="loginData.name"
-              placeholder="Enter username"
-              class="input-white"
+              placeholder="请输入用户名"
+              class="input-field"
+              prefix-icon="el-icon-user"
           ></el-input>
         </el-form-item>
 
         <el-form-item
             label="密码"
             prop="password"
-            :rules="[{ required: true, message: 'Please input password', trigger: 'blur' }]">
+            :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
           <el-input
               type="password"
               v-model="loginData.password"
-              placeholder="Enter password"
-              class="input-white"
+              placeholder="请输入密码" 
+              class="input-field"
+              prefix-icon="el-icon-lock"
           ></el-input>
         </el-form-item>
 
@@ -31,11 +33,13 @@
           <el-button
               type="primary"
               @click="goToLogin"
-              :loading="loading">
+              :loading="loading"
+              class="login-btn">
             登录
           </el-button>
           <el-button
-              @click="goToRegister">
+              @click="goToRegister"
+              class="register-btn">
             注册
           </el-button>
         </el-form-item>
@@ -45,7 +49,7 @@
 </template>
 
 <script>
-import { login } from '@/api'; // Import login API method
+import { login } from '@/api';
 
 export default {
   data() {
@@ -54,95 +58,83 @@ export default {
         name: '',
         password: ''
       },
-      loading: false // 控制登录按钮加载状态
+      loading: false
     };
   },
   methods: {
-    // 登录方法
     goToLogin() {
-      // 启用加载状态
       this.loading = true;
 
-      login(this.loginData) // 调用登录接口
+      login(this.loginData)
           .then((res) => {
             if (res.data.code === 1) {
-              this.$message.success('登录成功'); // 提示登录成功
+              this.$message.success('登录成功');
 
-              localStorage.setItem('token', res.data.data.token); // 保存token
-              localStorage.setItem('user', JSON.stringify(res.data.data.user)); // 保存登录用户
+              localStorage.setItem('token', res.data.data.token);
+              localStorage.setItem('user', JSON.stringify(res.data.data.user));
 
-              // 模拟登录逻辑，根据用户名分配角色
               setTimeout(() => {
                 if (this.loginData.name === 'admin' && this.loginData.password === 'admin') {
-                  localStorage.setItem('userRole', 'admin'); // 保存角色为管理员
-                  this.$router.push('/admin'); // 跳转到管理员页面
+                  localStorage.setItem('userRole', 'admin');
+                  this.$router.push('/admin');
                 } else if (this.loginData.name !== '' && this.loginData.password !== '') {
-                  localStorage.setItem('userRole', 'user'); // 保存角色为普通用户
-                  this.$router.push('/home'); // 跳转到主页
+                  localStorage.setItem('userRole', 'user');
+                  this.$router.push('/home');
                 }
 
-                // 登录成功后删除用户密码 避免密码泄露
                 const storedUser = JSON.parse(localStorage.getItem('user'));
                 if (storedUser && storedUser.password) {
-                  delete storedUser.password; // Remove the password from user data
-                  localStorage.setItem('user', JSON.stringify(storedUser)); // Update user in localStorage
+                  delete storedUser.password;
+                  localStorage.setItem('user', JSON.stringify(storedUser));
                 }
 
-                // 停止加载状态
                 this.loading = false;
-              }, 500); // 模拟网络延迟
+              }, 500);
             } else {
-              this.$message.error(res.data.message); // 提示登录失败
-              // 清空数据
+              this.$message.error(res.data.message);
               this.loginData.name = '';
               this.loginData.password = '';
             }
           })
           .catch(error => {
             console.error('Failed to login:', error);
-            this.$message.error('登录失败'); // 提示登录失败
-            // 清空数据
+            this.$message.error('登录失败');
             this.loginData.name = '';
             this.loginData.password = '';
           })
           .finally(() => {
-            this.loading = false; // 停止加载状态
+            this.loading = false;
           });
     },
-    // 检查是否已经登录
     checkLoginStatus() {
       const user = localStorage.getItem('user');
 
-      // Retrieve user info and set the login data
       if (user) {
         const parsedUser = JSON.parse(user);
-        this.loginData.name = parsedUser.name;  // Set the username
-        this.loginData.password = parsedUser.password;  // Convert the password to string
+        this.loginData.name = parsedUser.name;
+        this.loginData.password = parsedUser.password;
         this.goToLogin();
       } else {
         this.loginData.name = '';
         this.loginData.password = '';
       }
     },
-    // 跳转到注册页面
     goToRegister() {
       this.$router.push({name: 'Register'});
     },
-    // 禁用滚动
     disableScroll() {
       document.body.style.overflow = 'hidden';
     },
-    // 启用滚动
     enableScroll() {
       document.body.style.overflow = '';
     }
   },
   mounted() {
-    this.disableScroll(); // 组件挂载时禁用滚动
-    this.checkLoginStatus(); // 检查登录状态
+    this.disableScroll();
+    this.checkLoginStatus();
   },
   beforeUnmount() {
-    this.enableScroll(); // 组件卸载时启用滚动
+    this.enableScroll();
   }
 };
 </script>
@@ -150,36 +142,82 @@ export default {
 <style scoped>
 .login-container {
   display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  height: 100vh; /* 全屏高度 */
-  background-image: url('@/assets/loginBack.jpg'); /* 背景图片 */
-  background-size: cover; /* 背景图片填充 */
-  background-position: center; /* 背景图片居中 */
-  background-repeat: no-repeat; /* 背景不重复 */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('@/assets/loginBack.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .login-form {
-  max-width: 400px;
-  padding: 50px;
-  background: rgba(255, 255, 255, 0.8); /* 白色背景加透明度 */
-  border-radius: 8px;
-  text-align: center; /* 文本居中 */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+  max-width: 450px;
+  width: 90%;
+  padding: 40px 50px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.login-form:hover {
+  transform: translateY(-5px);
 }
 
 .form-title {
-  margin-bottom: 20px; /* 标题与表单的间距 */
-  font-size: 20px; /* 标题字体大小 */
-  font-weight: bold; /* 标题加粗 */
-  color: #003366; /* 标题颜色 */
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.input-white {
-  background-color: rgb(255, 255, 255); /* 输入框背景为白色 */
+.input-field {
+  background-color: #ffffff;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
-.el-button {
-  margin: 0 5px; /* 按钮间距 */
+.input-field:hover, .input-field:focus {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn, .register-btn {
+  width: 120px;
+  height: 40px;
+  margin: 10px;
+  border-radius: 20px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.login-btn {
+  background: #409EFF;
+  border: none;
+}
+
+.login-btn:hover {
+  background: #66b1ff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(64, 158, 255, 0.3);
+}
+
+.register-btn {
+  background: #ffffff;
+  border: 1px solid #dcdfe6;
+}
+
+.register-btn:hover {
+  background: #f5f7fa;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+:deep(.el-form-item__label) {
+  font-size: 16px;
+  color: #2c3e50;
 }
 </style>

@@ -11,13 +11,14 @@
             placeholder="搜索商品"
             suffix-icon="el-icon-search"
             clearable
+            class="search-input"
         />
         <el-col :span="1" class="user-options">
         </el-col>
-        <el-button type="primary" @click="searchProducts">搜索</el-button>
+        <el-button type="primary" @click="searchProducts" class="search-btn">搜索</el-button>
       </el-col>
       <el-col :span="4" class="user-options">
-        <el-button type="success" @click="logout">登出</el-button>
+        <el-button type="success" @click="logout" class="logout-btn">登出</el-button>
         <el-button @click="navigateChat">公告</el-button>
       </el-col>
     </el-row>
@@ -352,6 +353,55 @@ export default {
 
 .search-col {
   text-align: right;
+}
+
+.logout-btn {
+  background-color: #ffcccc !important;
+  border-color: #ffcccc !important;
+  color: grey !important;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  margin-right: 10px;
+}
+
+.search-input :deep(.el-input__wrapper) {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.search-input :deep(.el-input__wrapper):hover,
+.search-input :deep(.el-input__wrapper):focus {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-input :deep(.el-input__inner) {
+  height: 40px;
+  font-size: 16px;
+  color: #333;
+  padding: 0 20px;
+}
+
+.search-btn {
+  height: 40px;
+  border-radius: 20px;
+  padding: 0 25px;
+  font-size: 16px;
+  background: #4CAF50;
+  border-color: #4CAF50;
+  transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+  background: #45a049;
+  border-color: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 .user-options {

@@ -165,6 +165,7 @@
               <th>公告标题</th>
               <th>公告内容</th>
               <th>发布时间</th>
+              <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -172,6 +173,9 @@
               <td>{{ announcement.title }}</td>
               <td>{{ announcement.content }}</td>
               <td>{{ announcement.createTime }}</td>
+              <td>
+                <el-button type="primary" @click="deleteAnnouncement(announcement.id)">删除</el-button>
+              </td>
             </tr>
             </tbody>
           </table>
@@ -186,6 +190,7 @@
               :current-page="currentPage"
               @current-change="handlePageChange"
           />
+          
         </div>
       </div>
     </div>
@@ -202,7 +207,7 @@ import {
   getUserById,
   getTradeList,
   addAnnouncement,
-  getAnnouncementList
+  getAnnouncementList, deleteAnnouncementById
 } from '@/api';
 
 export default {
@@ -315,6 +320,14 @@ export default {
       addAnnouncement(this.announcement).then(() => {
         this.announcement.title = '';
         this.announcement.content = '';
+      });
+    },
+    deleteAnnouncement(id) {
+      // Delete the announcement by id
+      deleteAnnouncementById(id).then(() => {
+        ElMessage.success('公告已删除');
+        // Refresh the page
+        location.reload();
       });
     },
   },

@@ -1,20 +1,22 @@
 <template>
   <div class="form-container">
     <h2 class="center-title">发布闲置</h2>
-    <el-form :model="product" ref="form" label-width="120px">
+    <el-form :model="product" ref="form" label-width="120px" class="publish-form">
       <!-- Product Name Input -->
       <el-form-item label="商品名称" prop="name">
-        <el-input v-model="product.name" placeholder="Enter product name" class="short-input"></el-input>
+        <el-input v-model="product.name" placeholder="请输入商品名称" class="short-input"></el-input>
       </el-form-item>
 
       <!-- Price Input -->
       <el-form-item label="价格" prop="price">
-        <el-input v-model="product.price" placeholder="Enter product price" class="short-input"></el-input>
+        <el-input v-model="product.price" placeholder="请输入商品价格" class="short-input">
+          <template #prefix>¥</template>
+        </el-input>
       </el-form-item>
 
-      <!--新增 Location 输入框-->
+      <!-- Location Input -->
       <el-form-item label="地址" prop="location">
-        <el-select v-model="product.address" placeholder="Select a province" class="short-input">
+        <el-select v-model="product.address" placeholder="请选择校区" class="short-input">
           <el-option v-for="province in provinces"
                      :key="province.code"
                      :label="province.name"
@@ -32,19 +34,24 @@
             :on-change="handleFileChange"
             :auto-upload="false"
             action="/upload"
+            drag
         >
           <template #trigger>
-            <el-button type="primary">选择文件</el-button>
+            <div class="upload-area">
+              <el-icon class="upload-icon"><Upload /></el-icon>
+              <div class="upload-text">点击或拖拽图片上传</div>
+              <div class="upload-tip">支持 jpg、png 格式</div>
+            </div>
           </template>
         </el-upload>
-        <div v-if="product.image">
-          <img :src="product.image" alt="Uploaded Image" class="uploaded-image" />
+        <div v-if="product.image" class="image-preview">
+          <img :src="product.image" alt="商品预览图" class="uploaded-image" />
         </div>
       </el-form-item>
 
-      <!--新增 condition 输入框-->
+      <!-- Condition Input -->
       <el-form-item label="新旧程度" prop="condition">
-        <el-select v-model="product.condition" placeholder="Select a level" class="short-input">
+        <el-select v-model="product.condition" placeholder="请选择新旧程度" class="short-input">
           <el-option v-for="level in levels"
                      :key="level.code"
                      :label="level.name"
@@ -55,21 +62,30 @@
 
       <!-- Description Input -->
       <el-form-item label="描述" prop="description">
-        <el-input type="textarea" v-model="product.description" placeholder="Enter product description"></el-input>
+        <el-input type="textarea" 
+                  v-model="product.description" 
+                  placeholder="请详细描述商品的具体情况，例如：使用时长、磨损程度等"
+                  :rows="4"
+                  class="description-input">
+        </el-input>
       </el-form-item>
 
       <!-- Publish Button -->
       <el-form-item>
-        <el-button type="primary" @click="submitProduct" class="button-container">发布商品</el-button>
+        <el-button type="primary" @click="submitProduct" class="submit-button">发布商品</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { publishProduct, upload } from '@/api';  // Import API methods
+import { publishProduct, upload } from '@/api';
+import { Upload } from '@element-plus/icons-vue';
 
 export default {
+  components: {
+    Upload
+  },
   data() {
     return {
       product: {
@@ -103,68 +119,58 @@ export default {
       const formData = new FormData();
       formData.append('image', file.raw);
 
-      // Call the backend API to upload the image
       upload(formData)
           .then((result) => {
             if (result.data.code === 1) {
-              // Assuming the URL of the image is returned in the response data
-              this.product.image = result.data.data;  // Store the image URL
-              // alert(this.product.image);
+              this.product.image = result.data.data;
               this.$message({
-                message: 'Image uploaded successfully!',
+                message: '图片上传成功!',
                 type: 'success',
               });
-
-              // Clear the selected file and reset the image preview
               this.$refs.upload.clearFiles();
             } else {
               this.$message({
-                message: 'Failed to upload image',
+                message: '图片上传失败',
                 type: 'error',
               });
             }
           })
           .catch((error) => {
-            console.error('Error uploading image:', error);
+            console.error('上传图片出错:', error);
             this.$message({
-              message: 'An error occurred while uploading the image',
+              message: '上传图片时发生错误',
               type: 'error',
             });
           });
     },
 
-    // Submit the product data to the backend
     submitProduct() {
-      // Check if all fields are filled
       if (!this.product.name || !this.product.price || !this.product.description || !this.product.image) {
-        this.$message.error('Please fill in all required fields and upload an image.');
+        this.$message.error('请填写所有必填项并上传图片');
         return;
       }
 
-      // Set the seller ID to the current user's ID
-      // this.product.sellerId = this.$store.state.user.id;
       this.product.sellerId = JSON.parse(localStorage.getItem('user')).id;
 
-      // Call the API to publish the product
       publishProduct(this.product)
           .then((result) => {
             if (result.data.code === 1) {
               this.$message({
-                message: 'Product published successfully!',
+                message: '商品发布成功!',
                 type: 'success',
               });
-              this.$router.push('/home');  // Redirect to home page after success
+              this.$router.push('/home');
             } else {
               this.$message({
-                message: 'Failed to publish product',
+                message: '商品发布失败',
                 type: 'error',
               });
             }
           })
           .catch((error) => {
-            console.error('Error publishing product:', error);
+            console.error('发布商品出错:', error);
             this.$message({
-              message: 'An error occurred while publishing the product',
+              message: '发布商品时发生错误',
               type: 'error',
             });
           });
@@ -177,44 +183,101 @@ export default {
 .form-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* 居中所有内容 */
-  justify-content: flex-start; /* 垂直开始对齐内容 */
-  min-height: 100vh; /* 使容器至少占满视口高度 */
-  margin-top: -10px; /* 向上调整 */
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+  height: auto;
+}
+
+.publish-form {
+  width: 100%;
+  max-width: 800px;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }
 
 .center-title {
-  margin-bottom: 20px; /* 底部间距 */
-  font-size: 24px; /* 字体大小 */
-  font-weight: bold; /* 加粗 */
+  color: #303133;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
 }
 
 .short-input {
-  width: 300px; /* 设置输入框的宽度 */
-  margin: 0; /* 移除默认边距 */
+  width: 300px;
+  transition: all 0.3s ease;
 }
 
-.upload-demo {
-  max-width: 100%; /* 限制图标和文本的最大宽度 */
-  max-height: 100%; /* 限制图标和文本的最大高度 */
-  display: flex;
-  align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
-  background-color: transparent; /* 设置背景透明以去掉边框效果 */
+.short-input:hover {
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.description-input {
+  width: 100%;
+}
+
+.upload-area {
+  padding: 5px;
+  text-align: center;
+  border: dashed #dcdfe6;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.upload-area:hover {
+  border-color: #409EFF;
+}
+
+.upload-icon {
+  font-size: 28px;
+  color: #8c939d;
+  margin-bottom: 10px;
+}
+
+.upload-text {
+  color: #606266;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.upload-tip {
+  color: #909399;
+  font-size: 12px;
+}
+
+.image-preview {
+  margin-top: 20px;
+  text-align: center;
 }
 
 .uploaded-image {
-  width: 300px;
-  height: 300px;
-  object-fit: cover; /* Ensure the image covers the area without distortion */
+  width: 500px;
+  height: auto;
+  object-fit: cover;
   border-radius: 8px;
-  border: 1px solid #ddd;
-  margin-top: 10px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
 }
 
-/* 居中按钮 */
-.button-container {
-  text-align: center; /* 居中按钮 */
-  margin-top: 20px; /* 顶部间距 */
+.uploaded-image:hover {
+  transform: scale(1.02);
+}
+
+.submit-button {
+  width: 200px;
+  height: 40px;
+  font-size: 16px;
+  display: block;
+  margin: 30px auto 0;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(64,158,255,0.4);
 }
 </style>

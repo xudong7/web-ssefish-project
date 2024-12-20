@@ -25,4 +25,8 @@ public class AnnouncementService {
         announcement.setCreateTime(LocalDateTime.now());
         announcementMapper.addAnnouncement(announcement);
     }
+
+    public void deleteAnnouncementById(Integer id) {
+        announcementMapper.deleteAnnouncementById(id);
+    }
 }

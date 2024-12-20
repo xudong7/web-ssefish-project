@@ -148,3 +148,8 @@ export const addAnnouncement = (announcement) => {
     return axios.post('/announcements', announcement);
 }
 
+// É¾³ý¹«¸æ
+export const deleteAnnouncementById = (id) => {
+    return axios.delete(`/announcements/${id}`);
+}
+

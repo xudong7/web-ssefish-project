@@ -1,35 +1,41 @@
 <template>
   <div class="announcement-container">
-    <!-- 左侧公告列表 -->
-    <div class="announcement-sidebar">
-      <div class="announcement-history-title">公告列表</div>
-      <div class="announcement-history-list">
-        <div
-          v-for="(announcement, index) in announcements"
-          :key="announcement.id"
-          class="announcement-item"
-          :class="{ active: index === activeAnnouncement }"
-          @click="selectAnnouncement(index)"
-        >
-          <div class="announcement-info">
-            <div class="announcement-title">{{ announcement.title }}</div>
-            <div class="announcement-time">{{ formatDate(announcement.createTime) }}</div>
-          </div>
+    <!-- 顶部大图 -->
+    <div class="announcement-header">
+      <div class="header-content">
+        <h1 class="header-title">{{ currentAnnouncement?.title || '公告' }}</h1>
+        <div class="header-meta">
+          <span class="meta-item">{{ formatDate(currentAnnouncement?.createTime) || '暂无日期' }}</span>
+          <span class="meta-item">{{ currentAnnouncement?.views || 229 }} 次阅读</span>
+          <span class="meta-item">{{ currentAnnouncement?.duration || 2 }} 分钟</span>
         </div>
       </div>
     </div>
 
-    <!-- 右侧公告详情 -->
+    <!-- 主要内容区域 -->
     <div class="announcement-main">
-      <el-header class="announcement-header">
-        <span class="announcement-name">{{ currentAnnouncement?.title || '请选择公告' }}</span>
-      </el-header>
-
-      <el-main class="announcement-content-container">
-        <div class="announcement-content">
-          <div v-html="currentAnnouncement?.content || ''"></div>
+      <!-- 左侧目录 -->
+      <div class="catalog-wrapper">
+        <div class="announcement-catalog">
+          <div class="catalog-title">目录</div>
+          <div class="catalog-items">
+            <div 
+              v-for="(announcement, index) in announcements" 
+              :key="announcement.id"
+              class="catalog-item"
+              :class="{ active: index === activeAnnouncement }"
+              @click="selectAnnouncement(index)"
+            >
+              {{ announcement.title }}
+            </div>
+          </div>
         </div>
-      </el-main>
+      </div>
+
+      <!-- 右侧内容 -->
+      <div class="content-wrapper">
+        <div class="announcement-content" v-html="currentAnnouncement?.content || '请选择一个公告查看详细内容'"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -74,108 +80,170 @@ export default {
 
 <style scoped>
 .announcement-container {
-  display: flex;
-  height: 100vh;
-  border-radius: 12px; /* 圆角 */
-  overflow: hidden; /* 禁止溢出 */
+  min-height: 100vh;
+  background-color: #f5f7fa;
 }
 
-/* 左侧公告列表 */
-.announcement-sidebar {
-  width: 15%;
-  background-color: #f7f7f7;
-  border-right: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
-  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1); /* 加阴影 */
-}
-
-.announcement-history-title {
-  padding: 18px 20px;
-  font-weight: bold;
-  font-size: 18px;
-  background-color: #4fa3f7;
-  color: white;
-  text-align: center;
-  border-top-left-radius: 12px;
-}
-
-.announcement-history-list {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-}
-
-.announcement-item {
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  cursor: pointer;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.announcement-item:hover {
-  background-color: #e6f7ff;
-  transform: scale(1.02);
-}
-
-.announcement-item.active {
-  background-color: #4fa3f7;
-  color: white;
-}
-
-.announcement-info {
-  margin-left: 15px;
-  flex: 1;
-}
-
-.announcement-title {
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.announcement-time {
-  font-size: 12px;
-  color: #888;
-  margin-top: 5px;
-}
-
-/* 右侧公告详情 */
-.announcement-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-
+/* 顶部大图样式 */
 .announcement-header {
-  background-color: #4fa3f7;
-  color: white;
-  padding: 12px 20px;
+  height: 400px;
+  background: linear-gradient(135deg, #e6f3ff 0%, #409EFF 100%);  /* 从浅蓝到主题蓝的渐变 */
   display: flex;
   align-items: center;
-  border-top-right-radius: 12px;
+  justify-content: center;
+  color: #2c3e50;  /* 改为深色文字 */
+  text-align: center;
+  padding: 0 20px;
+  position: relative;
+  overflow: hidden;
 }
 
-.announcement-name {
-  font-size: 18px;
+/* 调整波浪效果 */
+.announcement-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%, transparent);
+  background-size: 30px 30px;
+  opacity: 0.3;
 }
 
-.announcement-content-container {
-  flex: 1;
+.header-content {
+  max-width: 800px;
+  position: relative;  /* 确保内容在波浪效果之上 */
+  z-index: 1;
+}
+
+.header-title {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-shadow: none;  /* 移除文字阴影 */
+  color: #2c3e50;
+}
+
+.header-meta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 14px;
+}
+
+.meta-item {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 4px 12px;
+  border-radius: 15px;
+  color: #2c3e50;
+}
+
+/* 主要内容区域样式 */
+.announcement-main {
+  display: flex;
+  max-width: 1200px;
+  margin: -60px auto 0;
+  padding: 0 20px;
+  position: relative;
+  gap: 20px;
+}
+
+/* 左侧目录样式 */
+.catalog-wrapper {
+  width: 280px;
+}
+
+.announcement-catalog {
+  background-color: white;
+  border-radius: 8px;
   padding: 20px;
-  overflow-y: auto;
+  position: sticky;
+  top: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.catalog-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.catalog-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.catalog-item {
+  font-size: 14px;
+  color: #606266;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.catalog-item:hover {
+  background-color: #ecf5ff;
+  color: #409EFF;
+}
+
+.catalog-item.active {
+  background-color: #409EFF;
+  color: white;
+}
+
+/* 右侧内容样式 */
+.content-wrapper {
+  flex: 1;
 }
 
 .announcement-content {
-  font-size: 16px;
-  color: #333;
-  line-height: 1.6;
+  background-color: white;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  line-height: 1.8;
+  color: #606266;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .announcement-main {
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .announcement-header {
+    height: 300px;
+  }
+
+  .header-title {
+    font-size: 28px;
+  }
+
+  .announcement-main {
+    flex-direction: column;
+    margin-top: -40px;
+  }
+
+  .catalog-wrapper {
+    width: 100%;
+  }
+
+  .announcement-catalog {
+    position: static;
+  }
+
+  .announcement-content {
+    padding: 20px;
+  }
 }
 </style>

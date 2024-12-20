@@ -35,4 +35,11 @@ public class AnnouncementController {
         announcementService.addAnnouncement(announcement);
         return Result.success();
     }
+
+    @DeleteMapping("/announcements/{id}")
+    public Result deleteAnnouncement(@PathVariable Integer id) {
+        log.info("Delete announcement by id");
+        announcementService.deleteAnnouncementById(id);
+        return Result.success();
+    }
 }
