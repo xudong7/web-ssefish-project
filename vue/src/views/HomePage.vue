@@ -1,28 +1,5 @@
 <template>
   <div>
-    <!-- Header Section -->
-    <el-row class="header" type="flex" justify="space-between" align="middle">
-      <el-col :span="8">
-        <h1 class="site-title">校园二手闲置物品交易平台</h1>
-      </el-col>
-      <el-col :span="8" class="search-col" style="display: flex; justify-content: space-between; align-items: center;">
-        <el-input
-            v-model="searchQuery"
-            placeholder="搜索商品"
-            suffix-icon="el-icon-search"
-            clearable
-            class="search-input"
-        />
-        <el-col :span="1" class="user-options">
-        </el-col>
-        <el-button type="primary" @click="searchProducts" class="search-btn">搜索</el-button>
-      </el-col>
-      <el-col :span="4" class="user-options">
-        <el-button type="success" @click="logout" class="logout-btn">登出</el-button>
-        <el-button @click="navigateChat">公告</el-button>
-      </el-col>
-    </el-row>
-
     <!-- Sorting Bar -->
     <el-row class="sorting-bar" type="flex" justify="start" align="middle" style="padding: 20px 0;">
       <!-- 发布时间排序 -->
@@ -51,13 +28,29 @@
       </el-col>
 
       <!-- Reset Button -->
-      <el-col :span="3">
+      <el-col :span="5">
         <el-button type="warning" @click="resetFilters">重置</el-button>
+      </el-col>
+
+      <!-- Search Bar -->
+      <el-col :span="10" class="search-col">
+        <el-input
+            v-model="searchQuery"
+            placeholder="搜索商品"
+            suffix-icon="el-icon-search"
+            clearable
+            class="search-input"
+        />
+        <el-button type="primary" @click="searchProducts" class="search-btn">搜索</el-button>
+      </el-col>
+      <el-col :span="2" class="user-options">
+        <el-button type="success" @click="logout" class="logout-btn">登出</el-button>
+        <el-button @click="navigateChat">公告</el-button>
       </el-col>
     </el-row>
 
     <!-- Product Grid Section -->
-    <el-row gutter="20" type="flex" justify="start">
+    <el-row gutter="30" type="flex" justify="start">
       <el-col :span="6" v-for="product in paginatedProducts" :key="product.id">
         <el-card class="product-card" shadow="hover">
           <template #header>
@@ -70,11 +63,11 @@
             <el-button class="buy-btn" type="primary" @click="buyProduct(product)">购买</el-button>
             <!-- Favorite button with dynamic state -->
             <el-button
-                :type="product.isLiked ? 'danger' : 'success'"
+                :type="product.isLiked? 'danger' : 'success'"
                 @click="toggleFavorite(product)"
             >
               <el-icon>
-                <Star />
+                <Star/>
               </el-icon>
             </el-button>
           </div>
@@ -106,7 +99,7 @@ import {
 } from '@/api';
 import {Star} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
-import { v4 as uuidv4 } from 'uuid'; // 引入 uuid 库
+import {v4 as uuidv4} from 'uuid'; // 引入 uuid 库
 
 export default {
   components: {Star},
@@ -182,21 +175,19 @@ export default {
 
       const apiFunction = apiMap[value] || apiMap.default;
 
-      apiFunction()
-          .then(response => {
-            if (response && response.data && response.data.code === 1) {
-              this.productList = response.data.data;
-              // only add product which status == 1
-              this.productList = this.productList.filter(product => product.status === 1);
-              this.totalCount = this.productList.length;
-            } else {
-              this.$message.error(response.data.message || "Unknown error occurred");
-            }
-          })
-          .catch(error => {
-            console.error('API call failed: ', error);
-            this.$message.error('Failed to load products');
-          });
+      apiFunction().then(response => {
+        if (response && response.data && response.data.code === 1) {
+          this.productList = response.data.data;
+          // only add product which status == 1
+          this.productList = this.productList.filter(product => product.status === 1);
+          this.totalCount = this.productList.length;
+        } else {
+          this.$message.error(response.data.message || "Unknown error occurred");
+        }
+      }).catch(error => {
+        console.error('API call failed: ', error);
+        this.$message.error('Failed to load products');
+      });
     },
 
     logout() {
@@ -237,11 +228,10 @@ export default {
             } else {
               this.$message.error('无法加载收藏列表');
             }
-          })
-          .catch((error) => {
-            console.error('API 请求失败：', error);
-            this.$message.error('加载收藏列表失败');
-          });
+          }).catch((error) => {
+        console.error('API 请求失败：', error);
+        this.$message.error('加载收藏列表失败');
+      });
     },
 
     // 更新商品的收藏状态
@@ -258,17 +248,17 @@ export default {
 
       toggleProductWantList(userId, product.id)
           .then((response) => {
-            if (response && response.data && response.data.code === 1) {
-              const message = product.isLiked ? '已收藏' : '已取消收藏';
-              ElMessage.success(message);
-            } else {
-              ElMessage.error(response.data.message || '操作失败');
-            }
-          })
-          .catch((error) => {
-            console.error('API 请求失败：', error);
-            ElMessage.error('操作失败，请稍后重试');
-          });
+                if (response && response.data && response.data.code === 1) {
+                  const message = product.isLiked ? '已收藏' : '已取消收藏';
+                  ElMessage.success(message);
+                } else {
+                  ElMessage.error(response.data.message || '操作失败');
+                }
+              }
+          ).catch((error) => {
+        console.error('API 请求失败：', error);
+        ElMessage.error('操作失败，请稍后重试');
+      });
     },
 
     handleCurrentChange(val) {
@@ -328,7 +318,7 @@ export default {
         console.error('Error during purchase: ', error);
         ElMessage.error('购买失败，请稍后再试');
       }
-    },
+    }
   },
   created() {
     this.fetchUserWantList();
@@ -338,6 +328,11 @@ export default {
 </script>
 
 <style scoped>
+/* 统一设置页面主体背景色，使用淡蓝色渐变背景，使其与导航栏背景色更协调 */
+body {
+  background: linear-gradient(to bottom, #E6F3FF, #F5F9FC);
+}
+
 /* Header styles */
 .header {
   background-color: lightskyblue;
@@ -352,48 +347,39 @@ export default {
 }
 
 .search-col {
-  text-align: right;
-}
-
-.logout-btn {
-  background-color: #ffcccc !important;
-  border-color: #ffcccc !important;
-  color: grey !important;
+  display: flex;
+  align-items: center;
 }
 
 .search-input {
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
   margin-right: 10px;
-}
-
-.search-input :deep(.el-input__wrapper) {
-  background-color: rgba(255, 255, 255, 0.9);
+  height: 36px;
+  font-size: 14px;
+  color: #333;
+  padding: 0 15px;
+  border: none;
   border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
-.search-input :deep(.el-input__wrapper):hover,
-.search-input :deep(.el-input__wrapper):focus {
+.search-input:hover,
+.search-input:focus {
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.search-input :deep(.el-input__inner) {
-  height: 40px;
-  font-size: 16px;
-  color: #333;
-  padding: 0 20px;
-}
-
 .search-btn {
-  height: 40px;
+  height: 36px;
   border-radius: 20px;
-  padding: 0 25px;
-  font-size: 16px;
+  padding: 0 20px;
+  font-size: 14px;
   background: #4CAF50;
   border-color: #4CAF50;
+  color: white;
   transition: all 0.3s ease;
 }
 
@@ -408,16 +394,27 @@ export default {
   text-align: right;
 }
 
+/* Sorting Bar styles，设置排序栏背景色与整体更协调 */
+.sorting-bar {
+  background-color: rgba(230, 243, 255, 0.8);
+  padding: 20px 0;
+}
+
 /* Product Card Styles */
 .product-card {
   border-radius: 10px;
   overflow: hidden;
   background-color: #fff;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease; /* 增加透明度过渡效果 */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0; /* 初始设置为透明 */
+  animation: fadeIn 0.5s forwards; /* 添加淡入动画 */
 }
 
-.product-card:hover {
-  transform: translateY(-5px);
+@keyframes fadeIn {
+  to {
+    opacity: 1; /* 动画结束时变为完全不透明 */
+  }
 }
 
 .product-name {
@@ -436,43 +433,72 @@ export default {
 
 .product-image {
   max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.logout-btn {
+  background-color: #ffcccc !important;
+  border-color: #ffcccc !important;
+  color: grey !important;
+}
+
+.logout-btn:hover {
+  background-color: #ff6666 !important;
+  border-color: #ff6666 !important;
+  color: white !important;
 }
 
 .product-price {
   font-size: 16px;
-  color: #ff5722;
+  font-weight: bold;
+  color: #333;
   margin: 10px 0;
 }
 
-.view-details-btn {
-  background-color: #007BFF;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  font-size: 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.view-details-btn,
+.buy-btn {
+  margin: 10px;
 }
 
-.view-details-btn:hover {
-  background-color: #0056b3;
+/* Favorite Button Styles */
+.el-button--danger {
+  background-color: #FF4500;
+  border-color: #FF4500;
 }
 
-/* Pagination styles */
+.el-button--danger:hover {
+  background-color: #FF6347;
+  border-color: #FF6347;
+}
+
+.el-button--success {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.el-button--success:hover {
+  background-color: #45a049;
+  border-color: #45a049;
+}
+
+/* Pagination Styles */
+
 .el-pagination {
   margin-top: 20px;
   text-align: center;
 }
 
-.product-image {
-  width: 100%; /* Make the image take up the full width of its container */
-  height: 200px; /* Set a fixed height to ensure consistency across images */
-  object-fit: contain; /* Ensure the image maintains its aspect ratio while fitting within the container */
-  border-radius: 8px;
-  margin-bottom: 15px;
+/* Reset Button Styles */
+.el-button--warning {
+  background-color: lightskyblue;
+  border-color: lightskyblue;
 }
+
+.el-button--warning:hover {
+  background-color: #2196F3;
+  border-color: #2196F3;
+}
+
 </style>

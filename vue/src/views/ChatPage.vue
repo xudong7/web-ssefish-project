@@ -6,8 +6,8 @@
         <h1 class="header-title">{{ currentAnnouncement?.title || '公告' }}</h1>
         <div class="header-meta">
           <span class="meta-item">{{ formatDate(currentAnnouncement?.createTime) || '暂无日期' }}</span>
-          <span class="meta-item">{{ currentAnnouncement?.views || 229 }} 次阅读</span>
-          <span class="meta-item">{{ currentAnnouncement?.duration || 2 }} 分钟</span>
+<!--          <span class="meta-item">{{ currentAnnouncement?.views || 229 }} 次阅读</span>-->
+<!--          <span class="meta-item">{{ currentAnnouncement?.duration || 2 }} 分钟</span>-->
         </div>
       </div>
     </div>
@@ -184,6 +184,7 @@ export default {
   color: #606266;
   cursor: pointer;
   padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
   border-radius: 4px;
   transition: all 0.3s;
 }
@@ -195,6 +196,21 @@ export default {
 
 .catalog-item.active {
   background-color: #409EFF;
+  color: white;
+}
+
+.catalog-item::before {
+  content: '>';
+  margin-right: 8px;
+  color: #ccc;
+  transition: all 0.3s;
+}
+
+.catalog-item:hover::before {
+  color: #409EFF;
+}
+
+.catalog-item.active::before {
   color: white;
 }
 
@@ -240,6 +256,7 @@ export default {
 
   .announcement-catalog {
     position: static;
+    margin-bottom: 20px;
   }
 
   .announcement-content {

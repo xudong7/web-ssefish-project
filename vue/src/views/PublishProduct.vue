@@ -180,12 +180,13 @@ export default {
 </script>
 
 <style scoped>
+
 .form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 40px 20px;
-  background-color: #f8f9fa;
+  background: linear-gradient(to bottom, #E6F3FF, #F5F9FC);
   height: auto;
 }
 
@@ -209,9 +210,11 @@ export default {
 .short-input {
   width: 300px;
   transition: all 0.3s ease;
+  border: 1px solid #dcdfe6;
 }
 
 .short-input:hover {
+  border-color: #409EFF;
   box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
 
@@ -273,10 +276,15 @@ export default {
   font-size: 16px;
   display: block;
   margin: 30px auto 0;
+  background-color: #409EFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
   transition: all 0.3s ease;
 }
 
 .submit-button:hover {
+  background-color: #2679f5;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(64,158,255,0.4);
 }

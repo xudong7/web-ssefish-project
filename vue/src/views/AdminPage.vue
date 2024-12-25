@@ -12,10 +12,22 @@
       <!-- Sidebar -->
       <div class="sidebar">
         <ul>
-          <li @click="navigateTo('product')" :class="{ active: currentTab === 'product' }">商品管理</li>
-          <li @click="navigateTo('user')" :class="{ active: currentTab === 'user' }">用户管理</li>
-          <li @click="navigateTo('transaction')" :class="{ active: currentTab === 'transaction' }">交易记录</li>
-          <li @click="navigateTo('announcement')" :class="{ active: currentTab === 'announcement' }">公告发布</li>
+          <li @click="navigateTo('product')" :class="{ active: currentTab === 'product' }">
+            <el-icon><GoodsFilled /></el-icon>
+            商品管理
+          </li>
+          <li @click="navigateTo('user')" :class="{ active: currentTab === 'user' }">
+            <el-icon><UserFilled /></el-icon>
+            用户管理
+          </li>
+          <li @click="navigateTo('transaction')" :class="{ active: currentTab === 'transaction' }">
+            <el-icon><List /></el-icon>
+            交易记录
+          </li>
+          <li @click="navigateTo('announcement')" :class="{ active: currentTab === 'announcement' }">
+            <el-icon><Promotion /></el-icon>
+            公告发布
+          </li>
         </ul>
       </div>
 
@@ -190,7 +202,7 @@
               :current-page="currentPage"
               @current-change="handlePageChange"
           />
-          
+
         </div>
       </div>
     </div>
@@ -209,11 +221,16 @@ import {
   addAnnouncement,
   getAnnouncementList, deleteAnnouncementById
 } from '@/api';
+import {GoodsFilled, UserFilled, List, Promotion} from '@element-plus/icons-vue';
 
 export default {
   name: 'AdminPage',
   components: {
     ElPagination,
+    GoodsFilled,
+    UserFilled,
+    List,
+    Promotion,
   },
   data() {
     return {
@@ -346,7 +363,7 @@ export default {
   flex-direction: column;
   height: 100vh;
   font-family: 'Arial', sans-serif;
-  background-color: #f4f6f9;
+  background: linear-gradient(to bottom, #F0F8FF, #E6F3FF);
 }
 
 .header {

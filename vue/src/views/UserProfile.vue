@@ -587,6 +587,12 @@ export default {
   color: grey !important; 
 }
 
+.logout-btn:hover {
+  background-color: #ff6666 !important;
+  border-color: #ff6666 !important;
+  color: white !important;
+}
+
 .edit-btn {
   /* background-color: #ffffff; */
   border-color: #dcdfe6;

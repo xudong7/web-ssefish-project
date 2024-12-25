@@ -41,12 +41,12 @@
           <div class="action-buttons">
             <el-button type="primary" size="large" @click="buyProduct">立即购买</el-button>
             <el-button
-                :type="this.product.isLiked ? 'danger' : 'success'"
+                :type="this.product.isLiked? 'danger' : 'success'"
                 size="large"
                 @click="toggleFavorite"
             >
               <el-icon><Star /></el-icon>
-              {{ this.product.isLiked ? '取消收藏' : '收藏' }}
+              {{ this.product.isLiked? '取消收藏' : '收藏' }}
             </el-button>
             <el-button @click="goToHome" size="large">返回首页</el-button>
           </div>
@@ -59,17 +59,17 @@
           <h2>卖家其他商品</h2>
         </div>
         <div class="related-products-list">
-          <el-card v-for="item in sellerProducts" 
-                  :key="item.id" 
-                  class="related-product-card"
-                  shadow="hover">
+          <el-card v-for="item in sellerProducts"
+                   :key="item.id"
+                   class="related-product-card"
+                   shadow="hover">
             <img :src="item.image" alt="商品图片" class="related-product-image"/>
             <div class="related-product-info">
               <h4>{{ item.name }}</h4>
               <p class="related-price">¥{{ item.price }}</p>
-              <el-button type="primary" 
-                        size="small" 
-                        @click="viewProductDetail(item.id)">
+              <el-button type="primary"
+                         size="small"
+                         @click="viewProductDetail(item.id)">
                 查看详情
               </el-button>
             </div>
@@ -142,10 +142,10 @@ export default {
     fetchSellerProducts(sellerId) {
       getProductList()
           .then(response => {
-            this.sellerProducts = response.data.data.filter(product => 
-              product.sellerId === sellerId && 
-              product.id !== this.product.id && 
-              product.status === 1
+            this.sellerProducts = response.data.data.filter(product =>
+                product.sellerId === sellerId &&
+                product.id!== this.product.id &&
+                product.status === 1
             ).slice(0, 3);
           })
           .catch(error => {
@@ -174,12 +174,12 @@ export default {
     },
     toggleFavorite() {
       const userId = JSON.parse(localStorage.getItem('user')).id;
-      this.product.isLiked = !this.product.isLiked;
+      this.product.isLiked =!this.product.isLiked;
 
       toggleProductWantList(userId, this.product.id)
           .then((response) => {
             if (response && response.data && response.data.code === 1) {
-              const message = this.product.isLiked ? '已收藏' : '已取消收藏';
+              const message = this.product.isLiked? '已收藏' : '已取消收藏';
               ElMessage.success(message);
             } else {
               ElMessage.error(response.data.message || '操作失败');
