@@ -229,7 +229,7 @@ export default {
 
 <style scoped>
 .product-detail-container {
-  padding: 20px;
+  padding: 10px;
   background-color: #f5f7fa;
   min-height: 100vh;
 }
@@ -322,6 +322,7 @@ export default {
 }
 
 .related-products-section {
+  margin-top: 20px;
   padding: 20px;
   background: white;
   border-radius: 8px;

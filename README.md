@@ -1,4 +1,4 @@
-# SSEFish - 校园二手交易平台 🎓
+# 软工闲鱼 - 校园二手交易平台 🎓
 
 [![Vue](https://img.shields.io/badge/Vue-3.2.13-brightgreen.svg)](https://vuejs.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-latest-brightgreen.svg)](https://spring.io/projects/spring-boot)
@@ -6,14 +6,14 @@
 
 ## 📖 简介
 
-SSEFish(School of Software Engineering Fish)是一个面向在校学生的二手交易平台。该项目源于我们学院的"软工集市"项目,旨在为学生提供一个安全、便捷的二手物品交易环境。
+软工闲鱼(School of Software Engineering Fish)是一个面向在校学生的二手交易平台。该项目仿照我们学院的"软工集市"项目，旨在为学生提供一个安全、便捷的二手物品交易环境。
 
 ### 主要功能
 - 🛍️ 二手商品发布与浏览
-- 💬 即时聊天与商品咨询
 - 💰 支付宝沙箱支付集成
 - 👤 用户信息管理
 - 📱 响应式界面设计
+<!-- - 💬 即时聊天与商品咨询 -->
 
 ## ✨ 特性
 

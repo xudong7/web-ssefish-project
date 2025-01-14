@@ -2,8 +2,9 @@
   <div>
     <!-- Sorting Bar -->
     <el-row class="sorting-bar" type="flex" justify="start" align="middle" style="padding: 20px 0;">
+      <el-col :span="1"></el-col>
       <!-- 发布时间排序 -->
-      <el-col :span="3">
+      <el-col :span="3" style="margin-right: 10px;">
         <el-select v-model="timeFilter" placeholder="发布时间" style="width: 100%; min-width: 10px"
                    @change="handleTimeSortChange">
           <el-option v-for="item in timeOptions" :key="item.value" :label="item.label" :value="item.value"/>
@@ -11,7 +12,7 @@
       </el-col>
 
       <!-- 价格排序 -->
-      <el-col :span="3">
+      <el-col :span="3" style="margin-right: 10px;">
         <el-select
             v-model="priceSort"
             placeholder="价格"
@@ -28,7 +29,7 @@
       </el-col>
 
       <!-- Reset Button -->
-      <el-col :span="5">
+      <el-col :span="3">
         <el-button type="warning" @click="resetFilters">重置</el-button>
       </el-col>
 
@@ -43,15 +44,15 @@
         />
         <el-button type="primary" @click="searchProducts" class="search-btn">搜索</el-button>
       </el-col>
-      <el-col :span="2" class="user-options">
+      <el-col :span="3" class="user-options">
         <el-button type="success" @click="logout" class="logout-btn">登出</el-button>
-        <el-button @click="navigateChat">公告</el-button>
+        <el-button @click="navigateChat" class="announcement-btn">公告</el-button>
       </el-col>
     </el-row>
 
     <!-- Product Grid Section -->
     <el-row gutter="30" type="flex" justify="start">
-      <el-col :span="6" v-for="product in paginatedProducts" :key="product.id">
+      <el-col :span="8" v-for="product in paginatedProducts" :key="product.id">
         <el-card class="product-card" shadow="hover">
           <template #header>
             <span class="product-name">{{ product.name }}</span>
@@ -391,13 +392,21 @@ body {
 }
 
 .user-options {
+  display: flex;
+  flex-wrap: nowrap;
   text-align: right;
 }
 
 /* Sorting Bar styles，设置排序栏背景色与整体更协调 */
 .sorting-bar {
-  background-color: rgba(230, 243, 255, 0.8);
-  padding: 20px 0;
+  display: flex;             /* 使用 Flexbox 布局 */
+  flex-wrap: nowrap;         /* 禁止换行 */
+  justify-content: flex-start; /* 确保内容居左对齐 */
+  align-items: center;       /* 垂直居中对齐 */
+  border-radius: 10px;       /* 圆角效果 */
+  background-color: rgba(230, 243, 255, 0.8); /* 背景色 */
+  padding: 20px 0;           /* 上下内边距 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 轻微的阴影效果 */
 }
 
 /* Product Card Styles */
@@ -409,6 +418,8 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   opacity: 0; /* 初始设置为透明 */
   animation: fadeIn 0.5s forwards; /* 添加淡入动画 */
+  margin-top: 20px; /* 添加顶部外边距 */
+  margin-bottom: 20px; /* 添加底部外边距 */
 }
 
 @keyframes fadeIn {
@@ -447,6 +458,18 @@ body {
 .logout-btn:hover {
   background-color: #ff6666 !important;
   border-color: #ff6666 !important;
+  color: grey !important;
+}
+
+.announcement-btn {
+  background-color: #fff !important;
+  border-color: #4CAF50 !important;
+  color: grey !important;
+}
+
+.announcement-btn:hover {
+  background-color: #4CAF50 !important;
+  border-color: #45a049 !important;
   color: white !important;
 }
 
